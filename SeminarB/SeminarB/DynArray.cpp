@@ -4,8 +4,8 @@
 template <class ComponentType>
 DynArray<ComponentType>::DynArray()
 {
-	type = new ComponentType[10];
-	std::cout << sizeof(ComponentType) << std::endl;
+	type_ = new ComponentType[6];
+	capacity_ = 6;
 }
 
 template <class ComponentType>
@@ -14,14 +14,16 @@ DynArray<ComponentType>::DynArray(DynArray& copy)
 }
 
 template <class ComponentType>
-DynArray<ComponentType>::DynArray(int index)
+DynArray<ComponentType>::DynArray(int indexSize)
 {
+	type_ = new ComponentType[indexSize];
+	capacity_ = indexSize;
 }
 
 template <class ComponentType>
 DynArray<ComponentType>::~DynArray()
 {
-	delete[] type;
+	delete[] type_;
 }
 
 template <class ComponentType>

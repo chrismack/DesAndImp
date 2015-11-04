@@ -6,7 +6,9 @@ template<class ComponentType>
 class DynArray
 {
 private:
-	ComponentType *type;
+	ComponentType *type_;
+	int size_;
+	int capacity_;
 public:
 	DynArray();
 	DynArray(DynArray&);
