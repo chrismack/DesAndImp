@@ -4,15 +4,17 @@
 */
 
 #include "stdafx.h"
+#include "DynArray.cpp"
 #include <iostream>
+#include <string>
 #include <vector>
 
 
 using namespace std;
 
-int main()
+int main(int argc, char *argv[])
 {
-	cout << sizeof(int) << endl;
+	DynArray<string> dynArray;
 	system("pause");
     return 0;
 }
