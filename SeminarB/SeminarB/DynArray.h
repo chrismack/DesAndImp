@@ -19,7 +19,7 @@ public:
 	int capacity() const;
 	bool empty() const;
 
-	void push_back(ComponentType&);
+	void push_back(ComponentType);
 	void pop_back();
 
 	ComponentType& back();
