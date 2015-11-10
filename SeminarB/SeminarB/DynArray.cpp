@@ -53,20 +53,20 @@ void DynArray<ComponentType>::push_back(ComponentType compType)
 	// If the buffer is full
 	if (size_ == capacity_)
 	{
-		// Increase the size of the array
 		capacity_ *= 1.5;
+
 		// Create a temp buffer to save content while new address is set
 		ComponentType *tempBuffer = new ComponentType[capacity_];
-		// Add elements into temp buffer
 		for (int i = 0; i < size_; i++)
 		{
 			tempBuffer[i] = type_[i];
 		}
-		// Set type to the address of the tempBuffer
+
+		// Return old memory location to heap
 		delete[] type_;
 		type_ = tempBuffer;
 	}
-	// Add to element to array
+
 	type_[size_] = compType;
 	size_++;
 }
@@ -76,6 +76,7 @@ void DynArray<ComponentType>::pop_back()
 {
 	//Array cannot be empty
 	assert(size_ > 0);
+	type_[size_ - 1] = ComponentType();
 	size_--;
 
 }
@@ -111,9 +112,9 @@ void DynArray<ComponentType>::set(ComponentType compType, int i)
 template <typename ComponentType>
 void DynArray<ComponentType>::zap()
 {
-	/*for (int i = 0; i < size_; i++)
+	for (int i = 0; i < size_; i++)
 	{
-		type_[i] = nullptr;
-	}*/
+		type_[i] = ComponentType();
+	}
 }
 
