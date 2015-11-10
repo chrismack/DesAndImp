@@ -2,7 +2,7 @@
 #ifndef DYNARRAY
 #define DYNARRAY
 
-template<class ComponentType>
+template<typename ComponentType>
 class DynArray
 {
 private:
@@ -22,9 +22,9 @@ public:
 	void push_back(ComponentType);
 	void pop_back();
 
-	ComponentType& back();
-	ComponentType& front();
-	ComponentType& get(int) const;
+	ComponentType back();
+	ComponentType front();
+	ComponentType get(int) const;
 
 	void set(ComponentType&, int);
 	void zap();

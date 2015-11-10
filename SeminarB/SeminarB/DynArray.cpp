@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "DynArray.h"
+#include <assert.h>
 
-template <class ComponentType>
+template <typename ComponentType>
 DynArray<ComponentType>::DynArray()
 {
 	type_ = new ComponentType[6];
@@ -9,12 +10,12 @@ DynArray<ComponentType>::DynArray()
 	capacity_ = 6;
 }
 
-template <class ComponentType>
+template <typename ComponentType>
 DynArray<ComponentType>::DynArray(DynArray& copy)
 {
 }
 
-template <class ComponentType>
+template <typename ComponentType>
 DynArray<ComponentType>::DynArray(int indexSize)
 {
 	type_ = new ComponentType[indexSize];
@@ -22,81 +23,92 @@ DynArray<ComponentType>::DynArray(int indexSize)
 	capacity_ = indexSize;
 }
 
-template <class ComponentType>
+template <typename ComponentType>
 DynArray<ComponentType>::~DynArray()
 {
 	delete[] type_;
 }
 
-template <class ComponentType>
+template <typename ComponentType>
 int DynArray<ComponentType>::size() const
 {
 	return size_;
 }
 
-template <class ComponentType>
+template <typename ComponentType>
 int DynArray<ComponentType>::capacity() const
 {
 	return capacity_;
 }
 
-template <class ComponentType>
+template <typename ComponentType>
 bool DynArray<ComponentType>::empty() const
 {
 	return size_ == 0;
 }
 
-template <class ComponentType>
+template <typename ComponentType>
 void DynArray<ComponentType>::push_back(ComponentType compType)
 {
 	// If the buffer is full
-	if (size_ == (capacity_ - 1))
+	if (size_ == capacity_)
 	{
+		// Increase the size of the array
 		capacity_ *= 1.5;
+		// Create a temp buffer to save content while new address is set
 		ComponentType *tempBuffer = new ComponentType[capacity_];
-		for (int i = 0; i <= size_; i++)
+		// Add elements into temp buffer
+		for (int i = 0; i < size_; i++)
 		{
 			tempBuffer[i] = type_[i];
 		}
-		//delete[] type_;
+		// Set type to the address of the tempBuffer
+		delete[] type_;
 		type_ = tempBuffer;
-		//delete[] tempBuffer;
 	}
 	// Add to element to array
 	type_[size_] = compType;
 	size_++;
 }
 
-template <class ComponentType>
+template <typename ComponentType>
 void DynArray<ComponentType>::pop_back()
 {
-	
+	//Array cannot be empty
+	assert(size_ > 0);
+	size_--;
+
 }
 
-template <class ComponentType>
-ComponentType& DynArray<ComponentType>::back()
+template <typename ComponentType>
+ComponentType DynArray<ComponentType>::back()
 {
-	return type_;
+	assert(size_ > 0)
+	return type_[size_ - 1];
 }
 
 template<class ComponentType>
-ComponentType& DynArray<ComponentType>::front()
+ComponentType DynArray<ComponentType>::front()
 {
-	return type_;
+	assert(size_ > 0)
+	return type_[0];
 }
 
 template<class ComponentType>
-ComponentType& DynArray<ComponentType>::get(int index) const
+ComponentType DynArray<ComponentType>::get(int index) const
 {
-	return type_;
+	assert(size_ > index);
+	return type_[index];
 }
 
 template<class ComponentType>
-void DynArray<ComponentType>::set(ComponentType& compType, int i)
+void DynArray<ComponentType>::set(ComponentType compType, int i)
 {
+	assert(size_ > i);
+	type_[i] = compType;
 }
 
-template <class ComponentType>
+template <typename ComponentType>
 void DynArray<ComponentType>::zap()
 {
 	/*for (int i = 0; i < size_; i++)
