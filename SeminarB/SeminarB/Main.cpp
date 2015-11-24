@@ -3,8 +3,7 @@
 *Author : Chris Mack n0576565
 */
 
-#include "stdafx.h"
-#include "DynArray.cpp"
+#include "DynArray.h"
 
 #include <iostream>
 #include <string>
@@ -24,6 +23,7 @@ int main(int argc, char *argv[])
 
 	cout << dynArray.size() << endl;
 	cout << dynArray.capacity() << endl;
+	cout << dynArray << endl;
 	system("pause");
 
 

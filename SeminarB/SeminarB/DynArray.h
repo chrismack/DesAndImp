@@ -1,10 +1,12 @@
 #pragma once
-#ifndef DYNARRAY
-#define DYNARRAY
+#ifndef DYNARRAY_H
+#define DYNARRAY_H
 
+#include <stdarg.h>
+#include <assert.h>
 #include <iostream>
 
-template<typename ComponentType>
+template<class ComponentType>
 class DynArray
 {
 private:
@@ -18,6 +20,7 @@ public:
 	DynArray();
 	DynArray(DynArray&);
 	DynArray(unsigned int indexSize);
+	DynArray(unsigned int indexSize, bool clean);
 	DynArray(ComponentType);
 
 	~DynArray();
@@ -29,6 +32,8 @@ public:
 
 	void push_back(ComponentType);
 	void pop_back();
+	void push_front(ComponentType);
+	void pop_front();
 	void shrink();
 	void insert(int, ComponentType);
 	void remove(int);
@@ -50,6 +55,8 @@ public:
 	void zap();
 };
 
+
+#include "DynArray.cpp"
 #endif /*end DYNARRAY*/
 
 
