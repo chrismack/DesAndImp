@@ -5,6 +5,9 @@
 
 #include "DynArray.h"
 
+/*
+* Default un-constructed, buffer size = 6
+*/
 template <class ComponentType>
 DynArray<ComponentType>::DynArray()
 {
@@ -13,6 +16,9 @@ DynArray<ComponentType>::DynArray()
 	capacity_ = 6;
 }
 
+/*
+ *Copy constructor
+ */
 template <class ComponentType>
 DynArray<ComponentType>::DynArray(DynArray& copy)
 {
@@ -25,10 +31,10 @@ DynArray<ComponentType>::DynArray(DynArray& copy)
 }
 
 template <class ComponentType>
-DynArray<ComponentType>::DynArray(unsigned int value)
+DynArray<ComponentType>::DynArray(unsigned int indexSize)
 {
-	type_ = new ComponentType[value];
-	for (int i = 0; i < value; i++)
+	type_ = new ComponentType[indexSize];
+	for (int i = 0; i < indexSize; i++)
 	{
 		type_[i] = ComponentType();
 	}
@@ -39,12 +45,9 @@ DynArray<ComponentType>::DynArray(unsigned int value)
 template<class ComponentType>
 DynArray<ComponentType>::DynArray(unsigned int indexSize, bool clean)
 {
-	if (clean)
-	{
-		type_ = new ComponentType[value];
+		type_ = new ComponentType[indexSize];
 		size_ = 0;
 		capacity_ = indexSize;
-	}
 }
 
 template <class ComponentType>
@@ -56,7 +59,7 @@ DynArray<ComponentType>::DynArray(ComponentType type)
 		type_[i] = type;
 	}
 	size_ = 6;
-	capacity = 6;
+	capacity_ = 6;
 }
 
 
@@ -85,7 +88,7 @@ bool DynArray<ComponentType>::empty() const
 }
 
 template<class ComponentType>
-bool DynArray<ComponentType>::equality(DynArray &dynarray)
+bool DynArray<ComponentType>::equality(DynArray &dynarray) const
 {
 	if (size_ == dynarray.size())
 	{
@@ -108,7 +111,7 @@ void DynArray<ComponentType>::push_back(ComponentType compType)
 	if (size_ == capacity_)
 	{
 		capacity_ *= 1.5;
-		reallocate(capacity_);
+		reserve(capacity_);
 	}
 
 	type_[size_] = compType;
@@ -126,9 +129,9 @@ void DynArray<ComponentType>::pop_back()
 }
 
 template<class ComponentType>
-void DynArray<ComponentType>::push_front(ComponentType)
+void DynArray<ComponentType>::push_front(ComponentType compType)
 {
-	insert(0, ComponentType);
+	insert(0, compType);
 }
 
 template<class ComponentType>
@@ -138,26 +141,41 @@ void DynArray<ComponentType>::pop_front()
 }
 
 template<class ComponentType>
-void DynArray<ComponentType>::shrink()
+void DynArray<ComponentType>::reserve(int size)
 {
-	if (capacity_ > size_)
+	// Create a temp buffer to save content while new address is set
+	ComponentType *tempBuffer = new ComponentType[size];
+	// Loop through all elements in existing buffer
+	for (int i = 0; i < size_; i++)
 	{
-		capacity_ = size_;
-		reallocate(capacity_);
+		tempBuffer[i] = type_[i];
 	}
+
+	// Return old memory location to heap
+	delete[] type_;
+	type_ = tempBuffer;
+	capacity_ = size;
+
 }
 
 template<class ComponentType>
-void DynArray<ComponentType>::insert(int index, ComponentType value)
+void DynArray<ComponentType>::shrink()
+{
+	assert(capacity_ > size_)
+	reserve(capacity_);
+	
+}
+
+template<class ComponentType>
+void DynArray<ComponentType>::insert(const int index, const ComponentType value)
 {
 	assert(index < size_);
 	if (size_ + 1 > capacity_)
 	{
-		capacity_ *= 1.5;
-		reallocate(capacity_);
+		reserve(capacity_ *= 1.5);
 	}
 
-	for (int i = size_; i > index; i--)
+	for (int i = size_ - 1; i >= index; i--)
 	{
 		type_[i + 1] = type_[i];
 	}
@@ -166,7 +184,7 @@ void DynArray<ComponentType>::insert(int index, ComponentType value)
 }
 
 template<class ComponentType>
-void DynArray<ComponentType>::remove(int index)
+void DynArray<ComponentType>::remove(const int index)
 {
 	assert(index < size_);
 	type_[index] = ComponentType();
@@ -182,7 +200,7 @@ void DynArray<ComponentType>::append(const DynArray &copy)
 {
 	if (size_ + copy.size() > capacity_)
 	{
-		reallocate(size_ + copy.size());
+		reserve(size_ + copy.size());
 	}
 
 	for (int i = 0; i < copy.size(); i++)
@@ -190,6 +208,27 @@ void DynArray<ComponentType>::append(const DynArray &copy)
 		type_[size_ + i] = copy.get(i);
 	}
 	size_ += copy.size();
+}
+
+template<class ComponentType>
+void DynArray<ComponentType>::set(const int index, const ComponentType compType)
+{
+	assert(index > 0 && index <= size_, "Out of bounds");
+	if (index == size_)
+	{
+		size_++;
+	}
+	type_[index] = compType;	
+}
+
+template <class ComponentType>
+void DynArray<ComponentType>::zap()
+{
+	for (int i = 0; i < size_; i++)
+	{
+		type_[i] = ComponentType();
+	}
+	size_ = 0;
 }
 
 template<class ComponentType>
@@ -210,17 +249,30 @@ DynArray<ComponentType> & DynArray<ComponentType>::operator=(const DynArray & co
 }
 
 template<class ComponentType>
-ComponentType& DynArray<ComponentType>::operator[](unsigned int i)
-{
-	return type_[i];
-}
-
-template<class ComponentType>
 DynArray<ComponentType> & DynArray<ComponentType>::operator+=(const DynArray &copy)
 {
 	append(copy);
 	return (*this);
 }
+
+template<class ComponentType>
+ComponentType& DynArray<ComponentType>::operator[](unsigned int index)
+{
+	assert(index > 0 && index <= size_, "Out of bounds");
+	if (index == size_)
+	{
+		size_++;
+	}
+	return type_[index];
+}
+
+template<class ComponentType>
+const ComponentType & DynArray<ComponentType>::operator[](unsigned int index) const
+{
+	assert(index > 0 && index < size_, "Out of bounds");
+	return type_[index];
+}
+
 
 template<class ComponentType>
 std::ostream & operator<<(std::ostream &out, const DynArray<ComponentType> &copy)
@@ -229,62 +281,29 @@ std::ostream & operator<<(std::ostream &out, const DynArray<ComponentType> &copy
 	{
 		out << copy.get(i) << ", ";
 	}
-	out << copy.get(i);
+	out << copy.get(copy.size() - 1);
 	return out;
 }
 
-template<class ComponentType>
-void DynArray<ComponentType>::reallocate(int size)
-{
-	// Create a temp buffer to save content while new address is set
-		ComponentType *tempBuffer = new ComponentType[size];
-		// Loop through all elements in existing buffer
-		for (int i = 0; i < size_; i++)
-		{
-			tempBuffer[i] = type_[i];
-		}
-
-		// Return old memory location to heap
-		delete[] type_;
-		type_ = tempBuffer;
-		
-}
-
 template <class ComponentType>
-ComponentType DynArray<ComponentType>::back()
+ComponentType DynArray<ComponentType>::back() const
 {
 	assert(size_ > 0)
 	return type_[size_ - 1];
 }
 
 template<class ComponentType>
-ComponentType DynArray<ComponentType>::front()
+ComponentType DynArray<ComponentType>::front() const
 {
 	assert(size_ > 0)
 	return type_[0];
 }
 
 template<class ComponentType>
-ComponentType DynArray<ComponentType>::get(int index) const
+ComponentType DynArray<ComponentType>::get(const int index) const
 {
 	assert(size_ > index);
 	return type_[index];
-}
-
-template<class ComponentType>
-void DynArray<ComponentType>::set(ComponentType compType, int index)
-{
-	assert(capacity_ > index);
-	type_[i] = compType;
-}
-
-template <class ComponentType>
-void DynArray<ComponentType>::zap()
-{
-	for (int i = 0; i < size_; i++)
-	{
-		type_[i] = ComponentType();
-	}
 }
 
 #endif
