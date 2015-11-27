@@ -1,3 +1,6 @@
+#ifndef LINEPARSE_CPP
+#define LINEPARSE_CPP
+
 #include "LineParse.h"
 #include <iostream>
 #include <vector>
@@ -13,6 +16,7 @@ namespace SDI
 	LineParse::~LineParse()
 	{
 	}
+
 
 	/*
 	 * This function converts each of the parameters to a std::string and collects them all in
@@ -80,4 +84,6 @@ namespace SDI
 	}
 
 }
+
+#endif /* LINEPARSE_CPP */
 
