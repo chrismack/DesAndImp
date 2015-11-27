@@ -24,6 +24,7 @@ DynArray<ComponentType>::DynArray(DynArray& copy)
 {
 	type_ = new ComponentType[copy.size()];
 	size_ = copy.size();
+	capacity_ = copy.capacity();
 	for (unsigned int i = 0; i < size_; ++i)
 	{
 		type_[i] = copy.get(i);
@@ -298,6 +299,7 @@ ComponentType DynArray<ComponentType>::front() const
 	assert(size_ > 0)
 	return type_[0];
 }
+
 
 template<class ComponentType>
 ComponentType DynArray<ComponentType>::get(const int index) const

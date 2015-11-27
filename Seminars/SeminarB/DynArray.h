@@ -20,8 +20,9 @@ public:
 	DynArray(unsigned int indexSize);
 	DynArray(unsigned int indexSize, bool clean);
 	DynArray(const ComponentType);
-
+	/* Deconstructor */
 	~DynArray();
+
 
 	int size() const;
 	int capacity() const;
@@ -44,9 +45,6 @@ public:
 	/* Operator Overrides*/
 	DynArray & operator=(const DynArray &rhs);
 	DynArray & operator+=(const DynArray &rhs);
-	
-	//ComponentType & operator[](const unsigned int);
-
 	ComponentType& operator[](unsigned int index);
 	const ComponentType& operator[](unsigned int index) const;
 
