@@ -24,7 +24,7 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SeminarC.h">
+    <ClInclude Include="LineParse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SeminarC.cpp">
+    <ClCompile Include="LineParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
