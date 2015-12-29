@@ -10,6 +10,7 @@
 using namespace std;
 int main(int argc, char * argv[])
 {
+	
 	vector<std::string> myVec;
 	std::set<char> charSet;
 	std::set<char>::iterator it;
