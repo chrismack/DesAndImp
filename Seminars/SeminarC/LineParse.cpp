@@ -2,20 +2,16 @@
 #define LINEPARSE_CPP
 
 #include "LineParse.h"
-#include <iostream>
-#include <vector>
-#include <string>
+
 
 namespace SDI
 {
 	LineParse::LineParse()
-	{
-	}
+	{}
 
 
 	LineParse::~LineParse()
-	{
-	}
+	{}
 
 
 	/*
@@ -26,7 +22,6 @@ namespace SDI
 		std::vector<std::string> stringContainer;
 		for (int i = 0; i < argc; i++)
 		{
-			std::cout << argv[i] << std::endl;
 			stringContainer.push_back(argv[i]);
 		}
 

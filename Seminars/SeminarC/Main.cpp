@@ -18,9 +18,14 @@ int main(int argc, char * argv[])
 	std::map<char, string> valuesMap;
 	std::map<char, string>::iterator itMap;
 
-	cout << argv[0] << endl;
+
 	SDI::LineParse lineParse;
-	lineParse.parseArgs(argc, argv);
+	myVec = lineParse.parseArgs(argc, argv);
+
+	for (std::string str : myVec)
+	{
+		std::cout << str << std::endl;
+	}
 	
 	charSet = lineParse.parseArgsFlags(argc, argv);
 	for (it = charSet.begin(); it != charSet.end(); ++it)
