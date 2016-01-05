@@ -39,12 +39,17 @@ namespace SDI
 	private: // Variables
 		typedef std::pair<std::string, std::string> stringLevelPrefix;
 
+		typedef std::pair<int, std::string> messagePosition;
+		typedef SDI::DynArray<messagePosition> orderArray;
+		//typedef std::pair<int, SDI::DynArray<std::string>> orderArray;
+
 		/*
 		 * Current level of logs that are written to file
 		 */
 		LogLevel loggingLevel_ = LogLevel::NONE;
 
 		std::ofstream logFile_;
+		std::ofstream dumpFile_;
 
 		/*
 		 * Map of corrosponding (Enums, String)
@@ -59,46 +64,22 @@ namespace SDI
 			{Logger::LogLevel::NONE,    {"NONE",    ""         } }
 		};
 
+		int arrayOrder = 0;
 
 		/*
 		 * Map of different logging levels and their arrays
 		 */
-		std::map<LogLevel, SDI::DynArray<std::string>> loggingMap_;
+		std::map<LogLevel, orderArray> loggingMap_;
 
-		// Set of flags for logger
-		std::set<char> flagSet_ =
-		{
-			'a', // Set logging state to all
-			'i', // Set logging state to INFO
-			'd', // Set logging state to DEBUG
-			'w', // Set logging state to WARNING
-			'e', // Set logging state to ERROR
-			'n', // Set logging state to NONE
-
-			't',
-			'p',
-			'c',
-			'x',
-			'o',
-
-			'I', // Set message prefix for INFO
-			'D', // Set message prefix for DEBUG
-			'W', // Set message prefix for WARNING
-			'E', // Set message prefix for ERRO
-
-			'S',
-			'L',
-			'F',
-			'T'
-		};
-
-		SDI::DynArray<Logger::LogLevel> conjoinedLevels;
-
-		bool timeLogging_ = true;
+		bool timeLogging_ = false;
 		char * timeFormat_ = "[%d:%m:%y-%T]";
 
-		bool logPrefixes_ = true;
-		bool logToConsole_ = true;
+		bool logPrefixes_ = false;
+		bool logToConsole_ = false;
+		bool incrementalLogging_ = false;
+		
+		std::string logVersion;
+		std::string logPath_;
 
 	public: // Fucntions
 
@@ -123,22 +104,25 @@ namespace SDI
 		/*
 		 * Select what level of logging should be written to file
 		 */
-		void setLogLevel(LogLevel);
+		void setLogLevel(const LogLevel);
 
 		/*
 		 * Returns the current logging level of the logger
 		 * By default set to NONE
 		 */
-		LogLevel getLogLevel();
+		LogLevel getLogLevel() const;
 
 		/*
 		 * Returns the current logging level as a string
 		 * Returns NONE as default
 		 */
-		std::string getLogLevelString();
+		const std::string getLogLevelString();
 
 		void enableTimeStamps(bool);
 		void setTimeStampsString(char *);
+
+		void dumpLogs(Logger::LogLevel = Logger::LogLevel::ALL);
+		void dumpAllOrdered();
 
 
 
@@ -151,18 +135,20 @@ namespace SDI
 
 		std::set<char> removeInvalidFlags(std::set<char>::iterator, std::set<char>);
 
+		std::map<char, std::string> removeInvalidFlagValues(std::map<char, std::string>::iterator, std::map<char, std::string>);
+
 		void processFlags(std::set<char>::iterator, std::set<char>);
 
+		void processFlagValues(std::map<char, std::string>::iterator, std::map<char, std::string>);
 
-		/*
-		 * Used to initalise map of different logging levels and their dynamic arrays
-		 */
-		void setUpMapArray(LogLevel);
+		void sortArray(SDI::DynArray<Logger::messagePosition>&);
 
 		/*
 		 * write to array in map at specic logging level
 		 */
 		void logAtLevel(LogLevel, std::string);
+
+		void setLogPrefix(Logger::LogLevel, std::string);
 
 		/*
 		 * Prints message to console
