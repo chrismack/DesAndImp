@@ -64,8 +64,6 @@ namespace SDI
 			{Logger::LogLevel::NONE,    {"NONE",    ""         } }
 		};
 
-
-		std::string logVersion;
 		std::string logPath_;
 
 		/*
@@ -146,36 +144,81 @@ namespace SDI
 		 */
 		const std::string getLogLevelString();
 
+		/*
+		 * Get if the logger should prefix logging level
+		 */
 		bool isPrefixing() const;
 
+		/*
+		* Set if the logger should prefix logging level
+		*/
 		void setPrefixing(const bool);
 
+		/*
+		 * return a string of the prefix for logging level passed 
+		 */
 		std::string getLevelPrefix(const Logger::LogLevel) const;
 
+		/*
+		 * Sets the prefix message for a specific level
+		 */
 		void setLevelPrefixString(const Logger::LogLevel, const std::string);
 
+		/*
+		 * Get if time stamps are being prefixed to the log string 
+		 */
 		bool isTimestamping() const;
 
+		/*
+		 * Set if time stamps should be prefixed to log strings 
+		 */
 		void setTimestamping(const bool);
 
+		/*
+		 * Set the time stamp format for prefixes
+		 * requires setTimestamping(true);
+		 */
 		void setTimeStampsString(char *);
 
+		/*
+		 * Gets if logs are being printed to the console 
+		 */
 		bool isConsoleOutputting() const;
 
+		/*
+		 * Set if logs should be sent to the console
+		 */
 		void setConsleOutput(const bool);
 
+		/*
+		 * get if incremental logging mode is enables 
+		 */
 		bool isIncrementalLogging() const;
 
+		/*
+		 * Set incremental logging mode
+		 * appends run number to end of log file
+		 */
 		void setIncrementalLogging(const bool);
+
+		/*
+		 * Gets the current path of the logger
+		 * Cannot be set requires new instance of logger 
+		 */
+		std::string getLogPath() const;
 
 		//		End getters and setters
 		//=============================================
 
-		// Dumps all the logs defaults to all, logs are unordered
+		/*
+		 * Dumps all the logs defaults to all, logs are unordered
+		 */
 		void dumpLogs(Logger::LogLevel = Logger::LogLevel::ALL);
-
-		// Dumps all the logs in correct order
-		// Slower than dumpLogs
+		
+		/*
+		 * Slower than dumpLogs
+		 * Dumps all the logs in correct order
+		 */
 		void dumpAllOrdered();
 
 

@@ -243,6 +243,11 @@ namespace SDI
 		incrementalLogging_ = incLogging;
 	}
 
+	std::string Logger::getLogPath() const
+	{
+		return logPath_;
+	}
+
 
 	/*
 	 * Dumps all logs of specific level
