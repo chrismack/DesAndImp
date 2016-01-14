@@ -20,7 +20,7 @@ namespace SDI
 {
 	class Logger
 	{
-	public: // Vasriables
+	public: // Variables
 
 		/*
 		 * Different logging levels
@@ -52,9 +52,9 @@ namespace SDI
 		std::ofstream dumpFile_;
 
 		/*
-		 * Map of corrosponding (Enums, String)
+		 * Map of corrosponding (Enums, String, LogLevelPrefix)
 		 */
-		std::map<LogLevel, stringLevelPrefix> enumStrings_ =
+		std::map<LogLevel, stringLevelPrefix> enumStrings_ = std::map<LogLevel, stringLevelPrefix>
 		{
 			{Logger::LogLevel::ALL,     {"ALL",     ""         } },
 			{Logger::LogLevel::INFO,    {"INFO",    "[INFO]"   } },
@@ -64,22 +64,47 @@ namespace SDI
 			{Logger::LogLevel::NONE,    {"NONE",    ""         } }
 		};
 
-		int arrayOrder = 0;
+
+		std::string logVersion;
+		std::string logPath_;
+
+		/*
+		 * Order in which logs are recieved
+		 * each log increments this by one after logging 
+		 */
+		int arrayOrder_ = 0;
 
 		/*
 		 * Map of different logging levels and their arrays
 		 */
 		std::map<LogLevel, orderArray> loggingMap_;
 
+		/*
+		 * Time stamp prefixes
+		 */
 		bool timeLogging_ = false;
-		char * timeFormat_ = "[%d:%m:%y-%T]";
 
+		/*
+		 * Format for the prefixes
+		 * Does not support %T or %F on some machines
+		 */
+		char * timeFormat_ = "[%d:%m:%y]";
+
+		/*
+		 * Should log prefixes
+		 */
 		bool logPrefixes_ = false;
+
+		/*
+		 * Should print to console
+		 */
 		bool logToConsole_ = false;
+
+		/*
+		 * Shoudl append log count at the end of the log file
+		 */
 		bool incrementalLogging_ = false;
 		
-		std::string logVersion;
-		std::string logPath_;
 
 	public: // Fucntions
 
@@ -101,6 +126,9 @@ namespace SDI
 		void warning(std::string);
 		void error(std::string);
 
+		// ====================================
+		//		Getters and Setters
+
 		/*
 		 * Select what level of logging should be written to file
 		 */
@@ -118,10 +146,36 @@ namespace SDI
 		 */
 		const std::string getLogLevelString();
 
-		void enableTimeStamps(bool);
+		bool isPrefixing() const;
+
+		void setPrefixing(const bool);
+
+		std::string getLevelPrefix(const Logger::LogLevel) const;
+
+		void setLevelPrefixString(const Logger::LogLevel, const std::string);
+
+		bool isTimestamping() const;
+
+		void setTimestamping(const bool);
+
 		void setTimeStampsString(char *);
 
+		bool isConsoleOutputting() const;
+
+		void setConsleOutput(const bool);
+
+		bool isIncrementalLogging() const;
+
+		void setIncrementalLogging(const bool);
+
+		//		End getters and setters
+		//=============================================
+
+		// Dumps all the logs defaults to all, logs are unordered
 		void dumpLogs(Logger::LogLevel = Logger::LogLevel::ALL);
+
+		// Dumps all the logs in correct order
+		// Slower than dumpLogs
 		void dumpAllOrdered();
 
 
@@ -135,20 +189,31 @@ namespace SDI
 
 		std::set<char> removeInvalidFlags(std::set<char>::iterator, std::set<char>);
 
+		/*
+		 * Removes flags the the logger doesn't support
+		 */
 		std::map<char, std::string> removeInvalidFlagValues(std::map<char, std::string>::iterator, std::map<char, std::string>);
 
+		/*
+		 * process flags without values
+		 */
 		void processFlags(std::set<char>::iterator, std::set<char>);
 
+		/*
+		 * Process flags that do contain values
+		 */
 		void processFlagValues(std::map<char, std::string>::iterator, std::map<char, std::string>);
 
+		/*
+		 * Sorts all of the arrays regardless of level to the order they recieved
+		 * Uses bubble sort to order logs
+		 */
 		void sortArray(SDI::DynArray<Logger::messagePosition>&);
 
 		/*
 		 * write to array in map at specic logging level
 		 */
 		void logAtLevel(LogLevel, std::string);
-
-		void setLogPrefix(Logger::LogLevel, std::string);
 
 		/*
 		 * Prints message to console

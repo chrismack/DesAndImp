@@ -129,7 +129,11 @@ namespace SDI
 
 	void Logger::log(Logger::LogLevel level, std::string message)
 	{
-		logAtLevel(level, message);
+		// Do not log if the level has been set to a non-logging level
+		if (level != Logger::LogLevel::ALL || level != Logger::LogLevel::NONE)
+		{
+			logAtLevel(level, message);
+		}
 	}
 
 	void Logger::info(std::string message)
@@ -191,7 +195,7 @@ namespace SDI
 	/*
 	 * Setter to enable time stamps
 	 */
-	void Logger::enableTimeStamps(bool enabled)
+	void Logger::setTimestamping(bool enabled)
 	{
 		timeLogging_ = enabled;
 	}
@@ -403,7 +407,7 @@ namespace SDI
 			// Prefixes
 			if (prefixFlags.count(it->first) > 0)
 			{
-				setLogPrefix(prefixFlags[it->first], flagValues[it->first]);
+				setLevelPrefixString(prefixFlags[it->first], flagValues[it->first]);
 			}
 			// Log file path
 			else if (it->first == 'L')
@@ -430,8 +434,8 @@ namespace SDI
 	{
 		// Insert message into the dynamic array
 
-		loggingMap_[level].push_back({arrayOrder, message});
-		arrayOrder++;
+		loggingMap_[level].push_back({arrayOrder_, message});
+		arrayOrder_++;
 
 		// If the current logging level is the same as loggingLevel
 		if (shouldLog(level))
@@ -453,7 +457,7 @@ namespace SDI
 		}
 	}
 
-	void Logger::setLogPrefix(Logger::LogLevel level, std::string prefix)
+	void Logger::setLevelPrefixString(Logger::LogLevel level, std::string prefix)
 	{
 		if (enumStrings_.count(level) > 0)
 		{
