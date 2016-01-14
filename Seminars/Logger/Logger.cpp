@@ -192,6 +192,21 @@ namespace SDI
 		return "[ERROR] Could not convert logging level to string";
 	}
 
+	bool Logger::isPrefixing() const
+	{
+		return logPrefixes_;
+	}
+
+	void Logger::setPrefixing(const bool prefix)
+	{
+		logPrefixes_ = prefix;
+	}
+
+	bool Logger::isTimestamping() const 
+	{
+		return timeLogging_;
+	}
+
 	/*
 	 * Setter to enable time stamps
 	 */
@@ -207,6 +222,27 @@ namespace SDI
 	{
 		timeFormat_ = timeFormat;
 	}
+
+	bool Logger::isConsoleOutputting() const
+	{
+		return logToConsole_;
+	}
+
+	void Logger::setConsleOutput(const bool console)
+	{
+		logToConsole_ = console;
+	}
+
+	bool Logger::isIncrementalLogging() const
+	{
+		return incrementalLogging_;
+	}
+
+	void Logger::setConsleOutput(const bool incLogging)
+	{
+		incrementalLogging_ = incLogging;
+	}
+
 
 	/*
 	 * Dumps all logs of specific level
