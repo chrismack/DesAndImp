@@ -37,7 +37,8 @@ namespace SDI
 
 
 	private: // Variables
-		typedef std::pair<std::string, std::string> stringLevelPrefix;
+
+		typedef std::pair<const std::string, std::string> stringLevelPrefix;
 
 		typedef std::pair<int, std::string> messagePosition;
 		typedef SDI::DynArray<messagePosition> orderArray;
@@ -54,7 +55,7 @@ namespace SDI
 		/*
 		 * Map of corrosponding (Enums, String, LogLevelPrefix)
 		 */
-		std::map<LogLevel, stringLevelPrefix> enumStrings_ = std::map<LogLevel, stringLevelPrefix>
+		std::map<const LogLevel, stringLevelPrefix> enumStrings_ = std::map<const LogLevel, stringLevelPrefix>
 		{
 			{Logger::LogLevel::ALL,     {"ALL",     ""         } },
 			{Logger::LogLevel::INFO,    {"INFO",    "[INFO]"   } },
@@ -75,7 +76,7 @@ namespace SDI
 		/*
 		 * Map of different logging levels and their arrays
 		 */
-		std::map<LogLevel, orderArray> loggingMap_;
+		std::map<const LogLevel, orderArray> loggingMap_;
 
 		/*
 		 * Time stamp prefixes
@@ -108,6 +109,8 @@ namespace SDI
 
 		//Default log config
 		Logger();
+		// Copy
+		Logger(Logger&);
 		// Log with log path
 		Logger(std::string);
 		// Log with commandLine args
@@ -123,6 +126,13 @@ namespace SDI
 		void debug(std::string);
 		void warning(std::string);
 		void error(std::string);
+
+		void logFormatted(Logger::LogLevel, const char * format, ...);
+
+		/*
+		 * Insert op logs as Info 
+		 */
+		Logger& operator<<(const std::string);
 
 		// ====================================
 		//		Getters and Setters
@@ -157,7 +167,7 @@ namespace SDI
 		/*
 		 * return a string of the prefix for logging level passed 
 		 */
-		std::string getLevelPrefix(const Logger::LogLevel) const;
+		std::string getLevelPrefix(const Logger::LogLevel);
 
 		/*
 		 * Sets the prefix message for a specific level

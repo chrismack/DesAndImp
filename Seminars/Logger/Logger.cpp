@@ -5,7 +5,6 @@
 
 namespace SDI
 {
-
 	/*
 	 * Default log location and name
 	 */
@@ -14,6 +13,36 @@ namespace SDI
 		if (!logFile_.is_open())
 		{
 			logFile_.open("Log.log");
+		}
+	}
+
+	Logger::Logger(Logger &cpy)
+	{
+		loggingLevel_		= cpy.loggingLevel_;
+		logPath_			= cpy.logPath_;
+
+		//I could loop though the map and copy everything manually
+		// However it seems conter productive having duplicates of the logs
+		//loggingMap_			= cpy.loggingMap_
+		arrayOrder_			= cpy.arrayOrder_;
+		enumStrings_		= cpy.enumStrings_;
+		timeLogging_		= cpy.timeLogging_;
+		timeFormat_			= cpy.timeFormat_;
+		logPrefixes_		= cpy.logPrefixes_;
+		logToConsole_       = cpy.logToConsole_;
+		incrementalLogging_ = cpy.incrementalLogging_;
+		
+		//Set copy to append
+		if (logFile_.is_open())
+		{
+			logFile_.close();
+			logFile_.open(logPath_, std::ios::app);
+		}
+
+		if (cpy.logFile_.is_open())
+		{
+			cpy.logFile_.close();
+			cpy.logFile_.open(cpy.logPath_, std::ios::app);
 		}
 	}
 
@@ -104,7 +133,6 @@ namespace SDI
 	}
 
 
-
 	/*
 	 * Deconstruct Logger
 	 */
@@ -156,6 +184,22 @@ namespace SDI
 		logAtLevel(LogLevel::ERROR, message);
 	}
 
+	void Logger::logFormatted(Logger::LogLevel level, const char * format, ...)
+	{
+		char log[256];
+		va_list arguments;
+		va_start(arguments, format);
+		vsprintf(log, format, arguments);
+		logAtLevel(level, log);
+		va_end(arguments);
+	}
+
+	Logger & Logger::operator<<(const std::string message)
+	{
+		logAtLevel(Logger::LogLevel::INFO, message);
+		return *this;
+	}
+
 	/*
 	 * ===============================
 	 * End different types of logging
@@ -202,6 +246,11 @@ namespace SDI
 		logPrefixes_ = prefix;
 	}
 
+	std::string Logger::getLevelPrefix(const Logger::LogLevel level)
+	{
+		return enumStrings_[level].second;
+	}
+
 	bool Logger::isTimestamping() const 
 	{
 		return timeLogging_;
@@ -238,7 +287,7 @@ namespace SDI
 		return incrementalLogging_;
 	}
 
-	void Logger::setConsleOutput(const bool incLogging)
+	void Logger::setIncrementalLogging(const bool incLogging)
 	{
 		incrementalLogging_ = incLogging;
 	}
