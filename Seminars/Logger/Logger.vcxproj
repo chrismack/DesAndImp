@@ -149,7 +149,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
-    <Text Include="Logger.conf" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestCode_ApplicationMain.h" />
