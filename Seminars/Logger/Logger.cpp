@@ -702,9 +702,9 @@ namespace SDI
 			versionTrack.close();
 		}
 		// Increment file
-		if (versionTrack.is_open())
+		if (!versionTrack.is_open())
 		{
-			versionTrack.open(logPath_ + "-Verson.conf");
+			versionTrack.open(logPath_ + "-Verson.conf", std::ios::out);
 		}
 		int version = std::stoi(logVersion);
 		version++;
