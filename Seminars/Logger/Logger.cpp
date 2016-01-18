@@ -8,14 +8,21 @@ namespace SDI
 	/*
 	 * Default log location and name
 	 */
-	Logger::Logger()
+	Logger::Logger(bool incLogging, bool deleteFile)
 	{
-		if (!logFile_.is_open())
+		if (incLogging)
 		{
-			logFile_.open("Log.log");
+			incrementalLogging();
+		}
+		if (std::fstream(logPath_) && !incLogging, deleteFile)
+		{
+			std::remove(logPath_.c_str());
 		}
 	}
 
+	/*
+	 * Copy all traits of logger except previous log messages
+	 */
 	Logger::Logger(Logger &cpy)
 	{
 		loggingLevel_		= cpy.loggingLevel_;
@@ -24,7 +31,7 @@ namespace SDI
 		//I could loop though the map and copy everything manually
 		// However it seems conter productive having duplicates of the logs
 		//loggingMap_			= cpy.loggingMap_
-		arrayOrder_			= cpy.arrayOrder_;
+		//arrayOrder_			= cpy.arrayOrder_;
 		enumStrings_		= cpy.enumStrings_;
 		timeLogging_		= cpy.timeLogging_;
 		timeFormat_			= cpy.timeFormat_;
@@ -32,32 +39,32 @@ namespace SDI
 		logToConsole_       = cpy.logToConsole_;
 		incrementalLogging_ = cpy.incrementalLogging_;
 		
-		//Set copy to append
-		if (logFile_.is_open())
-		{
-			logFile_.close();
-			logFile_.open(logPath_, std::ios::app);
-		}
-
-		if (cpy.logFile_.is_open())
-		{
-			cpy.logFile_.close();
-			cpy.logFile_.open(cpy.logPath_, std::ios::app);
-		}
 	}
 
 	/*
 	 * Initalise Logger with path to log file
+	 * Incremental logging false by default
+	 * Delete existing file false by default
 	 */
-	Logger::Logger(std::string logPath)
+	Logger::Logger(std::string logPath, bool incLogging, bool deleteFile)
 	{
-		if (!logFile_.is_open())
+		logPath_ = logPath;
+
+		if (incLogging)
 		{
-			logFile_.open(logPath);
+			incrementalLogging();
+		}
+		if (std::fstream(logPath_) && !incLogging && deleteFile)
+		{
+			std::remove(logPath_.c_str());
 		}
 	}
 
-	Logger::Logger(int argc, char * argv[])
+	/*
+	 * Constructor with commandLine args and option to delete existing file
+	 * Delete file false by default
+	 */
+	Logger::Logger(int argc, char * argv[], bool deleteFile)
 	{
 		// Instance of line parser
 		SDI::LineParse lineparse;
@@ -69,67 +76,22 @@ namespace SDI
 		argFlags = removeInvalidFlags(iterator, argFlags);
 		processFlags(iterator, argFlags);
 		
-
 		std::map<char, std::string>::iterator mapIt;
 		std::map<char, std::string> argFlagValues = lineparse.parseArgsValues(argc, argv);
 		processFlagValues(mapIt, lineparse.parseArgsValues(argc, argv));
-		
-		std::string filePath = "Log.log";
-		
+
+		if (std::fstream(logPath_) && !incrementalLogging_ && deleteFile)
+		{
+			std::remove(logPath_.c_str());
+		}
 		if (!logFile_.is_open())
 		{
-			// Remove file name if one has been set.
-			if (logPath_ != "")
-			{
-				filePath = logPath_;
-			}
-
 			if (incrementalLogging_)
 			{
-				try
-				{
-					std::string logVersion;
-
-					// File already exists
-					std::fstream versionTrack;
-					if (std::fstream(filePath + "-Verson.conf"))
-					{
-						if (!versionTrack.is_open())
-						{
-							std::string line;
-							versionTrack.open(filePath + "-Verson.conf", std::ios::in);
-							std::getline(versionTrack, line);
-							logVersion = line;
-							versionTrack.close();
-						}
-					}
-					else
-					{
-						if (!versionTrack.is_open())
-						{
-							versionTrack.open(filePath + "-Verson.conf", std::ios::out);
-							versionTrack << "0" << std::endl;
-							logVersion = "0";
-							versionTrack.close();
-
-						}
-					}
-					// Increment file
-					versionTrack.open(filePath + "-Verson.conf");
-					int version = std::stoi(logVersion);
-					version++;
-					versionTrack << version;
-					versionTrack.close();
-					if (logVersion != "0")
-					{
-						filePath += logVersion;
-					}
-
-				}
-				catch (std::exception e) {}
+				incrementalLogging();
 			}
-			logFile_.open(filePath);
 		}
+
 	}
 
 
@@ -142,12 +104,8 @@ namespace SDI
 		{
 			logFile_.close();
 		}
-
-		if (dumpFile_.is_open())
-		{
-			dumpFile_.close();
-		}
 	}
+
 
 	/*
 	 * ===========================
@@ -184,6 +142,10 @@ namespace SDI
 		logAtLevel(LogLevel::ERROR, message);
 	}
 
+	/*
+	 * Format string that takes variable args and fills in string
+	 * useful for for loops
+	 */
 	void Logger::logFormatted(Logger::LogLevel level, const char * format, ...)
 	{
 		char log[256];
@@ -194,6 +156,9 @@ namespace SDI
 		va_end(arguments);
 	}
 
+	/*
+	 * Override insertion operator 
+	 */
 	Logger & Logger::operator<<(const std::string message)
 	{
 		logAtLevel(Logger::LogLevel::INFO, message);
@@ -236,21 +201,33 @@ namespace SDI
 		return "[ERROR] Could not convert logging level to string";
 	}
 
+	/*
+	 * Return if messages are getting prefixed with log level
+	 */
 	bool Logger::isPrefixing() const
 	{
 		return logPrefixes_;
 	}
 
+	/*
+	 * Set if messages are getting prefixed with log level
+	 */
 	void Logger::setPrefixing(const bool prefix)
 	{
 		logPrefixes_ = prefix;
 	}
 
+	/*
+	 * Return the logLevel Prefix
+	 */
 	std::string Logger::getLevelPrefix(const Logger::LogLevel level)
 	{
 		return enumStrings_[level].second;
 	}
 
+	/*
+	 * Return if messages are getting prefixed with the time
+	 */
 	bool Logger::isTimestamping() const 
 	{
 		return timeLogging_;
@@ -265,6 +242,14 @@ namespace SDI
 	}
 
 	/*
+	 * Return the time format string
+	 */
+	char * Logger::getTimeStampsString() const
+	{
+		return timeFormat_;
+	}
+
+	/*
 	 * Setter to set time format
 	 */
 	void Logger::setTimeStampsString(char * timeFormat)
@@ -272,41 +257,76 @@ namespace SDI
 		timeFormat_ = timeFormat;
 	}
 
+	/*
+	 * Return if log messages are being printed to console
+	 */
 	bool Logger::isConsoleOutputting() const
 	{
 		return logToConsole_;
 	}
 
+	/*
+	 * set if log mesages should be printed to the console
+	 */
 	void Logger::setConsleOutput(const bool console)
 	{
 		logToConsole_ = console;
 	}
 
+	/*
+	 * Return if incremental logging is enabled
+	 * Incremental logging append number at the end of log file
+	 */
 	bool Logger::isIncrementalLogging() const
 	{
 		return incrementalLogging_;
 	}
 
+	/*
+	 * Set if we want to enable incremental logging
+	 */
 	void Logger::setIncrementalLogging(const bool incLogging)
 	{
 		incrementalLogging_ = incLogging;
 	}
 
-	std::string Logger::getLogPath() const
+	/*
+	 * Return if we are printing debug messages in debug mode
+	 */
+	bool Logger::getDebugLoggingMode() const
+	{
+		return debugLogging;
+	}
+
+	/*
+	 * Set if we should output debug messages in debug mode
+	 */
+	void Logger::setDebugLoggingMode(const bool mode)
+	{
+		debugLogging = mode;
+	}
+
+	/*
+	 * Returns the current path for the logger
+	 * Cannot be set outside of constructor
+	 */
+	std::string Logger::getPath() const
 	{
 		return logPath_;
 	}
+
 
 
 	/*
 	 * Dumps all logs of specific level
 	 * Defaults to Logger::LogLevel::ALL
 	 */
-	void Logger::dumpLogs(Logger::LogLevel level)
+	void Logger::dumpLogs(Logger::LogLevel level, std::string path)
 	{
+		std::ofstream dumpFile_;
 		if (!dumpFile_.is_open())
 		{
-			dumpFile_.open("Log.dump");
+			dumpFile_.open(path);
 		}
 
 		if (level == loggingLevel_ || level != Logger::LogLevel::ALL)
@@ -327,15 +347,16 @@ namespace SDI
 				}
 			}
 		}
-
+		dumpFile_.close();
 	}
 
 	/*
 	 * Sorts all of the logs depending on the order they were entered
 	 * Prints them to a dump file
 	 */
-	void Logger::dumpAllOrdered()
+	void Logger::dumpAllOrdered(std::string path)
 	{
+		std::ofstream dumpFile_;
 		SDI::DynArray<Logger::messagePosition> allLogs;
 		
 		std::map<Logger::LogLevel, Logger::orderArray>::iterator it;
@@ -350,14 +371,14 @@ namespace SDI
 
 		if (!dumpFile_.is_open())
 		{
-			dumpFile_.open("Log.dump");
+			dumpFile_.open(path);
 		}
 
 		for (int j = 0; j < allLogs.size(); j++)
 		{
 			dumpFile_ << allLogs[j].second << std::endl;
 		}
-
+		dumpFile_.close();
 	}
 
 	/*
@@ -383,7 +404,9 @@ namespace SDI
 		}
 	}
 
-
+	/*
+	 * Remove invalid flags from command line args
+	 */
 	std::set<char> Logger::removeInvalidFlags(std::set<char>::iterator it, std::set<char> argFlags)
 	{
 		// Set of flags that the logger can accept
@@ -400,6 +423,7 @@ namespace SDI
 			'p', // Enable logging prefixes //Done
 			'c', // Incremental log files 
 			'o', // Should output to console //Done
+			'b', // Enable debugging mode
 
 			'I', // Set message prefix for INFO //Done
 			'D', // Set message prefix for DEBUG //Done
@@ -422,6 +446,9 @@ namespace SDI
 		return validFlags;
 	}
 
+	/*
+	 * Remove invalid flag values drom command lines
+	 */
 	std::map<char, std::string> Logger::removeInvalidFlagValues(std::map<char, std::string>::iterator it, std::map<char, std::string> argFlagValues)
 	{
 		for (it = argFlagValues.begin(); it != argFlagValues.end(); ++it)
@@ -435,6 +462,9 @@ namespace SDI
 		return argFlagValues;
 	}
 
+	/*
+	 * Set logger variables from command line
+	 */
 	void Logger::processFlags(std::set<char>::iterator it, std::set<char> args)
 	{
 		// Logging level flags
@@ -479,11 +509,19 @@ namespace SDI
 				// Enable time stamps
 				timeLogging_ = true;
 			}
+			else if (*it == 'b')
+			{
+				debugLogging = true;
+			}
 		}
 	}
 
+	/*
+	 * Set logger values from commandLine 
+	 */
 	void Logger::processFlagValues(std::map<char, std::string>::iterator it, std::map<char, std::string> flagValues)
 	{
+		// Map of values to levels
 		std::map<char, Logger::LogLevel> prefixFlags =
 		{
 			{ 'I', Logger::LogLevel::INFO },
@@ -530,23 +568,33 @@ namespace SDI
 		// If the current logging level is the same as loggingLevel
 		if (shouldLog(level))
 		{
-			if (logPrefixes_)
+			// Do not prefix if we are returning a new line
+			if (message != "\n")
 			{
-				message = enumStrings_[level].second + message;
+				if (logPrefixes_)
+				{
+					message = enumStrings_[level].second + message;
+				}
+				if (timeLogging_)
+				{
+					message = currentDateTime() + message;
+				}
 			}
-			if (timeLogging_)
-			{
-				message = currentDateTime() + message;
-			}
-
 			printLineToLog(message);
 			if (logToConsole_)
 			{
 				printToConsole(message);
 			}
 		}
+
+
 	}
 
+	/*
+	 * Set prefix for a specific log level 
+	 * defaults to INFO
+	 * [INFO]
+	 */
 	void Logger::setLevelPrefixString(Logger::LogLevel level, std::string prefix)
 	{
 		if (enumStrings_.count(level) > 0)
@@ -568,10 +616,20 @@ namespace SDI
 	 */
 	void Logger::printLineToLog(std::string line)
 	{
-		if (logFile_.is_open())
+		if (!logFile_.is_open())
 		{
-			logFile_ << line << std::endl;
+			// Open in append to prevent loss of data
+			logFile_.open(logPath_, std::ios::app | std::ios::out);
 		}
+		//logFile_.write(line.c_str(), line.length());
+		//logFile_.write("\n", 1);
+		logFile_ << line << std::endl;
+
+		/*
+		 * File not closed after each print to keep logger thread safe
+		 * close function should be used when finished with the logger
+		 */
+		//logFile_.close();
 	}
 
 	/*
@@ -589,6 +647,12 @@ namespace SDI
 		{
 			return true;
 		}
+		#if _DEBUG
+			if (debugLogging == true && level == LogLevel::DEBUG)
+			{
+				return true;
+			}
+		#endif
 		return false;
 	}
 
@@ -604,6 +668,53 @@ namespace SDI
 
 		std::strftime(buffer, sizeof(buffer), timeFormat_, timeStruct);
 		return buffer;
+	}
+
+	/*
+	 * Handles how many times we have run the logger with incremental mode on
+	 * Appends run number to end of logfile
+	 */
+	void Logger::incrementalLogging()
+	{
+		std::string logVersion;
+
+		// File already exists
+		std::fstream versionTrack;
+		if (std::fstream(logPath_ + "-Verson.conf"))
+		{
+			if (!versionTrack.is_open())
+			{
+				versionTrack.open(logPath_ + "-Verson.conf", std::ios::in);
+			}
+			std::string line;
+			std::getline(versionTrack, line);
+			logVersion = line;
+			versionTrack.close();
+		}
+		else // Create version track file
+		{
+			if (!versionTrack.is_open())
+			{
+				versionTrack.open(logPath_ + "-Verson.conf", std::ios::out);
+			}
+			versionTrack << "0" << std::endl;
+			logVersion = "0";
+			versionTrack.close();
+		}
+		// Increment file
+		if (versionTrack.is_open())
+		{
+			versionTrack.open(logPath_ + "-Verson.conf");
+		}
+		int version = std::stoi(logVersion);
+		version++;
+		versionTrack << version;
+		versionTrack.close();
+		if (logVersion != "0")
+		{
+			logPath_ += logVersion;
+		}
+
 	}
 
 

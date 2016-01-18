@@ -71,6 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <ReferencePath>$(ReferencePath);</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -89,7 +90,6 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Users\Chris\Source\Repos\DesAndImp\Seminars\SeminarC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
-      <AdditionalOptions>Logger -a %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,25 +152,24 @@
     <Text Include="Logger.conf" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ApplicationMain.h" />
+    <ClInclude Include="DynArray.h" />
+    <ClInclude Include="EveryFunction.h" />
     <ClInclude Include="LineParse.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="LoggerHandler.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Test.h" />
-    <ClInclude Include="Test2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ApplicationMain.cpp" />
+    <ClCompile Include="DynArray.cpp" />
+    <ClCompile Include="EveryFunction.cpp" />
     <ClCompile Include="LineParse.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="LoggerHandler.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Test.cpp" />
-    <ClCompile Include="Test2.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SeminarB\SeminarB.vcxproj">
-      <Project>{1224e231-8a20-4d65-9817-e419b164b2a5}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

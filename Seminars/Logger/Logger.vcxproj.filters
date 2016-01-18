@@ -33,10 +33,16 @@
     <ClInclude Include="LineParse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Test.h">
+    <ClInclude Include="LoggerHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Test2.h">
+    <ClInclude Include="DynArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EveryFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,10 +59,16 @@
     <ClCompile Include="Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
+    <ClCompile Include="ApplicationMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Test2.cpp">
+    <ClCompile Include="LoggerHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DynArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EveryFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

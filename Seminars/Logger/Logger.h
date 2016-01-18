@@ -3,17 +3,16 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <string>
-
 #include <vector>
 #include <map>
 #include <set>
 #include <list>
+#include <string>
 
 #include <ctime>
 #include <fstream>
 
-#include "../SeminarB/DynArray.h"
+#include "DynArray.h"
 #include "LineParse.h"
 
 namespace SDI
@@ -50,7 +49,7 @@ namespace SDI
 		LogLevel loggingLevel_ = LogLevel::NONE;
 
 		std::ofstream logFile_;
-		std::ofstream dumpFile_;
+		
 
 		/*
 		 * Map of corrosponding (Enums, String, LogLevelPrefix)
@@ -65,7 +64,7 @@ namespace SDI
 			{Logger::LogLevel::NONE,    {"NONE",    ""         } }
 		};
 
-		std::string logPath_;
+		std::string logPath_ = "Log.log";
 
 		/*
 		 * Order in which logs are recieved
@@ -104,18 +103,41 @@ namespace SDI
 		 */
 		bool incrementalLogging_ = false;
 		
+		/*
+		 * If we should output debug logs if we are in debug mode
+		 */
+		bool debugLogging = true;
 
 	public: // Fucntions
 
-		//Default log config
-		Logger();
-		// Copy
+		/*
+		 * Default log config
+		 * Incremental Logging = false
+		 * Delete File = false
+		 */
+		Logger(bool = false, bool = false);
+		
+		/*
+		* copy config
+		*/
 		Logger(Logger&);
-		// Log with log path
-		Logger(std::string);
-		// Log with commandLine args
-		Logger(int argc, char * argv[]);
-		// Deconstructor
+		
+		/*
+		* Log with path
+		* Incremental Logging = false
+		* Delete File = false
+		*/
+		Logger(std::string, bool = false, bool = false);
+		
+		/*
+		* Log with command line args
+		* Delete File = false
+		*/
+		Logger(int argc, char * argv[], bool = false);
+		
+		/*
+		 * Deconstructor
+		 */
 		~Logger();
 
 		/*
@@ -167,17 +189,18 @@ namespace SDI
 		/*
 		 * return a string of the prefix for logging level passed 
 		 */
-		std::string getLevelPrefix(const Logger::LogLevel);
+		std::string getLevelPrefix(const Logger::LogLevel = Logger::LogLevel::INFO);
 
 		/*
 		 * Sets the prefix message for a specific level
 		 */
-		void setLevelPrefixString(const Logger::LogLevel, const std::string);
+		void setLevelPrefixString(const Logger::LogLevel = Logger::LogLevel::INFO, const std::string = "[INFO]");
 
 		/*
 		 * Get if time stamps are being prefixed to the log string 
 		 */
 		bool isTimestamping() const;
+
 
 		/*
 		 * Set if time stamps should be prefixed to log strings 
@@ -185,9 +208,14 @@ namespace SDI
 		void setTimestamping(const bool);
 
 		/*
-		 * Set the time stamp format for prefixes
-		 * requires setTimestamping(true);
-		 */
+		* return the time stamp format for prefixes
+		*/
+		char* getTimeStampsString() const;
+
+		/*
+		* Set the time stamp format for prefixes
+		* requires setTimestamping(true);
+		*/
 		void setTimeStampsString(char *);
 
 		/*
@@ -212,10 +240,20 @@ namespace SDI
 		void setIncrementalLogging(const bool);
 
 		/*
-		 * Gets the current path of the logger
+		 * Return if we are outputting debug logs if we are running in debug mode
+		 */
+		bool getDebugLoggingMode() const;
+
+		/*
+		 * Set if we should output debug logs if we are in debug mode
+		 */
+		void setDebugLoggingMode(const bool);
+
+		/*
+		 * Return the logFile path 
 		 * Cannot be set requires new instance of logger 
 		 */
-		std::string getLogPath() const;
+		std::string getPath() const;
 
 		//		End getters and setters
 		//=============================================
@@ -223,15 +261,13 @@ namespace SDI
 		/*
 		 * Dumps all the logs defaults to all, logs are unordered
 		 */
-		void dumpLogs(Logger::LogLevel = Logger::LogLevel::ALL);
+		void dumpLogs(Logger::LogLevel = Logger::LogLevel::ALL, std::string = "LogDump.dump");
 		
 		/*
 		 * Slower than dumpLogs
 		 * Dumps all the logs in correct order
 		 */
-		void dumpAllOrdered();
-
-
+		void dumpAllOrdered(std::string = "LogDumpAll.dump");
 
 	private: // Functions
 
@@ -288,6 +324,11 @@ namespace SDI
 		 * format dictated by timeFormat_
 		 */
 		std::string currentDateTime();
+
+		/*
+		 * Create incremental logging file and read version and set correct logging path
+		 */
+		void incrementalLogging();
 
 	};
 }
