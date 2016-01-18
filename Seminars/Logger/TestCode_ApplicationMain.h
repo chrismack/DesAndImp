@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Logger.h"
+#include "TestCode_LoggerHandler.h"
+#include "TestCode_EveryFunction.h"
 
-class ApplicationMain
+class TestCode_ApplicationMain
 {
 private :
 	/*
@@ -13,8 +15,8 @@ private :
 	SDI::Logger* copiedLogger;
 
 public:
-	ApplicationMain();
-	~ApplicationMain();
+	TestCode_ApplicationMain();
+	~TestCode_ApplicationMain();
 
 	/*
 	 * Thread task to show logger is thread safe

@@ -7,14 +7,14 @@
 #include <string>
 
 
-class LoggerHandler
+class TestCode_LoggerHandler
 {
 public:
 
 	/*
 	 * Static instance of this class 
 	 */
-	static LoggerHandler* instance;
+	static TestCode_LoggerHandler* instance;
 
 	/*
 	 * commandLine args that can be passed to loggers 
@@ -37,14 +37,14 @@ public:
 	/*
 	 * Constructors
 	 */
-	LoggerHandler();
-	LoggerHandler(int argc, char * argv[]);
-	~LoggerHandler();
+	TestCode_LoggerHandler();
+	TestCode_LoggerHandler(int argc, char * argv[]);
+	~TestCode_LoggerHandler();
 
 	/*
 	 * returns a singleton instance of the logger
 	 */
-	static LoggerHandler* getHandler();
+	static TestCode_LoggerHandler* getHandler();
 };
 
 #endif // LOGGERHANDLER

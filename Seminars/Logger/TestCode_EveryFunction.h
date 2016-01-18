@@ -1,7 +1,7 @@
 #pragma once
 #include "Logger.h"
-#include "LoggerHandler.h"
-class EveryFunction
+#include "TestCode_LoggerHandler.h"
+class TestCode_EveryFunction
 {
 private:
 	SDI::Logger* localLogger;
@@ -10,7 +10,7 @@ private:
 	void everyFunction();
 
 public:
-	EveryFunction();
-	~EveryFunction();
+	TestCode_EveryFunction();
+	~TestCode_EveryFunction();
 };
 

@@ -1,9 +1,10 @@
-#include "EveryFunction.h"
+#include "TestCode_EveryFunction.h"
 
-EveryFunction::EveryFunction()
+TestCode_EveryFunction::TestCode_EveryFunction()
 {
-	LoggerHandler::getHandler()->everyFunction = new SDI::Logger("everyFunction.log", false, true);
-	localLogger = LoggerHandler::getHandler()->everyFunction;
+
+	TestCode_LoggerHandler::getHandler()->everyFunction = new SDI::Logger("everyFunction.log", false, true);
+	localLogger = TestCode_LoggerHandler::getHandler()->everyFunction;
 	localLogger->setConsleOutput(true);
 	localLogger->setLogLevel(SDI::Logger::LogLevel::ALL);
 
@@ -12,11 +13,11 @@ EveryFunction::EveryFunction()
 }
 
 
-EveryFunction::~EveryFunction()
+TestCode_EveryFunction::~TestCode_EveryFunction()
 {
 }
 
-void EveryFunction::callAllLogs()
+void TestCode_EveryFunction::callAllLogs()
 {
 	localLogger->info("\n");
 	localLogger->log(SDI::Logger::LogLevel::INFO, "log functions at info level");
@@ -26,7 +27,7 @@ void EveryFunction::callAllLogs()
 	localLogger->error("Error function");
 }
 
-void EveryFunction::everyFunction()
+void TestCode_EveryFunction::everyFunction()
 {
 	// All logging functions
 	callAllLogs();
