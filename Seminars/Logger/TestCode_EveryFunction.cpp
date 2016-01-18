@@ -87,6 +87,7 @@ void TestCode_EveryFunction::everyFunction()
 	}
 
 	localLogger->setLogLevel(SDI::Logger::LogLevel::INFO);
+
 	localLogger->debug("debug with debugging mode enabled");
 	localLogger->setDebugLoggingMode(false);
 	localLogger->debug("Debug messages wont show in debug unless log level is set to debug and DebugLogging mode is true");

@@ -77,6 +77,7 @@ TestCode_ApplicationMain::TestCode_ApplicationMain()
 	TestCode_EveryFunction every;
 
 	logger->error("Main thread ended! dumping logs");
+	logger->dumpLogs(SDI::Logger::LogLevel::INFO);
 	logger->dumpAllOrdered();
 
 }
