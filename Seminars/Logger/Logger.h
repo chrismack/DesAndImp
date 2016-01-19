@@ -46,7 +46,7 @@ namespace SDI
 		/*
 		 * Current level of logs that are written to file
 		 */
-		LogLevel loggingLevel_ = LogLevel::NONE;
+		LogLevel loggingLevel_ = LogLevel::ALL;
 
 		std::ofstream logFile_;
 		
