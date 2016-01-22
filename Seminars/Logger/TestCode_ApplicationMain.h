@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "TestCode_LoggerHandler.h"
 #include "TestCode_EveryFunction.h"
+#include "TestCode_Calculator.h"
 
 class TestCode_ApplicationMain
 {

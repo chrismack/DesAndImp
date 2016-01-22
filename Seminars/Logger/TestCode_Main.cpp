@@ -4,6 +4,7 @@
 #include "TestCode_LoggerHandler.h"
 #include "TestCode_ApplicationMain.h"
 
+
 int main(int argc, char * argv[])
 {
 	/*

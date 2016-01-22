@@ -41,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="TestCode_ApplicationMain.h" />
     <ClInclude Include="DynArray.h" />
+    <ClInclude Include="TestCode_Calculator.h" />
     <ClInclude Include="TestCode_EveryFunction.h" />
     <ClInclude Include="LineParse.h" />
     <ClInclude Include="Logger.h" />
@@ -163,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="TestCode_ApplicationMain.cpp" />
     <ClCompile Include="DynArray.cpp" />
+    <ClCompile Include="TestCode_Calculator.cpp" />
     <ClCompile Include="TestCode_EveryFunction.cpp" />
     <ClCompile Include="LineParse.cpp" />
     <ClCompile Include="Logger.cpp" />
