@@ -7,7 +7,7 @@
 
 class Material
 {
-private:
+private: /* Variables */
 	
 	/*
 	 * Unique id for the film
@@ -25,7 +25,7 @@ private:
 	std::string format;
 
 	/*
-	 *
+	 * == Need to ask about this ==
 	 */
 	std::string audioFormat;
 
@@ -57,9 +57,32 @@ private:
 	std::pair<int, int> frameAspect;
 
 
-public:
+public: /* Functions */
+
 	Material();
 	~Material();
+
+	/*
+	 * ======= GETTERS =======
+	 */
+
+	int getId() const;
+	std::string getFilmTitle() const;
+	std::string getFormat() const;
+	std::string getAudioFormat() const;
+	unsigned int getRunTime() const;
+	std::string getLanguage() const;
+	float retailPrice() const;
+	std::string getSubtitles() const;
+	std::pair<int, int> getAspectRatio() const;
+
+	/*
+	 * =======================
+	 */
+
+
+
+
 };
 
 #endif /* MATERIAL_H */
