@@ -7,7 +7,7 @@ TestCode_ApplicationMain::TestCode_ApplicationMain()
 {
 	bool breakLoop = true;
 
-	TestCode_LoggerHandler::getHandler()->logger = new SDI::Logger(TestCode_LoggerHandler::getHandler()->argc, TestCode_LoggerHandler::getHandler()->argv);
+	TestCode_LoggerHandler::getHandler()->logger = new SDI::Logger(TestCode_LoggerHandler::getHandler()->argc, TestCode_LoggerHandler::getHandler()->argv, true);
 	
 	logger = TestCode_LoggerHandler::getHandler()->logger;
 
@@ -29,7 +29,7 @@ TestCode_ApplicationMain::TestCode_ApplicationMain()
 	logger->debug("This is a debug message");
 	
 	// Copy constructor for Logger using handler
-	TestCode_LoggerHandler::getHandler()->logger2 = new SDI::Logger(false, logger->getPath() != "Log.log");
+	TestCode_LoggerHandler::getHandler()->logger2 = new SDI::Logger(false, (logger->getPath() != "Log.log"));
 	copiedLogger = TestCode_LoggerHandler::getHandler()->logger2;
 	copiedLogger->setConsleOutput(true);
 	copiedLogger->setLogLevel(SDI::Logger::LogLevel::WARNING);
@@ -75,6 +75,7 @@ TestCode_ApplicationMain::TestCode_ApplicationMain()
 	logger->debug("Calling everyfunction!");
 
 	TestCode_EveryFunction every;
+	TestCode_Calculator calc;
 
 	logger->error("Main thread ended! dumping logs");
 	logger->dumpLogs(SDI::Logger::LogLevel::INFO);
