@@ -5,8 +5,7 @@
 
 #include "Material.h"
 
-class Disc :
-	public Material
+class Disc : public Material
 {
 public:
 	Disc();

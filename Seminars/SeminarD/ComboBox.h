@@ -3,7 +3,9 @@
 #ifndef COMBOBOX_H 
 #define COMBOBOX_H
 
-class ComboBox
+#include "IPackagable.h"
+
+class ComboBox : public IPackagable
 {
 public:
 	ComboBox();

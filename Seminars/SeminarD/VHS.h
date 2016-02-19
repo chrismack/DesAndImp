@@ -4,8 +4,9 @@
 #define VHS_H
 
 #include "Material.h"
+#include "IPackagable.h"
 
-class VHS : public Material
+class VHS : public Material, public IPackagable
 {
 public:
 	VHS();

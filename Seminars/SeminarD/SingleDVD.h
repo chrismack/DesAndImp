@@ -4,8 +4,9 @@
 #define SINGLEDVD_G
 
 #include "Disc.h"
+#include "IPackagable.h"
 
-class SingleDVD : public Disc
+class SingleDVD : public Disc, public IPackagable
 {
 public:
 	SingleDVD();

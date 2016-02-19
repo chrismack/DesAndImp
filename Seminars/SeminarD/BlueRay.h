@@ -4,7 +4,8 @@
 #define BLURAY_H
 
 #include "Disc.h"
-class BlueRay : public Disc
+#include "IPackagable.h"
+class BlueRay : public Disc, public IPackagable 
 {
 public:
 	BlueRay();
