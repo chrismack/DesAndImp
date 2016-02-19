@@ -13,4 +13,9 @@ ComboBox::~ComboBox()
 {
 }
 
+std::pair<int, int> ComboBox::getPackageSize()
+{
+	return std::pair<int, int>();
+}
+
 #endif // !COMBOBOX_CPP

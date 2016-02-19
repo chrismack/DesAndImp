@@ -12,4 +12,9 @@ VHS::~VHS()
 {
 }
 
+std::pair<int, int> VHS::getPackageSize()
+{
+	return std::pair<int, int>();
+}
+
 #endif // !VHS_CPP

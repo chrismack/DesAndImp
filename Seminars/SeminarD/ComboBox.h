@@ -10,6 +10,8 @@ class ComboBox : public IPackagable
 public:
 	ComboBox();
 	~ComboBox();
+
+	virtual std::pair<int, int> getPackageSize();
 };
 
 #endif // COMBOBOX_H

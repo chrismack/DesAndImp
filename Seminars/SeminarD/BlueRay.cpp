@@ -13,4 +13,11 @@ BlueRay::~BlueRay()
 {
 }
 
+std::pair<int, int> BlueRay::getPackageSize()
+{
+	return std::pair<int, int>();
+}
+
+
+
 #endif // !BLUERAY_CPP

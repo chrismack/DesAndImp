@@ -11,6 +11,8 @@ class SingleDVD : public Disc, public IPackagable
 public:
 	SingleDVD();
 	~SingleDVD();
+
+	virtual std::pair<int, int> getPackageSize();
 };
 
 #endif // !SINGLEDVD_H

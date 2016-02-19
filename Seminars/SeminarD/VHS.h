@@ -11,6 +11,8 @@ class VHS : public Material, public IPackagable
 public:
 	VHS();
 	~VHS();
+
+	virtual std::pair<int, int> getPackageSize();
 };
 
 #endif // !VHS_H

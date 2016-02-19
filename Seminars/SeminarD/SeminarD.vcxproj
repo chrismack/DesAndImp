@@ -96,7 +96,6 @@
     <ClCompile Include="ComboBox.cpp" />
     <ClCompile Include="Disc.cpp" />
     <ClCompile Include="DoubleDVD.cpp" />
-    <ClCompile Include="IPackagable.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Project.cpp" />

@@ -13,4 +13,9 @@ DoubleDVD::~DoubleDVD()
 {
 }
 
+std::pair<int, int> DoubleDVD::getPackageSize()
+{
+	return std::pair<int, int>();
+}
+
 #endif // !DOUBLEDVD_CPP
