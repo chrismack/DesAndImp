@@ -1,9 +1,15 @@
 #pragma once
-#include "Material.h"
-class SingleDVD : public Material
+
+#ifndef SINGLEDVD_H
+#define SINGLEDVD_G
+
+#include "Disc.h"
+
+class SingleDVD : public Disc
 {
 public:
 	SingleDVD();
 	~SingleDVD();
 };
 
+#endif // !SINGLEDVD_H
