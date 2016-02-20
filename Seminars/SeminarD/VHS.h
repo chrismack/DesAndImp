@@ -8,11 +8,14 @@
 
 class VHS : public Material, public IPackagable
 {
+private:
+	std::pair<int, int> packageDimensions_;
 public:
 	VHS();
 	~VHS();
 
-	virtual std::pair<int, int> getPackageSize();
+	void setPackageDimensions(std::pair<int, int> dimensions);
+	std::pair<int, int> getPackageSize() const;
 };
 
 #endif // !VHS_H

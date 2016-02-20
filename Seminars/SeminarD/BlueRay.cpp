@@ -13,9 +13,14 @@ BlueRay::~BlueRay()
 {
 }
 
-std::pair<int, int> BlueRay::getPackageSize()
+void BlueRay::setPackageDimensions(std::pair<int, int> dimensions)
 {
-	return std::pair<int, int>();
+	this->packageDimensions_ = dimensions;
+}
+
+std::pair<int, int> BlueRay::getPackageSize() const
+{
+	return this->packageDimensions_;
 }
 
 #endif // !BLUERAY_CPP

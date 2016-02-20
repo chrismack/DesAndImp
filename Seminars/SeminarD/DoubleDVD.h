@@ -8,11 +8,14 @@
 
 class DoubleDVD : public SingleDVD, public IPackagable
 {
+private:
+	std::pair<int, int> packageDimensions_;
 public:
 	DoubleDVD();
 	~DoubleDVD();
 
-	virtual std::pair<int, int> getPackageSize();
+	void setPackageDimensions(std::pair<int, int> dimensions);
+	std::pair<int, int> getPackageSize() const;
 };
 
 #endif // !DOUBLEDVD_H

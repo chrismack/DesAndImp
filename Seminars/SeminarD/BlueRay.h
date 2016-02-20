@@ -7,11 +7,15 @@
 #include "IPackagable.h"
 class BlueRay : public Disc, public IPackagable 
 {
+private:
+	std::pair<int, int> packageDimensions_;
+
 public:
 	BlueRay();
 	~BlueRay();
 
-	virtual std::pair<int, int> getPackageSize();
+	void setPackageDimensions(std::pair<int, int> dimensions);
+	std::pair<int, int> getPackageSize() const;
 
 };
 

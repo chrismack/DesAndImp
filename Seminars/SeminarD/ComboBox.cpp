@@ -13,9 +13,14 @@ ComboBox::~ComboBox()
 {
 }
 
-std::pair<int, int> ComboBox::getPackageSize()
+void ComboBox::setPackageDimensions(std::pair<int, int> dimensions)
 {
-	return std::pair<int, int>();
+	this->packageDimensions_ = dimensions;
+}
+
+std::pair<int, int> ComboBox::getPackageSize() const
+{
+	return this->packageDimensions_;
 }
 
 #endif // !COMBOBOX_CPP

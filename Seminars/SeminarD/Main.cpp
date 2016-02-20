@@ -3,10 +3,17 @@
 
 #include "stdafx.h"
 
-#include "BlueRay.h"
+#include <iostream>
 
-int _tmain(int argc, _TCHAR* argv[])
+#include "BlueRay.h"
+#include "SingleDVD.h"
+
+int main(int argc, char * argv[])
 {
+	SingleDVD dvd;
+	dvd.setPackageDimensions(std::make_pair(101, 20));
+	std::cout << dvd.getPackageSize().first << std::endl;
+	system("pause");
 	return 0;
 }
 

@@ -13,9 +13,14 @@ SingleDVD::~SingleDVD()
 {
 }
 
-std::pair<int, int> SingleDVD::getPackageSize()
+void SingleDVD::setPackageDimensions(std::pair<int, int> dimensions)
 {
-	return std::pair<int, int>();
+	this->packageDimensions_ = dimensions;
+}
+
+std::pair<int, int> SingleDVD::getPackageSize() const
+{
+	return this->packageDimensions_;
 }
 
 #endif // !SINGLEDVD_CPP

@@ -12,9 +12,14 @@ VHS::~VHS()
 {
 }
 
-std::pair<int, int> VHS::getPackageSize()
+void VHS::setPackageDimensions(std::pair<int, int> dimensions)
 {
-	return std::pair<int, int>();
+	this->packageDimensions_ = dimensions;
+}
+
+std::pair<int, int> VHS::getPackageSize() const
+{
+	return this->packageDimensions_;
 }
 
 #endif // !VHS_CPP

@@ -13,9 +13,14 @@ DoubleDVD::~DoubleDVD()
 {
 }
 
-std::pair<int, int> DoubleDVD::getPackageSize()
+void DoubleDVD::setPackageDimensions(std::pair<int, int> dimensions)
 {
-	return std::pair<int, int>();
+	this->packageDimensions_ = dimensions;
+}
+
+std::pair<int, int> DoubleDVD::getPackageSize() const
+{
+	return this->packageDimensions_;
 }
 
 #endif // !DOUBLEDVD_CPP
