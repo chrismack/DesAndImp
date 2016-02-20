@@ -17,47 +17,92 @@ Material::~Material()
 
 int Material::getId() const
 {
-	return 0;
+	return id;
 }
 
 std::string Material::getFilmTitle() const
 {
-	return std::string();
+	return filmTitle;
 }
 
 std::string Material::getFormat() const
 {
-	return std::string();
+	return format;
 }
 
 std::string Material::getAudioFormat() const
 {
-	return std::string();
+	return audioFormat;
 }
 
 unsigned int Material::getRunTime() const
 {
-	return 0;
+	return runTime;
 }
 
 std::string Material::getLanguage() const
 {
-	return std::string();
+	return language;
 }
 
-float Material::retailPrice() const
+float Material::getRetailPrice() const
 {
-	return 0.0f;
+	return retailPrice;
 }
 
 std::string Material::getSubtitles() const
 {
-	return std::string();
+	return subtitles;
 }
 
 std::pair<int, int> Material::getAspectRatio() const
 {
-	return std::pair<int, int>();
+	return frameAspect;
+}
+
+void Material::setID(const int id)
+{
+	this->id = id;
+}
+
+void Material::setFilmTitle(const std::string filmTitle)
+{
+	this->filmTitle = filmTitle;
+}
+
+void Material::setFormat(const std::string format)
+{
+	this->format = format;
+}
+
+void Material::setAudioFormat(std::string audioFormat)
+{
+	this->audioFormat = audioFormat;
+}
+
+void Material::setRunTime(const unsigned int runTime)
+{
+	this->runTime = runTime;
+}
+
+void Material::setLanguage(const std::string language)
+{
+	this->language = language;
+}
+
+void Material::setRetailPrice(const float runTime)
+{
+	this->runTime = runTime;
+}
+
+void Material::setSubtitles(const std::string subtitles)
+{
+	this->subtitles = subtitles;
+}
+
+void Material::setAspectRation(const std::pair<int, int> aspectRatio)
+{
+	this->frameAspect = aspectRatio;
 }
 
 #endif // !MATERIAL_CPP

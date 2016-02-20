@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 
+#include "BlueRay.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {

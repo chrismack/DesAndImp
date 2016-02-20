@@ -13,4 +13,9 @@ Disc::~Disc()
 {
 }
 
+SDI::DynArray<std::string> Disc::getLanguagetracks()
+{
+	return languageTracks;
+}
+
 #endif // !DISC_CPP

@@ -72,14 +72,22 @@ public: /* Functions */
 	std::string getAudioFormat() const;
 	unsigned int getRunTime() const;
 	std::string getLanguage() const;
-	float retailPrice() const;
+	float getRetailPrice() const;
 	std::string getSubtitles() const;
 	std::pair<int, int> getAspectRatio() const;
 
 	/*
-	 * =======================
+	 * =======SETTERS==========
 	 */
-
+	void setID(const int id);
+	void setFilmTitle(const std::string filmTitle);
+	void setFormat(const std::string format);
+	void setAudioFormat(std::string audioFormat);
+	void setRunTime(const unsigned int runTime);
+	void setLanguage(const std::string language);
+	void setRetailPrice(const float runTime);
+	void setSubtitles(const std::string subtitles);
+	void setAspectRation(const std::pair<int, int> aspectRatio);
 
 
 

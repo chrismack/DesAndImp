@@ -8,6 +8,7 @@
 class IPackagable
 {
 public:
+
 	virtual ~IPackagable();
 	virtual std::pair<int, int> getPackageSize();
 };
