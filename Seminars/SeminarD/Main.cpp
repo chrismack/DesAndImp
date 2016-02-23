@@ -4,6 +4,7 @@
 #include "stdafx.h"
 
 #include <iostream>
+#include <tuple>
 
 #include "BlueRay.h"
 #include "SingleDVD.h"
@@ -12,8 +13,8 @@
 int main(int argc, char * argv[])
 {
 	SingleDVD dvd;
-	dvd.setPackageDimensions(std::make_pair(101, 20));
-	std::cout << dvd.getPackageSize().first << std::endl;
+	dvd.setPackageDimensions(std::tuple<int, int, int>(1000, 20, 100));
+	std::cout << std::get<0>(dvd.getPackageSize()) << std::endl;
 
 
 	system("pause");

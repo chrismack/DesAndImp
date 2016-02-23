@@ -23,6 +23,21 @@ void Disc::setLanguageTracks(const SDI::DynArray<std::string> languageTracks)
 	this->languageTracks_ = languageTracks;
 }
 
+void Disc::addLanguageTrack(std::string languageTrack)
+{
+	languageTracks_.append(languageTrack);
+}
+
+void Disc::setBonusFeatures(const SDI::DynArray<std::string> bonusFeatures)
+{
+	bounsFeatures_ = bonusFeatures;
+}
+
+SDI::DynArray<std::string> Disc::getBonusFeatures()
+{
+	return this->bounsFeatures_;
+}
+
 
 
 #endif // !DISC_CPP

@@ -13,7 +13,7 @@ public:
 	//virtual std::pair<int, int> getPackageSize() const = 0;
 	
 	virtual void setPackageDimensions(const std::tuple<int, int, int> dimensions) = 0;
-	virtual std::tuple<int, int, int> getPackageSize() = 0;
+	virtual std::tuple<int, int, int> getPackageSize() const = 0;
 };
 
 #endif // !IPACKAGEABLE_H

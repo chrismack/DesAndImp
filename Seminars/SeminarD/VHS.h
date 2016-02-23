@@ -17,7 +17,7 @@ public:
 	VHS();
 	~VHS();
 
-	void setPackageDimensions(std::tuple<int, int, int> dimensions);
+	void setPackageDimensions(const std::tuple<int, int, int> dimensions);
 	std::tuple<int, int, int> getPackageSize() const;
 
 	std::string getLanguageTrack() const;

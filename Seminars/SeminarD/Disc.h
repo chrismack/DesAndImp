@@ -17,12 +17,13 @@ private:
 public:
 	Disc();
 	~Disc();
-	virtual SDI::DynArray<std::string> getLanguagetracks();
-	virtual void setLanguageTracks(const SDI::DynArray<std::string> languageTracks);
-	virtual void addLanguageTrack(std::string);
+	
+	SDI::DynArray<std::string> getLanguagetracks();
+	void setLanguageTracks(const SDI::DynArray<std::string> languageTracks);
+	void addLanguageTrack(std::string);
 
-	virtual void setBonusFeatures(const SDI::DynArray<std::string> bonusFeatures);
-	virtual SDI::DynArray<std::string> setBonusFeatures() const;
+	void setBonusFeatures(const SDI::DynArray<std::string> bonusFeatures);
+	SDI::DynArray<std::string> getBonusFeatures();
 
 
 };

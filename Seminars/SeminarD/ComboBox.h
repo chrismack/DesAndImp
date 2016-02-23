@@ -3,6 +3,7 @@
 #ifndef COMBOBOX_H 
 #define COMBOBOX_H
 
+#include "Material.h"
 #include "IPackagable.h"
 
 class ComboBox : public Material, public IPackagable
@@ -13,7 +14,7 @@ public:
 	ComboBox();
 	~ComboBox();
 
-	void setPackageDimensions(std::tuple<int, int, int> dimensions);
+	void setPackageDimensions(const std::tuple<int, int, int> dimensions);
 	std::tuple<int, int, int> getPackageSize() const;
 };
 
