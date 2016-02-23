@@ -12,12 +12,12 @@ VHS::~VHS()
 {
 }
 
-void VHS::setPackageDimensions(std::pair<int, int> dimensions)
+void VHS::setPackageDimensions(std::tuple<int, int, int> dimensions)
 {
 	this->packageDimensions_ = dimensions;
 }
 
-std::pair<int, int> VHS::getPackageSize() const
+std::tuple<int, int, int> VHS::getPackageSize() const
 {
 	return this->packageDimensions_;
 }

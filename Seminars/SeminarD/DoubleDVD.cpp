@@ -13,12 +13,12 @@ DoubleDVD::~DoubleDVD()
 {
 }
 
-void DoubleDVD::setPackageDimensions(std::pair<int, int> dimensions)
+void DoubleDVD::setPackageDimensions(std::tuple<int, int, int> dimensions)
 {
 	this->packageDimensions_ = dimensions;
 }
 
-std::pair<int, int> DoubleDVD::getPackageSize() const
+std::tuple<int, int, int> DoubleDVD::getPackageSize() const
 {
 	return this->packageDimensions_;
 }

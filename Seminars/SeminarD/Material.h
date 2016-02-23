@@ -35,8 +35,7 @@ private: /* Variables */
 	unsigned int runTime;
 
 	/*
-	 * Language of the film
-	 * Language of sub titles
+	 * Default language of the film 
 	 * == Need to ask about this ==
 	 */
 	std::string language;

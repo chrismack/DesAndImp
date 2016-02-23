@@ -8,14 +8,14 @@
 class BlueRay : public Disc, public IPackagable 
 {
 private:
-	std::pair<int, int> packageDimensions_;
+	std::tuple<int, int, int> packageDimensions_;
 
 public:
 	BlueRay();
 	~BlueRay();
 
-	void setPackageDimensions(std::pair<int, int> dimensions);
-	std::pair<int, int> getPackageSize() const;
+	void setPackageDimensions(std::tuple<int, int, int> dimensions);
+	std::tuple<int, int, int> getPackageSize() const;
 
 };
 

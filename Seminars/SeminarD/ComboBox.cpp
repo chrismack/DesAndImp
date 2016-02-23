@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "ComboBox.h"
+#include "Material.h"
 
 ComboBox::ComboBox()
 {
@@ -13,12 +14,12 @@ ComboBox::~ComboBox()
 {
 }
 
-void ComboBox::setPackageDimensions(std::pair<int, int> dimensions)
+void ComboBox::setPackageDimensions(std::tuple<int, int, int> dimensions)
 {
 	this->packageDimensions_ = dimensions;
 }
 
-std::pair<int, int> ComboBox::getPackageSize() const
+std::tuple<int, int, int> ComboBox::getPackageSize() const
 {
 	return this->packageDimensions_;
 }

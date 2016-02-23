@@ -13,12 +13,12 @@ BlueRay::~BlueRay()
 {
 }
 
-void BlueRay::setPackageDimensions(std::pair<int, int> dimensions)
+void BlueRay::setPackageDimensions(std::tuple<int, int, int> dimensions)
 {
 	this->packageDimensions_ = dimensions;
 }
 
-std::pair<int, int> BlueRay::getPackageSize() const
+std::tuple<int, int, int> BlueRay::getPackageSize() const
 {
 	return this->packageDimensions_;
 }

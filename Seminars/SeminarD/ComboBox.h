@@ -5,16 +5,16 @@
 
 #include "IPackagable.h"
 
-class ComboBox : public IPackagable
+class ComboBox : public Material, public IPackagable
 {
 private:
-	std::pair<int, int> packageDimensions_;
+	std::tuple<int, int, int> packageDimensions_;
 public:
 	ComboBox();
 	~ComboBox();
 
-	void setPackageDimensions(std::pair<int, int> dimensions);
-	std::pair<int, int> getPackageSize() const;
+	void setPackageDimensions(std::tuple<int, int, int> dimensions);
+	std::tuple<int, int, int> getPackageSize() const;
 };
 
 #endif // COMBOBOX_H

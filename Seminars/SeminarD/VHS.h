@@ -9,13 +9,19 @@
 class VHS : public Material, public IPackagable
 {
 private:
-	std::pair<int, int> packageDimensions_;
+	std::tuple<int, int, int> packageDimensions_;
+
+	std::string languageTrack;
+
 public:
 	VHS();
 	~VHS();
 
-	void setPackageDimensions(std::pair<int, int> dimensions);
-	std::pair<int, int> getPackageSize() const;
+	void setPackageDimensions(std::tuple<int, int, int> dimensions);
+	std::tuple<int, int, int> getPackageSize() const;
+
+	std::string getLanguageTrack() const;
+	void setlanguageTrack(const std::string languageTrack);
 };
 
 #endif // !VHS_H

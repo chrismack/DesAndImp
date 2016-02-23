@@ -13,12 +13,12 @@ SingleDVD::~SingleDVD()
 {
 }
 
-void SingleDVD::setPackageDimensions(std::pair<int, int> dimensions)
+void SingleDVD::setPackageDimensions(std::tuple<int, int, int> dimensions)
 {
 	this->packageDimensions_ = dimensions;
 }
 
-std::pair<int, int> SingleDVD::getPackageSize() const
+std::tuple<int, int, int> SingleDVD::getPackageSize() const
 {
 	return this->packageDimensions_;
 }
