@@ -1,0 +1,3 @@
+Create a file parser
+implement functions in CPP files
+Projects class
