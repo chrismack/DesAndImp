@@ -20,12 +20,12 @@ private: /* Variables */
 	std::string filmTitle;
 
 	/*
-	 * == Need to ask about this == 
+	 * What class should be generated
 	 */
 	std::string format;
 
 	/*
-	 * == Need to ask about this ==
+	 * What audio format the film uses
 	 */
 	std::string audioFormat;
 
