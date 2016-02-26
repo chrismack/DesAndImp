@@ -51,7 +51,7 @@
     <ClInclude Include="Project.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SVHandler.h">
+    <ClInclude Include="CSVHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -89,7 +89,7 @@
     <ClCompile Include="IPackagable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SVHandler.cpp">
+    <ClCompile Include="CSVHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
