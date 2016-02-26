@@ -24,4 +24,12 @@ std::tuple<int, int, int> ComboBox::getPackageSize() const
 	return this->packageDimensions_;
 }
 
+void ComboBox::toString()
+{
+}
+
+void ComboBox::generateFromString(std::string str)
+{
+}
+
 #endif // !COMBOBOX_CPP

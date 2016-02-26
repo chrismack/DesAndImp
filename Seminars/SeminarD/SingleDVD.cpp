@@ -23,4 +23,12 @@ std::tuple<int, int, int> SingleDVD::getPackageSize() const
 	return this->packageDimensions_;
 }
 
+void SingleDVD::toString()
+{
+}
+
+void SingleDVD::generateFromString(std::string str)
+{
+}
+
 #endif // !SINGLEDVD_CPP

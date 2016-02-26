@@ -4,6 +4,8 @@
 #include <iostream>
 #include <fstream>
 
+CSVHandler* CSVHandler::INSTANCE;
+
 
 CSVHandler::CSVHandler()
 {
@@ -15,7 +17,7 @@ CSVHandler::~CSVHandler()
 {
 }
 
-CSVHandler * CSVHandler::getCVSInstance()
+CSVHandler* CSVHandler::getCVSInstance()
 {
 	if (CSVHandler::INSTANCE == nullptr)
 	{

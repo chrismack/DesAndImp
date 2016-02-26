@@ -6,9 +6,11 @@
 class CSVHandler
 {
 private:
-	static CSVHandler* INSTANCE;
 	SDI::DynArray<std::string> lines_;
 public:
+	
+	static CSVHandler* INSTANCE;
+	
 	CSVHandler();
 	~CSVHandler();
 

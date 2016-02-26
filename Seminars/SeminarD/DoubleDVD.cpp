@@ -41,4 +41,12 @@ void DoubleDVD::setContentOnSide(const int, const SDI::DynArray<std::string> con
 {
 }
 
+void DoubleDVD::toString()
+{
+}
+
+void DoubleDVD::generateFromString(std::string str)
+{
+}
+
 #endif // !DOUBLEDVD_CPP

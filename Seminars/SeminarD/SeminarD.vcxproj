@@ -91,6 +91,7 @@
     <ClInclude Include="IPackagable.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Project.h" />
+    <ClInclude Include="Serializable.h" />
     <ClInclude Include="SingleDVD.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="CSVHandler.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Project.cpp" />
+    <ClCompile Include="Serializable.cpp" />
     <ClCompile Include="SingleDVD.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

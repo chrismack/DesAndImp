@@ -5,7 +5,9 @@
 
 #include "Disc.h"
 #include "IPackagable.h"
-class BlueRay : public Disc, public IPackagable 
+#include "Serializable.h"
+
+class BlueRay : public Disc, public IPackagable, public Serializable
 {
 private:
 	std::tuple<int, int, int> packageDimensions_;
@@ -16,6 +18,9 @@ public:
 
 	void setPackageDimensions(const std::tuple<int, int, int> dimensions);
 	std::tuple<int, int, int> getPackageSize() const;
+
+	void toString();
+	void generateFromString(std::string str);
 
 };
 

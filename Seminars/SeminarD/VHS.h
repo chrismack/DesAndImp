@@ -5,6 +5,7 @@
 
 #include "Material.h"
 #include "IPackagable.h"
+#include "Serializable.h"
 
 class VHS : public Material, public IPackagable
 {
@@ -22,6 +23,9 @@ public:
 
 	std::string getLanguageTrack() const;
 	void setlanguageTrack(const std::string languageTrack);
+
+	void toString();
+	void generateFromString(std::string str);
 };
 
 #endif // !VHS_H

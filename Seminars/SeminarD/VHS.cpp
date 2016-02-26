@@ -31,4 +31,12 @@ void VHS::setlanguageTrack(const std::string languageTrack)
 {
 }
 
+void VHS::toString()
+{
+}
+
+void VHS::generateFromString(std::string str)
+{
+}
+
 #endif // !VHS_CPP

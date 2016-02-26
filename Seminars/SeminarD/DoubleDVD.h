@@ -5,9 +5,10 @@
 
 #include "SingleDVD.h"
 #include "IPackagable.h"
+#include "Serializable.h"
 #include <map>
 
-class DoubleDVD : public SingleDVD, public IPackagable
+class DoubleDVD : public SingleDVD, public IPackagable, public Serializable
 {
 private:
 	std::tuple<int, int, int> packageDimensions_;
@@ -25,6 +26,9 @@ public:
 	void setContent(const std::map< int, SDI::DynArray<std::string>> content);
 	SDI::DynArray<std::string> getContentOnSide(const int side) const;
 	void setContentOnSide(const int, const SDI::DynArray<std::string> content);
+
+	void toString();
+	void generateFromString(std::string str);
 
 };
 

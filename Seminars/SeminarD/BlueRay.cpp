@@ -23,4 +23,12 @@ std::tuple<int, int, int> BlueRay::getPackageSize() const
 	return this->packageDimensions_;
 }
 
+void BlueRay::toString()
+{
+}
+
+void BlueRay::generateFromString(std::string str)
+{
+}
+
 #endif // !BLUERAY_CPP
