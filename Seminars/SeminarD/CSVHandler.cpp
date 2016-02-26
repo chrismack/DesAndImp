@@ -7,6 +7,7 @@
 
 CSVHandler::CSVHandler()
 {
+	INSTANCE = this;
 }
 
 
@@ -14,11 +15,20 @@ CSVHandler::~CSVHandler()
 {
 }
 
+CSVHandler * CSVHandler::getCVSInstance()
+{
+	if (CSVHandler::INSTANCE == nullptr)
+	{
+		CSVHandler::INSTANCE = new CSVHandler();
+	}
+	return CSVHandler::INSTANCE;
+}
+
 void CSVHandler::readLinesFromFile(std::string fileName)
 {
 	std::string line;
 	std::ifstream cvsFile(fileName);
-	if (cvsFile.is_open)
+	if (cvsFile.is_open())
 	{
 		while (std::getline(cvsFile, line))
 		{
@@ -36,7 +46,7 @@ SDI::DynArray<std::string> CSVHandler::getLines()
 void CSVHandler::addLineToFile(std::string fileName, std::string line)
 {
 	std::ofstream cvsFile(fileName);
-	if (cvsFile.is_open)
+	if (cvsFile.is_open())
 	{
 		cvsFile << line << std::endl;
 		cvsFile.close();
