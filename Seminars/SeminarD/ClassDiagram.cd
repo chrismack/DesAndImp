@@ -8,22 +8,40 @@
         <Point X="3.5" Y="4.938" />
       </Path>
     </InheritanceLine>
+    <InheritanceLine Type="Serializable" FixedToPoint="true">
+      <Path>
+        <Point X="3.25" Y="6.5" />
+        <Point X="3.25" Y="5.062" />
+        <Point X="3.5" Y="5.062" />
+      </Path>
+      <InheritanceModifierLabel ManuallyPlaced="true">
+        <Position X="0.32" Y="-0.171" />
+      </InheritanceModifierLabel>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAAAAAAAAAAQAAAIAAEAAAACAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAQAAAgAAAAAAQABAIAAEAAAACAAAAAAAAAAAA=</HashCode>
       <FileName>BlueRay.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ComboBox" Collapsed="true">
     <Position X="0.5" Y="2.75" Width="1.5" />
+    <InheritanceLine Type="Serializable" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="6.75" />
+        <Point X="0.26" Y="6.75" />
+        <Point X="0.26" Y="3.25" />
+        <Point X="0.5" Y="3.25" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAAAAAAAAAAAAEAIAAAAAACCAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAQAAAgAAAAAAAAFAIAAAAAACCAAAAAAAAAAAA=</HashCode>
       <FileName>ComboBox.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Disc" Collapsed="true">
     <Position X="4.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAAAAAAAABAAAAAAAAAAAAAAAAAAAQAAAAAQAAAAAA=</HashCode>
+      <HashCode>AEAAAAAAAABAAAAAAAAAAAAAAAAAAAwAAgAIRAAAAAA=</HashCode>
       <FileName>Disc.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -41,14 +59,22 @@
       <Path>
         <Point X="1.25" Y="5.312" />
         <Point X="1.25" Y="6.375" />
+        <Point X="3.167" Y="6.375" Type="JumpStart" />
+        <Point X="3.333" Y="6.375" Type="JumpEnd" />
         <Point X="5.75" Y="6.375" />
       </Path>
       <InheritanceModifierLabel ManuallyPlaced="true">
         <Position X="0.108" Y="0.075" />
       </InheritanceModifierLabel>
     </InheritanceLine>
+    <InheritanceLine Type="Serializable" FixedFromPoint="true">
+      <Path>
+        <Point X="4" Y="6.75" />
+        <Point X="5.75" Y="6.75" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAAAAAgAAAAAAAAIAAAAAAACAAAAEAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAQAAAgAgACAAAARAIAAIAAAACAACAEAAAAAAA=</HashCode>
       <FileName>DoubleDVD.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -63,17 +89,27 @@
     <Position X="5.75" Y="4.75" Width="1.5" />
     <InheritanceLine Type="IPackagable" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="2" Y="5.188" />
-        <Point X="3.875" Y="5.188" />
-        <Point X="3.875" Y="5.188" />
-        <Point X="5.75" Y="5.188" />
+        <Point X="1.688" Y="5.312" />
+        <Point X="1.688" Y="5.563" />
+        <Point X="3.167" Y="5.563" Type="JumpStart" />
+        <Point X="3.333" Y="5.563" Type="JumpEnd" />
+        <Point X="5.75" Y="5.563" />
       </Path>
       <InheritanceModifierLabel ManuallyPlaced="true">
         <Position X="0.07" Y="-0.244" />
       </InheritanceModifierLabel>
     </InheritanceLine>
+    <InheritanceLine Type="Serializable" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.688" Y="7.062" />
+        <Point X="3.688" Y="7.437" />
+        <Point X="7.625" Y="7.437" />
+        <Point X="7.625" Y="5.188" />
+        <Point X="7.25" Y="5.188" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAAAAAAAAAAAAAAIAAAAAAACgCAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAQAAAgAAAAAAAABAIAAAAAAACgCAAAAAAAAAA=</HashCode>
       <FileName>SingleDVD.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -88,7 +124,7 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAACAAAAAAAAQAAIAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAIAAAQAACgAAAAAAAQBIIAAAAAAACAAAAAAAAAAAI=</HashCode>
       <FileName>VHS.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -104,6 +140,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
       <FileName>Project.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Serializable" Collapsed="true">
+    <Position X="2.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Serializable.h</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
