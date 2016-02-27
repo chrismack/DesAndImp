@@ -8,8 +8,8 @@
 class Serializable
 {
 public:
-	virtual void toString();
-	virtual void generateFromString(std::string str);
+	virtual void toString() = 0;
+	virtual void generateFromString(std::string str) = 0;
 };
 
 #endif // !SERIALIZABLE_H
