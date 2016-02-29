@@ -8,12 +8,14 @@
 #include "Serializable.h"
 #include <map>
 
-class DoubleDVD : public SingleDVD, public IPackagable, public Serializable
+class DoubleDVD : public Disc, public IPackagable, public Serializable
 {
 private:
 	std::tuple<int, int, int> packageDimensions_;
 
-	std::map < int, SDI::DynArray<std::string> > contentMap_;
+	std::map < int, std::vector<std::string>> contentMap_;
+
+	std::string packageType_;
 
 public:
 	DoubleDVD();
@@ -22,12 +24,15 @@ public:
 	void setPackageDimensions(const std::tuple<int, int, int> dimensions);
 	std::tuple<int, int, int> getPackageSize() const;
 
-	std::map< int, SDI::DynArray<std::string> > getAllContent() const;
-	void setContent(const std::map< int, SDI::DynArray<std::string>> content);
-	SDI::DynArray<std::string> getContentOnSide(const int side) const;
-	void setContentOnSide(const int, const SDI::DynArray<std::string> content);
+	void setPackageType(std::string packageType);
+	std::string getPackageType() const;
 
-	void toString();
+	std::map< int, std::vector<std::string> > getAllContent();
+	void setContent(const std::map< int, std::vector<std::string>> content);
+	std::vector<std::string> getContentOnSide(const int side);
+	void setContentOnSide(int, std::vector<std::string> content);
+
+	std::string toString();
 	void generateFromString(std::string str);
 
 };

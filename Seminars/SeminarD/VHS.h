@@ -12,7 +12,13 @@ class VHS : public Material, public IPackagable
 private:
 	std::tuple<int, int, int> packageDimensions_;
 
-	std::string languageTrack;
+	std::string languageTrack_;
+
+	std::string packageType_;
+
+	std::vector<std::string> content_;
+
+	std::string audioTrack;
 
 public:
 	VHS();
@@ -24,8 +30,17 @@ public:
 	std::string getLanguageTrack() const;
 	void setlanguageTrack(const std::string languageTrack);
 
-	void toString();
+	void setPackageType(std::string packageType);
+	std::string getPackageType() const;
+
+	void setContent(std::vector<std::string> content);
+	void addContent(std::string content);
+	std::vector<std::string> getContent();
+
+	std::string toString();
 	void generateFromString(std::string str);
+
+	std::string createStringList(std::vector<std::string> track);
 };
 
 #endif // !VHS_H

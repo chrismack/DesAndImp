@@ -19,7 +19,7 @@
       </InheritanceModifierLabel>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAAAgAAAAAAQABAIAAEAAAACAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAQAAAiIAAAAAQABAIAAEAAAACAAAAAAAAAAgA=</HashCode>
       <FileName>BlueRay.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -34,54 +34,58 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAAAgAAAAAAAAFAIAAAAAACCAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAQAAAiIAAiAAQAFAYAAAAAACCAAAAAAAAgAgA=</HashCode>
       <FileName>ComboBox.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Disc" Collapsed="true">
     <Position X="4.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAAAAAAAABAAAAAAAAAAAAAAAAAAAwAAgAIRAAAAAA=</HashCode>
+      <HashCode>AEAAAAIAAABgIAAAgAAAAAAAACAAAAwAAgAIRAAAAgA=</HashCode>
       <FileName>Disc.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DoubleDVD" Collapsed="true">
-    <Position X="5.75" Y="6" Width="1.5" />
+    <Position X="4.5" Y="6.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Members" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="SingleDVD">
+    <InheritanceLine Type="Disc">
       <InheritanceModifierLabel ManuallyPlaced="true">
-        <Position X="-0.494" Y="0.122" />
+        <Position X="0.37" Y="0.039" />
       </InheritanceModifierLabel>
     </InheritanceLine>
     <InheritanceLine Type="IPackagable" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="1.25" Y="5.312" />
-        <Point X="1.25" Y="6.375" />
-        <Point X="3.167" Y="6.375" Type="JumpStart" />
-        <Point X="3.333" Y="6.375" Type="JumpEnd" />
-        <Point X="5.75" Y="6.375" />
+        <Point X="1.25" Y="5.678" />
+        <Point X="3.167" Y="5.678" Type="JumpStart" />
+        <Point X="3.333" Y="5.678" Type="JumpEnd" />
+        <Point X="5" Y="5.678" />
+        <Point X="5" Y="6.25" />
       </Path>
       <InheritanceModifierLabel ManuallyPlaced="true">
-        <Position X="0.108" Y="0.075" />
+        <Position X="0.221" Y="0.233" />
       </InheritanceModifierLabel>
     </InheritanceLine>
     <InheritanceLine Type="Serializable" FixedFromPoint="true">
       <Path>
         <Point X="4" Y="6.75" />
-        <Point X="5.75" Y="6.75" />
+        <Point X="4.5" Y="6.75" />
       </Path>
+      <InheritanceModifierLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.109" Y="0.102" Height="0.182" Width="0.565" />
+      </InheritanceModifierLabel>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAgAQAAAgAgACAAAARAIAAIAAAACAACAEAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAQAAAiIgACAAAARAIAAIAAAACAACAEAAAAAgA=</HashCode>
       <FileName>DoubleDVD.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Material" Collapsed="true">
     <Position X="3.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QkAAYAgAAAAEAAkwIAAKCEAAAgQIIIQABwAAgAAQCgA=</HashCode>
+      <HashCode>QkAAYAgAACAEAAkwIAAKCEAAAgQIIIQABwAAgAAQCgA=</HashCode>
       <FileName>Material.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -93,6 +97,8 @@
         <Point X="1.688" Y="5.563" />
         <Point X="3.167" Y="5.563" Type="JumpStart" />
         <Point X="3.333" Y="5.563" Type="JumpEnd" />
+        <Point X="5.167" Y="5.563" Type="JumpStart" />
+        <Point X="5.333" Y="5.563" Type="JumpEnd" />
         <Point X="5.75" Y="5.563" />
       </Path>
       <InheritanceModifierLabel ManuallyPlaced="true">
@@ -109,7 +115,7 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAAAgAAAAAAAABAIAAAAAAACgCAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAQAAAiIAACAAQABAYAAAAAAACgCAAAAAAgAgA=</HashCode>
       <FileName>SingleDVD.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -118,20 +124,20 @@
     <InheritanceLine Type="IPackagable" ManuallyRouted="true" FixedFromPoint="true">
       <Path>
         <Point X="1.625" Y="4.75" />
-        <Point X="1.625" Y="3.945" />
-        <Point X="3.25" Y="3.945" />
+        <Point X="1.625" Y="4.375" />
+        <Point X="3.25" Y="4.375" />
         <Point X="3.25" Y="3.57" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAIAAAQAACgAAAAAAAQBIIAAAAAAACAAAAAAAAAAAI=</HashCode>
+      <HashCode>AAAIAAAQAACiIAACAAQQRIYAAAAAAACAAAAAAAAgAgA=</HashCode>
       <FileName>VHS.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="IPackagable" Collapsed="true">
     <Position X="0.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAQAAACIAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
       <FileName>IPackagable.h</FileName>
     </TypeIdentifier>
   </Class>

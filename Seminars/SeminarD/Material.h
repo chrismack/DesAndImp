@@ -3,7 +3,11 @@
 
 #pragma once
 
+#include "../SeminarB/DynArray.h"
+
+#include <assert.h>
 #include <string>
+#include <vector>
 
 class Material
 {
@@ -87,6 +91,9 @@ public: /* Functions */
 	void setRetailPrice(const float runTime);
 	void setSubtitles(const std::string subtitles);
 	void setAspectRation(const std::pair<int, int> aspectRatio);
+
+	std::vector<std::string> baseToStringArray();
+	virtual std::string toString() = 0;
 
 
 

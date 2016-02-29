@@ -8,7 +8,7 @@
 class Serializable
 {
 public:
-	virtual void toString() = 0;
+	virtual std::string toString() = 0;
 	virtual void generateFromString(std::string str) = 0;
 };
 

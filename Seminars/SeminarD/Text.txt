@@ -1,0 +1,6 @@
+# id, filmTitle, format, audioFormat, runTime, language, retailPrice, subtitles, frameAspect, audioTrack, packageType, packageSize, content
+
+1,Test,DVD,DBS,3600,{english|french},10.00,{english|french},16:9,plastic,{100|100|100},{english|french},{chapter1|chapter2|chapter3|bonus}
+2,TestReturns,VHS,DTS,3600,english,6.00,english,16:9,plastic,{100|100|100},english,english,{chapter1|chapter2|chapter3|bonus}
+
+3,TestReturnsDVD,DVD2,DTS,3600,english,6.00,english,16:9,plastic,{100|100|100},english,english,{chapter1|chapter2|chapter3-bonus}

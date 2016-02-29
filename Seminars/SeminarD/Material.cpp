@@ -1,7 +1,6 @@
 #ifndef MATERIAL_CPP
 #define MATERIAL_CPP
 
-
 #include "stdafx.h"
 #include "Material.h"
 
@@ -90,9 +89,9 @@ void Material::setLanguage(const std::string language)
 	this->language = language;
 }
 
-void Material::setRetailPrice(const float runTime)
+void Material::setRetailPrice(const float retialPrice)
 {
-	this->runTime = runTime;
+	this->retailPrice = retialPrice;
 }
 
 void Material::setSubtitles(const std::string subtitles)
@@ -103,6 +102,23 @@ void Material::setSubtitles(const std::string subtitles)
 void Material::setAspectRation(const std::pair<int, int> aspectRatio)
 {
 	this->frameAspect = aspectRatio;
+}
+
+std::vector<std::string> Material::baseToStringArray()
+{
+	std::vector<std::string> materialArray;
+
+	materialArray.push_back(std::to_string(id));
+	materialArray.push_back(filmTitle);
+	materialArray.push_back(format);
+	materialArray.push_back(audioFormat);
+	materialArray.push_back(std::to_string(runTime));
+	materialArray.push_back(language);
+	materialArray.push_back(std::to_string(retailPrice));
+	materialArray.push_back(subtitles);
+	materialArray.push_back(std::to_string(frameAspect.first) + ":" + std::to_string(frameAspect.second));
+
+	return materialArray;
 }
 
 #endif // !MATERIAL_CPP

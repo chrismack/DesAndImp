@@ -23,26 +23,64 @@ std::tuple<int, int, int> DoubleDVD::getPackageSize() const
 	return this->packageDimensions_;
 }
 
-std::map<int, SDI::DynArray<std::string>> DoubleDVD::getAllContent() const
+void DoubleDVD::setPackageType(std::string packageType)
 {
-	return std::map<int, SDI::DynArray<std::string>>();
+	this->packageType_ = packageType;
 }
 
-void DoubleDVD::setContent(const std::map<int, SDI::DynArray<std::string>> content)
+std::string DoubleDVD::getPackageType() const
 {
+	return this->packageType_;
 }
 
-SDI::DynArray<std::string> DoubleDVD::getContentOnSide(const int side) const
+std::map<int, std::vector<std::string>> DoubleDVD::getAllContent()
 {
-	return SDI::DynArray<std::string>();
+	return this->contentMap_;
 }
 
-void DoubleDVD::setContentOnSide(const int, const SDI::DynArray<std::string> content)
+void DoubleDVD::setContent(const std::map<int, std::vector<std::string>> content)
 {
+	this->contentMap_ = content;
 }
 
-void DoubleDVD::toString()
+std::vector<std::string> DoubleDVD::getContentOnSide(const int side)
 {
+	return this->contentMap_[side];
+}
+
+void DoubleDVD::setContentOnSide(const int side, const std::vector<std::string> content)
+{
+	assert(side > 0 && side < 2);
+	this->contentMap_[side] = content;
+}
+
+std::string DoubleDVD::toString()
+{
+	std::string objectString;
+	std::vector<std::string> bluRayElements = toStringArray();
+	bluRayElements.push_back(this->packageType_);
+
+	std::string packageDimString = "{";
+	packageDimString.append(std::to_string(std::get<0>(this->packageDimensions_)))
+		.append("|")
+		.append(std::to_string(std::get<1>(this->packageDimensions_)))
+		.append("|")
+		.append(std::to_string(std::get<2>(this->packageDimensions_)))
+		.append("}");
+
+	bluRayElements.push_back(packageDimString);
+	bluRayElements.push_back(createStringList(contentMap_));
+	bluRayElements.push_back(createStringList(bounsFeatures_));
+
+	std::stringstream ss;
+	for (int i = 0; i < bluRayElements.size(); i++)
+	{
+		ss << bluRayElements[i];
+		ss << ",";
+	}
+	objectString = ss.str();
+	objectString = objectString.substr(0, objectString.length() - 1);
+	return objectString;
 }
 
 void DoubleDVD::generateFromString(std::string str)
