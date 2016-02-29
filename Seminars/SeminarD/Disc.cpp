@@ -79,8 +79,8 @@ std::vector<std::string> Disc::toStringArray()
 	std::vector<std::string> baseArray = baseToStringArray();
 
 
-	baseArray[5] = createStringList(getLanguagetracks());
-	baseArray[7] = createStringList(getsubtitleTracks());
+	baseArray.push_back(createStringList(getLanguagetracks()));
+	baseArray.push_back(createStringList(getsubtitleTracks()));
 	baseArray.push_back(createStringList(getAudioTracks()));
 	
 	return baseArray;

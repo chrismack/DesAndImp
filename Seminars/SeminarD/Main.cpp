@@ -32,6 +32,8 @@ int main(int argc, char * argv[])
 	std::vector<std::string> langauages;
 	langauages.push_back("english");
 	langauages.push_back("french");
+	b1->setLanguage("english");
+	b1->setSubtitles("english");
 	b1->setLanguageTracks(langauages);
 	b1->setRetailPrice(10.00);
 
@@ -83,6 +85,8 @@ int main(int argc, char * argv[])
 	langauagesMap[1].push_back("french1");
 	d1->setLanguageTracks(langauagesMap);
 	d1->setRetailPrice(10.00);
+	d1->setLanguage("english");
+	d1->setSubtitles("english");
 
 	std::map<int, std::vector<std::string>> subsMap;
 	subsMap[0].push_back("english");
@@ -130,6 +134,7 @@ int main(int argc, char * argv[])
 	c1->setAspectRation(std::make_pair<int, int>(16, 9));
 	c1->setPackageType("cardboard");
 	c1->setPackageDimensions(std::tuple<int, int, int>(1000, 20, 100));
+	
 
 	std::vector<Disc*> dvdList;
 	dvdList.push_back(b1);
