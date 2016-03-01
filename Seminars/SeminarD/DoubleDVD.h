@@ -5,10 +5,9 @@
 
 #include "SingleDVD.h"
 #include "IPackagable.h"
-#include "Serializable.h"
 #include <map>
 
-class DoubleDVD : public Disc, public IPackagable, public Serializable
+class DoubleDVD : public Disc, public IPackagable
 {
 private:
 	std::tuple<int, int, int> packageDimensions_;

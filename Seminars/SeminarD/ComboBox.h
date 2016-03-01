@@ -5,11 +5,10 @@
 
 #include "Material.h"
 #include "IPackagable.h"
-#include "Serializable.h"
 
 #include "Disc.h"
 
-class ComboBox : public Material, public IPackagable, public Serializable
+class ComboBox : public Material, public IPackagable
 {
 private:
 	std::tuple<int, int, int> packageDimensions_;

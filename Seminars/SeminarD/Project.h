@@ -5,7 +5,7 @@
 
 #include <string>
 #include <vector>
-
+#include "Material.h"
 class Project
 {
 private:
@@ -17,6 +17,8 @@ private:
 	std::string language_;
 	std::vector<std::string> keywords_;
 	std::vector<int> weeklyTicketSales_;
+
+	std::vector<Material*> materials_;
 
 public:
 	Project();
@@ -39,6 +41,10 @@ public:
 	void setLanguage(const std::string language);
 	void setKeywords(const std::vector<std::string> keywords);
 	void setTicketSales(const std::vector<int> ticketSales);
+
+	std::vector<Material*> getMaterials();
+	void setMaterials(std::vector<Material*> materials);
+	void addMaterial(Material* material);
 };
 
 #endif // !PROJECT_H

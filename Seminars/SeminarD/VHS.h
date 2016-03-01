@@ -5,7 +5,6 @@
 
 #include "Material.h"
 #include "IPackagable.h"
-#include "Serializable.h"
 
 class VHS : public Material, public IPackagable
 {

@@ -5,9 +5,8 @@
 
 #include "Disc.h"
 #include "IPackagable.h"
-#include "Serializable.h"
 
-class BlueRay : public Disc, public IPackagable, public Serializable
+class BlueRay : public Disc, public IPackagable
 {
 private:
 	std::tuple<int, int, int> packageDimensions_;

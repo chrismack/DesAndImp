@@ -93,5 +93,20 @@ void Project::setTicketSales(const std::vector<int> ticketSales)
 	this->weeklyTicketSales_ = ticketSales;
 }
 
+std::vector<Material*> Project::getMaterials()
+{
+	return materials_;
+}
+
+void Project::setMaterials(std::vector<Material*> materials)
+{
+	this->materials_ = materials;
+}
+
+void Project::addMaterial(Material* material)
+{
+	this->materials_.push_back(material);
+}
+
 
 #endif // !PROJECT_CPP

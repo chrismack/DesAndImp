@@ -65,7 +65,6 @@ int main(int argc, char * argv[])
 	std::cout << b1->getId() << std::endl;
 	std::cout << std::get<0>(b1->getPackageSize()) << std::endl;
 	std::cout << b1->toString() << std::endl;
-	std::cout << mat->toString() << std::endl;
 	b1->getBonusFeatures();
 
 
