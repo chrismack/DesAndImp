@@ -17,6 +17,9 @@
   <ItemGroup>
     <Text Include="ReadMe.txt" />
     <Text Include="Text.txt" />
+    <Text Include="sdf.csv">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
