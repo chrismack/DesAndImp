@@ -31,8 +31,8 @@ public:
 	void addContent(Disc* disc);
 	std::vector<Disc*> getContent();
 
-	std::string toString();
-	void generateFromString(std::string str);
+	std::vector<std::string> toArray() override;
+	void populate(std::vector<std::string> elements) override;
 };
 
 #endif // COMBOBOX_H

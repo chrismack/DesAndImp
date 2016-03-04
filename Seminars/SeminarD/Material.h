@@ -16,7 +16,7 @@ private: /* Variables */
 	/*
 	 * Unique id for the film
 	 */
-	unsigned int id;
+	int id = -1;
 
 	/*
 	 * Name of the film
@@ -36,7 +36,7 @@ private: /* Variables */
 	/*
 	 * How long the film runs for in seconds
 	 */
-	unsigned int runTime;
+	int runTime = -1;
 
 	/*
 	 * Default language of the film 
@@ -47,7 +47,7 @@ private: /* Variables */
 	/*
 	 * How much the film is being sold for
 	 */
-	float retailPrice;
+	float retailPrice = -1;
 
 	/*
 	 * == Need to ask about this ==
@@ -92,10 +92,10 @@ public: /* Functions */
 	void setSubtitles(const std::string subtitles);
 	void setAspectRation(const std::pair<int, int> aspectRatio);
 
-	std::vector<std::string> baseToStringArray();
-	virtual std::string toString() = 0;
+	virtual std::vector<std::string> toArray();
+	virtual void populate(std::vector<std::string>);
 
-
+	std::vector<std::string> split(std::string string, std::string del);
 
 };
 

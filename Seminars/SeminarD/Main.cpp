@@ -1,5 +1,6 @@
 // Main.cpp : Defines the entry point for the console application.
 //
+#define _CRT_SECURE_NO_WARNINGS // Used for strtok doesn't compile with out
 
 #include "stdafx.h"
 
@@ -14,14 +15,16 @@
 #include "DoubleDVD.h"
 #include "ComboBox.h"
 
+#include "Project.h"
+
 int main(int argc, char * argv[])
 {
-	Material* mat = new SingleDVD;
-	SingleDVD* b1 = static_cast<SingleDVD*>(mat);
+	Material* mat = new BlueRay;
+	BlueRay* b1 = static_cast<BlueRay*>(mat);
 	
 	
 
-	//BlueRay* dvd = new BlueRay();
+	BlueRay* dvd = new BlueRay();
 	
 	b1->setID(1);
 	b1->setFilmTitle("Test");
@@ -64,7 +67,6 @@ int main(int argc, char * argv[])
 	b1->setBonusFeatures(bonus);
 	std::cout << b1->getId() << std::endl;
 	std::cout << std::get<0>(b1->getPackageSize()) << std::endl;
-	std::cout << b1->toString() << std::endl;
 	b1->getBonusFeatures();
 
 
@@ -117,7 +119,6 @@ int main(int argc, char * argv[])
 	bonusMap[1].push_back("BHS3");
 	d1->setBonusFeatures(bonusMap);
 
-	std::cout << d1->toString() << std::endl;
 
 	Material* mat2 = new ComboBox;
 	ComboBox* c1 = static_cast<ComboBox*>(mat2);
@@ -141,7 +142,95 @@ int main(int argc, char * argv[])
 	dvdList.push_back(b1);
 	c1->setContent(dvdList);
 
-	std::cout << c1->toString() << std::endl;
+	for (int i = 0; i < c1->toArray().size(); i++)
+	{
+		std::cout << c1->toArray()[i] << std::endl;
+	}
+	for (int i = 0; i < d1->toArray().size(); i++)
+	{
+		std::cout << d1->toArray()[i] << std::endl;
+	}
+
+	// 1,Test,BluRay,DTS,3600,english,10.000000,english,16:9,english|french,english|french,,plastic,1000|20|100,chap1|chap2|chap3,BHS1|BHS2|BHS3
+
+
+	std::vector<std::string> stringArray;
+
+	/* http://stackoverflow.com/questions/16286095/similar-function-to-javas-string-split-in-c */
+
+	std::string s = "1,Test,Combo,DTS,3600,english,10.000000,french,16:9,cardboard,1000 | 20 | 100,[1, Test, BluRay, DTS, 3600, english, 10.000000, english, 16:9, english | french, english | french, , plastic, 1000 | 20 | 100, chap1 | chap2 | chap3, BHS1 | BHS2 | BHS3_1, Test, BluRay, DTS, 3600, english, 10.000000, english, 16 : 9, english | french, english | french, , plastic, 1000 | 20 | 100, chap1 | chap2 | chap3, BHS1 | BHS2 | BHS3_1, Test, BluRay, DTS, 3600, english, 10.000000, english, 16 : 9, english | french, english | french, , plastic, 1000 | 20 | 100, chap1 | chap2 | chap3, BHS1 | BHS2 | BHS3]";
+	std::string dvds = s.substr(s.find('['), s.length());
+	s = s.substr(0, s.find('['));
+	std::string d = ",";
+
+	char* cstr = const_cast<char*>(s.c_str());
+	char* current;
+	std::vector<std::string> arr;
+	current = strtok(cstr, d.c_str());
+	while (current != NULL)
+	{
+		arr.push_back(current);
+		current = strtok(NULL, d.c_str());
+	}
+	arr.push_back(dvds);
+	for (int i = 0; i < arr.size(); i++)
+	{
+		std::cout << "FROM STRING : ";
+		std::cout << arr[i] << std::endl;
+	}
+
+	Material* matt = new ComboBox;
+	ComboBox* b9 = static_cast<ComboBox*>(matt);
+	b9->populate(arr);
+	std::cout << "-----------------------------" << std::endl;
+	for (int i = 0; i < b9->toArray().size(); i++)
+	{
+		std::cout << b9->toArray()[i] << std::endl;
+	}
+	
+	Project p;
+	p.setTitle("Title");
+	p.setSummary("Sum");
+	p.setGenre("Genre");
+	p.setReleaseDate(1000000000L);
+	std::vector<std::string> filmLocs{ "FilmLoc1", "FilmLoc2" };
+	p.setFilmingLocations(filmLocs);
+	p.setLanguage("language");
+	std::vector<std::string> keyWords{ "keyWords 2", "keyWords 2" };
+	p.setKeywords(keyWords);
+	std::vector<int> weekSales = {1, 4, 6};
+	p.setTicketSales(weekSales);
+	std::vector<Material*> projMats = { b1, d1, b9 };
+	p.setMaterials(projMats);
+
+	for (int i = 0; i < p.toArray().size(); i++)
+	{
+		std::cout << "PORJECT" << std::endl;
+		std::cout << p.toArray()[i] << std::endl;
+	}
+
+
+
+	std::vector<std::string> projectString;
+	
+	projectString.push_back("Title");
+	projectString.push_back("Sum");
+	projectString.push_back("Genre");
+	projectString.push_back("1000000000");
+	projectString.push_back("FilmLoc1 | FilmLoc2");
+	projectString.push_back("language");
+	projectString.push_back("keyWords 1 | keyWords 2");
+	projectString.push_back("1 | 4 | 6");
+	projectString.push_back("{ 1,Test,BluRay,DTS,3600,english,10.000000,english,16:9,english | french,english | french, ,plastic,1000 | 20 | 100,chap1 | chap2 | chap3,BHS1 | BHS2 | BHS3~1,Test,BluRay,DTS,3600,english,10.000000,english,16 : 9,english | french - english1 | french1,english | french - english1 | french1,audio 1 | audio 2 | audio 3 - audio 4,plastic,1000 | 20 | 100,chap1 | chap2 | chap3,-BHS1 | BHS2 | BHS3~1,Test,Combo,DTS,3600,english,10.000000,french,16 : 9,cardboard,1000 | 20 | 100,[1, Test, BluRay, DTS,3600, english,10.000000, english,16:9, english | french, english | french, , plastic,1000 | 20 | 100, chap1 | chap2 | chap3, BHS1 | BHS2 | BHS3_1, Test, BluRay, DTS,3600, english,10.000000, english,16 : 9, english | french, english | french, , plastic,1000 | 20 | 100, chap1 | chap2 | chap3, BHS1 | BHS2 | BHS3_1, Test, DoubleDVD, DTS,3600, english,10.000000, english,16 : 9, english | french, english | french, , plastic,1000 | 20 | 100, chap1 | chap2 | chap3, - BHS1 | BHS2 | BHS3]}");
+
+	Project* project = new Project();
+	project->populate(projectString);
+
+	std::vector<std::string> projectArrayLocal = project->toArray();
+	for (int i = 0; i < projectArrayLocal.size(); i++)
+	{
+		std::cout << projectArrayLocal[i] << std::endl;
+	}
 
 	system("pause");
 	return 0;

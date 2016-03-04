@@ -21,6 +21,7 @@ protected:
 
 	std::string createStringList(std::map<int, std::vector<std::string>> track);
 	std::string createStringList(std::vector<std::string> track);
+
 	
 
 public:
@@ -43,7 +44,10 @@ public:
 	void setAudioTracks(std::map<int, std::vector<std::string>> audioTrack);
 	void addAudioTrack(int side, std::string track);
 
-	std::vector<std::string> toStringArray();
+	std::vector<std::string> toArray() override;
+	void populate(std::vector<std::string> elements) override;
+
+	std::map<int, std::vector<std::string>> stringToMap(std::string string);
 
 };
 

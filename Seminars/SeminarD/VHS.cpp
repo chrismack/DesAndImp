@@ -59,37 +59,64 @@ std::vector<std::string> VHS::getContent()
 	return this->content_;
 }
 
-std::string VHS::toString()
-{
-	std::string objectString;
-	std::vector<std::string> baseArray = baseToStringArray();
+//std::string VHS::toString()
+//{
+//	std::string objectString;
+//	std::vector<std::string> baseArray = baseToStringArray();
+//
+//	std::string packageDimString = "{";
+//	packageDimString.append(std::to_string(std::get<0>(this->packageDimensions_)))
+//		.append("|")
+//		.append(std::to_string(std::get<1>(this->packageDimensions_)))
+//		.append("|")
+//		.append(std::to_string(std::get<2>(this->packageDimensions_)))
+//		.append("}");
+//
+//	baseArray.push_back(this->packageType_);
+//	baseArray.push_back(packageDimString);
+//	baseArray.push_back(createStringList(content_));
+//	return objectString;
+//}
 
-	std::string packageDimString = "{";
-	packageDimString.append(std::to_string(std::get<0>(this->packageDimensions_)))
+std::vector<std::string> VHS::toArray()
+{
+	std::vector<std::string> baseArray = Material::toArray();
+
+	baseArray.push_back(this->packageType_ != "" ? this->packageType_ : " ");
+	std::string packageDimString = std::to_string(std::get<0>(this->packageDimensions_))
 		.append("|")
 		.append(std::to_string(std::get<1>(this->packageDimensions_)))
 		.append("|")
-		.append(std::to_string(std::get<2>(this->packageDimensions_)))
-		.append("}");
+		.append(std::to_string(std::get<2>(this->packageDimensions_)));
 
-	baseArray.push_back(this->packageType_);
 	baseArray.push_back(packageDimString);
 	baseArray.push_back(createStringList(content_));
-	return objectString;
+
+	return baseArray;
 }
 
-void VHS::generateFromString(std::string str)
+void VHS::populate(std::vector<std::string> elements)
 {
+	content_ = split(elements[11], "|");
+	elements.pop_back();
+
+	std::vector<std::string> packageVector;
+	packageVector = split(elements[10], "|");
+	packageDimensions_ = std::tuple<int, int, int>(std::stoi(packageVector[0]), std::stoi(packageVector[1]), std::stoi(packageVector[2]));
+	elements.pop_back();
+
+	packageType_ = elements[9];
+	elements.pop_back();
+
+	Material::populate(elements);
+
+
 }
 
 std::string VHS::createStringList(std::vector<std::string> track)
 {
 	std::string tmpString;
 	std::stringstream ss;
-	if (track.size() > 1)
-	{
-		ss << "{";
-	}
 	for (int i = 0; i < track.size(); i++)
 	{
 		ss << track[i];
@@ -100,10 +127,6 @@ std::string VHS::createStringList(std::vector<std::string> track)
 	}
 	tmpString = ss.str();
 	tmpString.substr(tmpString.length() - 1);
-	if (track.size() > 1)
-	{
-		tmpString.append("}");
-	}
 
 	return tmpString;
 }

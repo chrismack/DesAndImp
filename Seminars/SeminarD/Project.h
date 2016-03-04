@@ -20,6 +20,10 @@ private:
 
 	std::vector<Material*> materials_;
 
+	std::vector<std::string> split(std::string string, std::string del);
+
+
+
 public:
 	Project();
 	~Project();
@@ -45,6 +49,9 @@ public:
 	std::vector<Material*> getMaterials();
 	void setMaterials(std::vector<Material*> materials);
 	void addMaterial(Material* material);
+
+	std::vector<std::string> toArray();
+	void populate(std::vector<std::string> elements);
 };
 
 #endif // !PROJECT_H

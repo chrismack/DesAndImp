@@ -36,8 +36,8 @@ public:
 	void addContent(std::string content);
 	std::vector<std::string> getContent();
 
-	std::string toString();
-	void generateFromString(std::string str);
+	std::vector<std::string> toArray() override;
+	void populate(std::vector<std::string> string) override;
 
 	std::string createStringList(std::vector<std::string> track);
 };

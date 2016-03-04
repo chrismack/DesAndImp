@@ -117,38 +117,70 @@ std::vector<std::string> SingleDVD::getContent()
 	return this->content_;
 }
 
-std::string SingleDVD::toString()
-{
-	std::string objectString;
-	std::vector<std::string> bluRayElements = toStringArray();
-	bluRayElements.push_back(this->packageType_);
+//std::string SingleDVD::toString()
+//{
+//	std::string objectString;
+//	std::vector<std::string> bluRayElements = toStringArray();
+//	bluRayElements.push_back(this->packageType_);
+//
+//	std::string packageDimString = "{";
+//	packageDimString.append(std::to_string(std::get<0>(this->packageDimensions_)))
+//		.append("|")
+//		.append(std::to_string(std::get<1>(this->packageDimensions_)))
+//		.append("|")
+//		.append(std::to_string(std::get<2>(this->packageDimensions_)))
+//		.append("}");
+//
+//	bluRayElements.push_back(packageDimString);
+//	bluRayElements.push_back(createStringList(content_));
+//	bluRayElements.push_back(createStringList(getBonusFeatures()));
+//
+//	std::stringstream ss;
+//	for (int i = 0; i < bluRayElements.size(); i++)
+//	{
+//		ss << bluRayElements[i];
+//		ss << ",";
+//	}
+//	objectString = ss.str();
+//	objectString = objectString.substr(0, objectString.length() - 1);
+//
+//	return objectString;
+//}
 
-	std::string packageDimString = "{";
-	packageDimString.append(std::to_string(std::get<0>(this->packageDimensions_)))
+std::vector<std::string> SingleDVD::toArray()
+{
+	std::vector<std::string> dvdElements = Disc::toArray();
+	dvdElements.push_back(this->packageType_ != "" ? this->packageType_ : " ");
+
+	std::string packageDimString = std::to_string(std::get<0>(this->packageDimensions_))
 		.append("|")
 		.append(std::to_string(std::get<1>(this->packageDimensions_)))
 		.append("|")
-		.append(std::to_string(std::get<2>(this->packageDimensions_)))
-		.append("}");
+		.append(std::to_string(std::get<2>(this->packageDimensions_)));
 
-	bluRayElements.push_back(packageDimString);
-	bluRayElements.push_back(createStringList(content_));
-	bluRayElements.push_back(createStringList(getBonusFeatures()));
+	dvdElements.push_back(packageDimString);
+	dvdElements.push_back(createStringList(content_));
+	dvdElements.push_back(createStringList(getBonusFeatures()));
 
-	std::stringstream ss;
-	for (int i = 0; i < bluRayElements.size(); i++)
-	{
-		ss << bluRayElements[i];
-		ss << ",";
-	}
-	objectString = ss.str();
-	objectString = objectString.substr(0, objectString.length() - 1);
-
-	return objectString;
+	return dvdElements;
 }
 
-void SingleDVD::generateFromString(std::string str)
+void SingleDVD::populate(std::vector<std::string> elements)
 {
+	bounsFeatures_ = stringToMap(elements[15]);
+	elements.pop_back();
+	content_ = split(elements[14], "|");
+	elements.pop_back();
+
+	std::vector<std::string> packageVector;
+	packageVector = split(elements[13], "|");
+	packageDimensions_ = std::tuple<int, int, int>(std::stoi(packageVector[0]), std::stoi(packageVector[1]), std::stoi(packageVector[2]));
+	elements.pop_back();
+
+	packageType_ = elements[12];
+	elements.pop_back();
+
+	Disc::populate(elements);
 }
 
 #endif // !SINGLEDVD_CPP

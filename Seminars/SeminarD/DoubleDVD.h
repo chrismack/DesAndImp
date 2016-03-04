@@ -31,8 +31,8 @@ public:
 	std::vector<std::string> getContentOnSide(const int side);
 	void setContentOnSide(int, std::vector<std::string> content);
 
-	std::string toString();
-	void generateFromString(std::string str);
+	std::vector<std::string> toArray() override;
+	void populate(std::vector<std::string> elements) override;
 
 };
 
