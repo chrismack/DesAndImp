@@ -49,12 +49,14 @@ std::vector<std::string> CSVHandler::getLines()
 
 void CSVHandler::addLineToFile(std::string fileName, std::string line)
 {
-	std::ofstream cvsFile(fileName);
-	if (cvsFile.is_open())
+	std::ofstream cvsFile(fileName, std::ofstream::app | std::ofstream::out);
+	
+	if (!cvsFile.is_open())
 	{
-		cvsFile << line << std::endl;
-		cvsFile.close();
+		cvsFile.open(fileName_, std::ofstream::app | std::ofstream::out);
 	}
+	cvsFile << line << std::endl;
+	cvsFile.close();
 }
 
 void CSVHandler::generateClassesFromLines()
@@ -74,7 +76,7 @@ void CSVHandler::generateClassFromLine(std::string line)
 
 void CSVHandler::writeToFile(Material* material)
 {
-	std::vector<std::string> materialArray; material->toArray();
+	std::vector<std::string> materialArray = material->toArray();
 	std::stringstream ss;
 	for (int i = 0; i < materialArray.size(); i++)
 	{
@@ -102,7 +104,7 @@ void CSVHandler::writeToFile(Project* project)
 		}
 	}
 
-	addLineToFile(ss.str(), fileName_);
+	addLineToFile(fileName_, ss.str());
 }
 
 std::vector<Material*> CSVHandler::getMaterialsFromFile()

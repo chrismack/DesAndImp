@@ -1,1 +1,2 @@
-1,Test,BluRay,DTS,3600,english,10.000000,english,16:9,english|french,english|french, ,plastic,1000|20|100,chap1|chap2|chap3,BHS1|BHS2|BHS3
+1,Test,BluRay,DTS,3600,english,10.000000,english,16:9,english|french-english1|french1,english|french-english1|french1,audio 1|audio 2|audio 3-audio 4,plastic,1000|20|100,chap1|chap2|chap3,-BHS1|BHS2|BHS3
+1,Test,BluRay,DTS,3600,english,10.000000,english,16:9,english|french-english1|french1,english|french-english1|french1,audio 1|audio 2|audio 3-audio 4,plastic,1000|20|100,chap1|chap2|chap3,-BHS1|BHS2|BHS3

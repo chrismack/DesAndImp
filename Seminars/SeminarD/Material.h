@@ -92,9 +92,20 @@ public: /* Functions */
 	void setSubtitles(const std::string subtitles);
 	void setAspectRation(const std::pair<int, int> aspectRatio);
 
+	/*
+	 * gets all class attributes and puts them into a vector
+	 */
 	virtual std::vector<std::string> toArray();
+
+	/*
+	 * Takes attributes from a vector and set class attributes
+	 * Vector has to be in correct order and have correct size
+	 */
 	virtual void populate(std::vector<std::string>);
 
+	/*
+	 * Split string on specified delimeter
+	 */
 	std::vector<std::string> split(std::string string, std::string del);
 
 };

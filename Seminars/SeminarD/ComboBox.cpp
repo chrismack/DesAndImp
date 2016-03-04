@@ -21,10 +21,6 @@ ComboBox::~ComboBox()
 {
 }
 
-void ComboBox::setDiscContent()
-{
-}
-
 void ComboBox::setPackageDimensions(std::tuple<int, int, int> dimensions)
 {
 	this->packageDimensions_ = dimensions;

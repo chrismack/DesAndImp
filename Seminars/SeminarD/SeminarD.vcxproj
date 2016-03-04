@@ -83,7 +83,6 @@
   <ItemGroup>
     <Text Include="ReadMe.txt" />
     <Text Include="Text.txt" />
-    <Text Include="sdf.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlueRay.h" />

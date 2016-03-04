@@ -72,54 +72,54 @@ int main(int argc, char * argv[])
 	//b1->getBonusFeatures();
 
 
-	//Material* mat1 = new DoubleDVD;
-	//DoubleDVD* d1 = static_cast<DoubleDVD*>(mat1);
+	Material* mat1 = new DoubleDVD;
+	DoubleDVD* d1 = static_cast<DoubleDVD*>(mat1);
 
-	//d1->setID(1);
-	//d1->setFilmTitle("Test");
-	//d1->setFormat("BluRay");
-	//d1->setAudioFormat("DTS");
-	//d1->setRunTime(3600);
+	d1->setID(1);
+	d1->setFilmTitle("Test");
+	d1->setFormat("BluRay");
+	d1->setAudioFormat("DTS");
+	d1->setRunTime(3600);
 
-	//std::map<int, std::vector<std::string>> langauagesMap;
-	//langauagesMap[0].push_back("english");
-	//langauagesMap[0].push_back("french");
-	//langauagesMap[1].push_back("english1");
-	//langauagesMap[1].push_back("french1");
-	//d1->setLanguageTracks(langauagesMap);
-	//d1->setRetailPrice(10.00);
-	//d1->setLanguage("english");
-	//d1->setSubtitles("english");
+	std::map<int, std::vector<std::string>> langauagesMap;
+	langauagesMap[0].push_back("english");
+	langauagesMap[0].push_back("french");
+	langauagesMap[1].push_back("english1");
+	langauagesMap[1].push_back("french1");
+	d1->setLanguageTracks(langauagesMap);
+	d1->setRetailPrice(10.00);
+	d1->setLanguage("english");
+	d1->setSubtitles("english");
 
-	//std::map<int, std::vector<std::string>> subsMap;
-	//subsMap[0].push_back("english");
-	//subsMap[0].push_back("french");
-	//subsMap[1].push_back("english1");
-	//subsMap[1].push_back("french1");
-	//d1->setSubtitleTracks(subsMap);
-	//d1->setAspectRation(std::make_pair<int, int>(16, 9));
+	std::map<int, std::vector<std::string>> subsMap;
+	subsMap[0].push_back("english");
+	subsMap[0].push_back("french");
+	subsMap[1].push_back("english1");
+	subsMap[1].push_back("french1");
+	d1->setSubtitleTracks(subsMap);
+	d1->setAspectRation(std::make_pair<int, int>(16, 9));
 
-	//std::map<int, std::vector<std::string>> audioMap;
-	//audioMap[0].push_back("audio 1");
-	//audioMap[0].push_back("audio 2");
-	//audioMap[0].push_back("audio 3");
-	//audioMap[1].push_back("audio 4");
-	//d1->setAudioTracks(audioMap);
+	std::map<int, std::vector<std::string>> audioMap;
+	audioMap[0].push_back("audio 1");
+	audioMap[0].push_back("audio 2");
+	audioMap[0].push_back("audio 3");
+	audioMap[1].push_back("audio 4");
+	d1->setAudioTracks(audioMap);
 
-	//d1->setPackageType("plastic");
-	//d1->setPackageDimensions(std::tuple<int, int, int>(1000, 20, 100));
+	d1->setPackageType("plastic");
+	d1->setPackageDimensions(std::tuple<int, int, int>(1000, 20, 100));
 
-	//std::map<int, std::vector<std::string>> contentMap;
-	//contentMap[0].push_back("chap1");
-	//contentMap[0].push_back("chap2");
-	//contentMap[0].push_back("chap3");
-	//d1->setContent(contentMap);
+	std::map<int, std::vector<std::string>> contentMap;
+	contentMap[0].push_back("chap1");
+	contentMap[0].push_back("chap2");
+	contentMap[0].push_back("chap3");
+	d1->setContent(contentMap);
 
-	//std::map<int, std::vector<std::string>> bonusMap;
-	//bonusMap[1].push_back("BHS1");
-	//bonusMap[1].push_back("BHS2");
-	//bonusMap[1].push_back("BHS3");
-	//d1->setBonusFeatures(bonusMap);
+	std::map<int, std::vector<std::string>> bonusMap;
+	bonusMap[1].push_back("BHS1");
+	bonusMap[1].push_back("BHS2");
+	bonusMap[1].push_back("BHS3");
+	d1->setBonusFeatures(bonusMap);
 
 
 	//Material* mat2 = new ComboBox;
@@ -213,20 +213,20 @@ int main(int argc, char * argv[])
 
 
 
-	//std::vector<std::string> projectString;
-	//
-	//projectString.push_back("Title");
-	//projectString.push_back("Sum");
-	//projectString.push_back("Genre");
-	//projectString.push_back("1000000000");
-	//projectString.push_back("FilmLoc1 | FilmLoc2");
-	//projectString.push_back("language");
-	//projectString.push_back("keyWords 1 | keyWords 2");
-	//projectString.push_back("1 | 4 | 6");
-	//projectString.push_back("{ 1,Test,BluRay,DTS,3600,english,10.000000,english,16:9,english | french,english | french, ,plastic,1000 | 20 | 100,chap1 | chap2 | chap3,BHS1 | BHS2 | BHS3~1,Test,BluRay,DTS,3600,english,10.000000,english,16 : 9,english | french - english1 | french1,english | french - english1 | french1,audio 1 | audio 2 | audio 3 - audio 4,plastic,1000 | 20 | 100,chap1 | chap2 | chap3,-BHS1 | BHS2 | BHS3~1,Test,Combo,DTS,3600,english,10.000000,french,16 : 9,cardboard,1000 | 20 | 100,[1, Test, BluRay, DTS,3600, english,10.000000, english,16:9, english | french, english | french, , plastic,1000 | 20 | 100, chap1 | chap2 | chap3, BHS1 | BHS2 | BHS3_1, Test, BluRay, DTS,3600, english,10.000000, english,16 : 9, english | french, english | french, , plastic,1000 | 20 | 100, chap1 | chap2 | chap3, BHS1 | BHS2 | BHS3_1, Test, DoubleDVD, DTS,3600, english,10.000000, english,16 : 9, english | french, english | french, , plastic,1000 | 20 | 100, chap1 | chap2 | chap3, - BHS1 | BHS2 | BHS3]}");
+	std::vector<std::string> projectString;
+	
+	projectString.push_back("Title");
+	projectString.push_back("Sum");
+	projectString.push_back("Genre");
+	projectString.push_back("1000000000");
+	projectString.push_back("FilmLoc1 | FilmLoc2");
+	projectString.push_back("language");
+	projectString.push_back("keyWords 1 | keyWords 2");
+	projectString.push_back("1 | 4 | 6");
+	projectString.push_back("{ 1,Test,BluRay,DTS,3600,english,10.000000,english,16:9,english | french,english | french, ,plastic,1000 | 20 | 100,chap1 | chap2 | chap3,BHS1 | BHS2 | BHS3~1,Test,BluRay,DTS,3600,english,10.000000,english,16 : 9,english | french - english1 | french1,english | french - english1 | french1,audio 1 | audio 2 | audio 3 - audio 4,plastic,1000 | 20 | 100,chap1 | chap2 | chap3,-BHS1 | BHS2 | BHS3~1,Test,Combo,DTS,3600,english,10.000000,french,16 : 9,cardboard,1000 | 20 | 100,[1, Test, BluRay, DTS,3600, english,10.000000, english,16:9, english | french, english | french, , plastic,1000 | 20 | 100, chap1 | chap2 | chap3, BHS1 | BHS2 | BHS3_1, Test, BluRay, DTS,3600, english,10.000000, english,16 : 9, english | french, english | french, , plastic,1000 | 20 | 100, chap1 | chap2 | chap3, BHS1 | BHS2 | BHS3_1, Test, DoubleDVD, DTS,3600, english,10.000000, english,16 : 9, english | french, english | french, , plastic,1000 | 20 | 100, chap1 | chap2 | chap3, - BHS1 | BHS2 | BHS3]}");
 
-	//Project* project = new Project();
-	//project->populate(projectString);
+	Project* project = new Project();
+	project->populate(projectString);
 
 	//std::vector<std::string> projectArrayLocal = project->toArray();
 	//for (int i = 0; i < projectArrayLocal.size(); i++)
@@ -235,7 +235,9 @@ int main(int argc, char * argv[])
 	//}
 
 	CSVHandler csvHandler("sdf.csv");
-	csvHandler.getMaterialsFromFile();
+	//csvHandler.writeToFile(project);
+	csvHandler.writeToFile(d1);
+	std::vector<Material*> materialsFromFile =  csvHandler.getMaterialsFromFile();
 
 	system("pause");
 	return 0;
