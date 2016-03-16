@@ -55,6 +55,9 @@
     <ClInclude Include="CSVHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MaterialFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -91,6 +94,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CSVHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

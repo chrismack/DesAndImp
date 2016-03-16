@@ -10,6 +10,8 @@
 #include "VHS.h"
 #include "Project.h"
 
+#include "MaterialFactory.h"
+
 #include <iostream>
 #include <fstream>
 
@@ -57,11 +59,13 @@ private:
 	 */
 	void addLineToFile(const std::string fileName, const std::string line);
 
+	MaterialFactory* factory_;
+
 public:
 	
 	static CSVHandler* INSTANCE;
 	
-	CSVHandler(std::string fileName);
+	CSVHandler(std::string fileName, MaterialFactory* factory);
 	~CSVHandler();
 
 	/*

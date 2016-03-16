@@ -17,6 +17,8 @@
 
 #include "CSVHandler.h"
 
+#include "MaterialFactory.h"
+
 #include "Project.h"
 
 int main(int argc, char * argv[])
@@ -234,7 +236,7 @@ int main(int argc, char * argv[])
 	//	std::cout << projectArrayLocal[i] << std::endl;
 	//}
 
-	CSVHandler csvHandler("sdf.csv");
+	CSVHandler csvHandler("sdf.csv", new MaterialFactory());
 	//csvHandler.writeToFile(project);
 	csvHandler.writeToFile(d1);
 	std::vector<Material*> materialsFromFile =  csvHandler.getMaterialsFromFile();

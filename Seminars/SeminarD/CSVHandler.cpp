@@ -7,10 +7,11 @@
 
 CSVHandler* CSVHandler::INSTANCE;
 
-CSVHandler::CSVHandler(std::string fileName)
+CSVHandler::CSVHandler(std::string fileName, MaterialFactory* factory)
 {
 	INSTANCE = this;
 	this->fileName_ = fileName;
+	this->factory_ = factory;
 }
 
 
@@ -22,7 +23,7 @@ CSVHandler* CSVHandler::getCVSInstance()
 {
 	if (CSVHandler::INSTANCE == nullptr)
 	{
-		CSVHandler::INSTANCE = new CSVHandler("default.csv");
+		CSVHandler::INSTANCE = new CSVHandler("default.csv", new MaterialFactory());
 	}
 	return CSVHandler::INSTANCE;
 }
@@ -134,45 +135,15 @@ std::vector<Project*> CSVHandler::getProjects()
 
 void CSVHandler::generate(std::string string, std::string type)
 {
-	std::vector<std::string> tmpLine = split(string, ",");
-	Material* mat = nullptr;
-
-	if (type == "BluRay")
+	if (type == "BluRay" || type == "SingleDVD" || type == "DoubleDVD" || type == "Combo" || type == "VHS")
 	{
-		mat = new BlueRay;
-	}
-	else if (type == "SingleDVD")
-	{
-		mat = new SingleDVD;
-	}
-	else if (type == "DoubleDVD")
-	{
-		mat = new DoubleDVD;
-	}
-	else if (type == "Combo")
-	{
-		mat = new ComboBox;
-		std::string dvds = string.substr(string.find('['), string.length());
-		string = string.substr(0, string.find('['));
-		string.append(dvds);
-		tmpLine = split(string, ",");
-	}
-	else if (type == "VHS")
-	{
-		mat = new VHS;
+		materials_.push_back(factory_->createMaterial(type, string));
 	}
 	else //Project
 	{
-		Project* project = new Project();
-		project->populate(tmpLine);
-		projects_.push_back(project);
+		projects_.push_back(factory_->createProject(string));
 	}
 
-	if (mat != nullptr)
-	{
-		mat->populate(tmpLine);
-		materials_.push_back(mat);
-	}
 }
 
 std::vector<std::string> CSVHandler::split(std::string string, std::string del)
