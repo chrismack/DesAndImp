@@ -14,12 +14,13 @@
     <ProjectGuid>{FC3B4984-C408-4D90-9FA4-EE5DEED01E10}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SeminarF</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -79,25 +80,50 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlueRay.h" />
+    <ClInclude Include="ComboBox.h" />
+    <ClInclude Include="CSVHandler.h" />
+    <ClInclude Include="Disc.h" />
+    <ClInclude Include="DoubleDVD.h" />
+    <ClInclude Include="DynArray.h" />
+    <ClInclude Include="IPackagable.h" />
+    <ClInclude Include="LineParse.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialFactory.h" />
+    <ClInclude Include="Project.h" />
+    <ClInclude Include="ProjectManager.h" />
+    <ClInclude Include="SingleDVD.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="VHS.h" />
     <ClInclude Include="XMLparser.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BlueRay.cpp" />
+    <ClCompile Include="ComboBox.cpp" />
+    <ClCompile Include="CSVHandler.cpp" />
+    <ClCompile Include="Disc.cpp" />
+    <ClCompile Include="DoubleDVD.cpp" />
+    <ClCompile Include="DynArray.cpp" />
+    <ClCompile Include="IPackagable.cpp" />
+    <ClCompile Include="LineParse.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialFactory.cpp" />
+    <ClCompile Include="Project.cpp" />
+    <ClCompile Include="ProjectManager.cpp" />
+    <ClCompile Include="SingleDVD.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="VHS.cpp" />
     <ClCompile Include="XMLparser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logger\Logger.vcxproj">
-      <Project>{7b1422ae-1336-4f90-a8d2-5df4513e89f3}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\SeminarD\SeminarD.vcxproj">
-      <Project>{a312c2a4-ea08-45ab-be02-2d7114ede9f7}</Project>
-    </ProjectReference>
+    <None Include="test.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
