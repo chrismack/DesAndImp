@@ -61,6 +61,7 @@ Material * MaterialFactory::createMaterial(std::string type, std::string data)
 	if (mat != nullptr)
 	{
 		mat->populate(tmpLine);
+		return mat;
 	}
 }
 
@@ -74,7 +75,6 @@ Project * MaterialFactory::createProject(std::string data)
 
 std::vector<std::string> MaterialFactory::split(std::string string, std::string del)
 {
-
 	/* http://stackoverflow.com/questions/16286095/similar-function-to-javas-string-split-in-c */
 
 	char* cstr = const_cast<char*>(string.c_str());
