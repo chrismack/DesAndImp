@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "Logger.h"
 
 #include "MaterialFactory.h"
 #include "CSVHandler.h"
@@ -11,28 +12,39 @@
 #include "../SeminarD/BlueRay.h"
 
 
+#define _CRT_SECURE_NO_WARNINGS
 
 ProjectManager::ProjectManager()
 {
-	SDI::Logger l;
-	l.setLogLevel(SDI::Logger::LogLevel::ALL);
-	l.info("Logger started");
 	exit_ = false;	// Initally set that we don't want to leave the application
 	
+	start();
+}
+
+ProjectManager::ProjectManager(SDI::Logger *logger)
+{
+	logger = LogHandler::getHandler()->logger;
+	logger->setLogLevel(SDI::Logger::LogLevel::ALL);
+
+	
+	exit_ = false;	// Initally set that we don't want to leave the application
+	logger->info("Starting the Project Manager");
+	start();
+}
+
+
+ProjectManager::~ProjectManager()
+{
+}
+
+void ProjectManager::start()
+{
 	while (!exit_)
 	{
 		displayMenuOptions();
 		processUserInput(getUserInput());
 		userContinueOption();
 	}
-	std::cout << "Hello" << std::endl;
-	importFile("test.csv");
-	displayMenuOptions();
-}
-
-
-ProjectManager::~ProjectManager()
-{
 }
 
 /*
@@ -42,18 +54,17 @@ ProjectManager::~ProjectManager()
  */
 bool ProjectManager::importFile(std::string path)
 {
-	std::cout << "Importing " << path << std::endl;
+	logger->info("Importing " + path);
 	if (fileExists(path))
 	{
+		logger->debug("file exists");
 		std::string extension = path.substr(path.find_last_of('.') + 1);	// Get the extension of the file that is being imported
-
 		if (extension == "csv")
 		{
-			
+			logger->debug("Starting csv import");
 			MaterialFactory* mf = new MaterialFactory();
 			CSVHandler csvHandler(path, mf);
 			
-
 			/*
 			 * Append materials to list of existing materials
 			 */
@@ -68,20 +79,34 @@ bool ProjectManager::importFile(std::string path)
 			projects_.insert(projects_.end(), projectsFromFile.begin(), projectsFromFile.end());	// Append to existing projects
 			projectsFromFile.clear();
 			
+			logger->debug("Finished csv import");
 			return true;
 		}
 		else if (extension == "xml")
 		{
+			logger->debug("Starting xml import");
+
+			// TODO : Need to implement XML handler like the CSV handler
+
+			logger->debug("Finished xml import");
 			return true;
 		}
 		else
 		{
 			return false;
 		}
+
+		// If time is available should look into JSON support
+
 	}
 	return false;
 }
 
+
+/*
+ * Check if a file in a specified path exists
+ * Returns true or false depending if the file could be found
+ */
 const bool ProjectManager::fileExists(const std::string & path)
 {
 	std::ifstream file(path);
@@ -123,7 +148,6 @@ void ProjectManager::userContinueOption()
 	}
 }
 
-
 /*
  * Return text user has entered
  */
@@ -134,6 +158,9 @@ std::string ProjectManager::getUserInput()
 	return userInput;
 }
 
+/*
+ * Takes the users input and processes input that has been entered
+ */
  void ProjectManager::processUserInput(const std::string &input)
  {
 	 if (input == "exit" || input == "0")
@@ -147,6 +174,9 @@ std::string ProjectManager::getUserInput()
 	 }
  }
 
+ /*
+  * Converts the input string to all lower case characters
+  */
  std::string ProjectManager::toLower(std::string & input)
  {
 	 for (int i = 0; i < input.length(); i++)

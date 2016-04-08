@@ -5,13 +5,15 @@
 #include <iostream>
 
 #include "stdafx.h"
+
+#include "LogHandler.h"
 #include "ProjectManager.h"
 
 
 int main(int argc, char* argv[])
 {
-
-	ProjectManager p;
+	LogHandler::getHandler()->logger = new SDI::Logger(argc, argv, false);
+	ProjectManager p(LogHandler::getHandler()->logger);
 	
 
 	return 0;

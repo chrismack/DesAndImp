@@ -6,12 +6,18 @@
 #include <string>
 #include <vector>
 
-#include "../SeminarD/Material.h"
-#include "../SeminarD/Project.h"
+#include "Material.h"
+#include "Project.h"
+
+#include "LogHandler.h"
+#include "Logger.h"
 
 class ProjectManager
 {
 private: // Variables
+
+	SDI::Logger* logger;
+
 	/*
 	 * List of all imported projects
 	 */
@@ -29,9 +35,16 @@ private: // Variables
 
 public:  // Functions
 	ProjectManager();
+	ProjectManager(SDI::Logger * logger);
 	~ProjectManager();
 
 private: // Functions
+
+	/*
+	 * The main loop for the application 
+	 */
+	void start();
+
 	/*
 	 * Write options to the display
 	 */

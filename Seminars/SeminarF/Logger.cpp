@@ -1,6 +1,8 @@
 #ifndef LOGGER_CPP
 #define LOGGER_CPP
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "Logger.h"
 
 namespace SDI
@@ -548,7 +550,7 @@ namespace SDI
 			// Time stamp format
 			else if (it->first == 'T')
 			{
-				timeFormat_ = strdup(it->second.c_str());
+				timeFormat_ = _strdup(it->second.c_str());
 			}
 		}
 	}
