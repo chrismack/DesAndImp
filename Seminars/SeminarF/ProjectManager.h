@@ -33,12 +33,29 @@ private: // Variables
 	 */
 	bool exit_;
 
+	/*
+	 * The default save location for the projects and materials to be saved to 
+	 */
+	std::string defaultSavePath = "projectmanager.csv";
+
 public:  // Functions
-	ProjectManager();
+
+	/*
+	 * start project with logging
+	 */
 	ProjectManager(SDI::Logger * logger);
+
+	/*
+	 * Deconstructor
+	 */
 	~ProjectManager();
 
 private: // Functions
+
+	/*
+	 * Check for the default save file and if it exists or not
+	 */
+	void setupSaveFile();
 
 	/*
 	 * The main loop for the application 
@@ -49,6 +66,12 @@ private: // Functions
 	 * Write options to the display
 	 */
 	void displayMenuOptions();
+
+	/*
+	 * Display message on screen for views that can be selected
+	 * displayed when option 3(view) from the menu is selected 
+	 */
+	void displayViewOptions();
 
 	/*
 	 * Display a message to the user and ask if they would like to continue
@@ -76,6 +99,11 @@ private: // Functions
 	 * Return : if the file can be properly imported
 	 */
 	bool importFile(const std::string path);
+
+	/*
+	 * Process and import data that has been formatted in CSV
+	 */
+	void importCSV(const std::string &CSV);
 
 	/*
 	 * Check if file at path exists

@@ -61,6 +61,7 @@ Material * MaterialFactory::createMaterial(std::string type, std::string data)
 	if (mat != nullptr)
 	{
 		mat->populate(tmpLine);
+		return mat;
 	}
 }
 

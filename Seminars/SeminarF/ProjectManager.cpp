@@ -9,32 +9,58 @@
 #include "MaterialFactory.h"
 #include "CSVHandler.h"
 
-#include "../SeminarD/BlueRay.h"
+#include "BlueRay.h"
 
 
 #define _CRT_SECURE_NO_WARNINGS
 
-ProjectManager::ProjectManager()
-{
-	exit_ = false;	// Initally set that we don't want to leave the application
-	
-	start();
-}
 
 ProjectManager::ProjectManager(SDI::Logger *logger)
 {
-	logger = LogHandler::getHandler()->logger;
-	logger->setLogLevel(SDI::Logger::LogLevel::ALL);
+	this->logger = LogHandler::getHandler()->logger;
+	this->logger->setLogLevel(SDI::Logger::LogLevel::ALL);
 
-	
 	exit_ = false;	// Initally set that we don't want to leave the application
-	logger->info("Starting the Project Manager");
+	this->logger->info("Starting the Project Manager");
+
+	setupSaveFile();
 	start();
 }
 
 
 ProjectManager::~ProjectManager()
 {
+}
+
+/*
+ * Create default save file and import any data that is contained in the def location
+ *
+ * If no data has been saved (fresh start) prompt for import
+ */
+void ProjectManager::setupSaveFile()
+{
+	std::fstream saveFile(defaultSavePath);
+	
+	if (! fileExists(defaultSavePath) || saveFile.peek() == std::fstream::traits_type::eof())	// File doesn't exists or is empty
+	{
+		saveFile.open(defaultSavePath, std::fstream::in | std::fstream::out | std::fstream::app);		// Create file if it doesn't exist
+		saveFile.close();
+	
+		// File doesn't exist may want to import from and existing file
+		std::cout << "You do not have any existing projects or materials"		 << std::endl;
+		std::cout << "Would you like to import from an existing file? Yes or No" << std::endl;
+		
+		std::string userImport = toLower(getUserInput());
+		if (userImport == "yes" || userImport == "y")
+		{
+			std::cout << "What file would you like to import?" << std::endl;
+			importFile(getUserInput());
+		}
+	}
+	else
+	{
+		importCSV(defaultSavePath);
+	}
 }
 
 void ProjectManager::start()
@@ -62,23 +88,7 @@ bool ProjectManager::importFile(std::string path)
 		if (extension == "csv")
 		{
 			logger->debug("Starting csv import");
-			MaterialFactory* mf = new MaterialFactory();
-			CSVHandler csvHandler(path, mf);
-			
-			/*
-			 * Append materials to list of existing materials
-			 */
-			std::vector<Material*> materialsFromFile = csvHandler.getMaterialsFromFile();
-			materials_.insert(materials_.end(), materialsFromFile.begin(), materialsFromFile.end());	// Append to existing projects
-			materialsFromFile.clear();
-			
-			/*
-			 * Append projects to list of existing projects
-			 */
-			std::vector<Project*> projectsFromFile = csvHandler.getProjectsFromFile();
-			projects_.insert(projects_.end(), projectsFromFile.begin(), projectsFromFile.end());	// Append to existing projects
-			projectsFromFile.clear();
-			
+			importCSV(path);
 			logger->debug("Finished csv import");
 			return true;
 		}
@@ -100,6 +110,30 @@ bool ProjectManager::importFile(std::string path)
 
 	}
 	return false;
+}
+
+/*
+ * Import projects and materials that have been stored in a CSV file
+ * Imports lines to materials_ and projects_
+ */
+void ProjectManager::importCSV(const std::string &CSV)
+{
+	MaterialFactory* mf = new MaterialFactory();
+	CSVHandler csvHandler(CSV, mf);
+
+	/*
+	* Append materials to list of existing materials
+	*/
+	std::vector<Material*> materialsFromFile = csvHandler.getMaterialsFromFile();
+	materials_.insert(materials_.end(), materialsFromFile.begin(), materialsFromFile.end());	// Append to existing projects
+	materialsFromFile.clear();
+
+	/*
+	* Append projects to list of existing projects
+	*/
+	std::vector<Project*> projectsFromFile = csvHandler.getProjectsFromFile();
+	projects_.insert(projects_.end(), projectsFromFile.begin(), projectsFromFile.end());	// Append to existing projects
+	projectsFromFile.clear();
 }
 
 
@@ -126,8 +160,17 @@ const bool ProjectManager::fileExists(const std::string & path)
 void ProjectManager::displayMenuOptions()
 {
 	std::cout << "			MENU			      "	<< std::endl;
-	std::cout << "0)exit   : leave the application" << std::endl;
-	std::cout << "1)import : Import from file"		<< std::endl;
+	std::cout << "0)exit   : leave the application" << std::endl;		// Leave applicatoin
+	std::cout << "1)import : Import from file"		<< std::endl;		// Import materials from files
+	std::cout << "2)save   : Save to file"			<< std::endl;		// Save material strings to file
+	std::cout << "3)view   : View data"				<< std::endl;		// View Materials and projects currently stored in memory
+	std::cout << std::endl;			
+}
+
+void ProjectManager::displayViewOptions()
+{
+	std::cout << "What would you like to view?" << std::endl << "1)Projects or 2)Materials" << std::endl;;
+	std::cout << "Please enter you choice" << std::endl;
 }
 
 void ProjectManager::userContinueOption()
@@ -171,6 +214,55 @@ std::string ProjectManager::getUserInput()
 	 {
 		 std::cout << "Please enter a path to the file you would like to import : " << std::endl;
 		 importFile(getUserInput());
+	 }
+	 else if (input == "2" || input == "save")
+	 {
+		 std::ofstream saveFile(defaultSavePath);
+		 saveFile.open(defaultSavePath, std::ofstream::out);
+		 CSVHandler csvHandler(defaultSavePath, new MaterialFactory());
+		 
+		 for (Project* project : projects_)
+		 {
+			 csvHandler.writeToFile(project);
+			 delete project;
+		 }
+
+		 for (Material* material : materials_)
+		 {
+			 csvHandler.writeToFile(material);
+			 delete material;
+		 }
+
+		 saveFile.close();
+	 }
+	 else if (input == "3" || input == "view")
+	 {
+		 displayViewOptions();
+		 std::string viewOption = toLower(getUserInput());
+		 if (viewOption == "1" || viewOption == "projects")
+		 {
+			 for (Project* project : projects_)
+			 {
+				 std::cout << project->getTitle() << std::endl;
+				 delete project;
+			 }
+		 }
+		 else if (viewOption == "2" || viewOption == "materials")
+		 {
+			 for (Material* material : materials_)
+			 {
+				 std::cout << material->getId() << " : "<< material->getFilmTitle() << std::endl;
+				 delete material;
+			 }
+		 }
+		 else		// No valid option has been entered for view option
+		 {
+			 std::cout << "You didn't enter a valid option for view" << std::endl;
+		 }
+	 }
+	 else			// No valid option has been entered
+	 {
+		 std::cout << "You didn't enter a valid option" << std::endl;
 	 }
  }
 
