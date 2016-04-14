@@ -291,7 +291,40 @@ Project * ProjectManager::createProject()
 
 Material * ProjectManager::createMaterial()
 {
-	return nullptr;
+	Material* material;
+	std::string type = messageReturnInput("Set Type");
+	if (type == "BluRay")
+	{
+		BlueRay* material = new BlueRay();
+	}
+	else if (type == "SingleDVD")
+	{
+		SingleDVD* material = new SingleDVD();
+	}
+	else if (type == "DoubleDVD")
+	{
+		DoubleDVD* material = new DoubleDVD();
+	}
+	else if (type == "Combo")
+	{
+		ComboBox* material = new ComboBox();
+	}
+	else if (type == "VHS")
+	{
+		VHS* material = new VHS();
+	}
+
+	material->setID(materials_.size());
+	material->setFilmTitle(messageReturnInput("Set Title"));
+	material->setFormat(messageReturnInput("Set Format"));
+	material->setAudioFormat(messageReturnInput("Set Audio Format"));
+	//material->setRunTime(messageReturnInput("Set Runtime"));
+	material->setLanguage(messageReturnInput("Set Language"));
+	//material->setRetailPrice(messageReturnInput("Set Retail Price"));
+	material->setSubtitles(messageReturnInput("Set Subtitles"));
+	//material->setAspectRation(messageReturnInput("Set Aspect Ratio"));
+
+	return material;
 }
 
 /*
