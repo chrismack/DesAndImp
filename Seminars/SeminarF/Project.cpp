@@ -209,9 +209,31 @@ void Project::populate(std::vector<std::string> elements)
 	}
 	weeklyTicketSales_ = weeklySales;
 
+	std::stringstream ss;
+	for (int i = 8; i < elements.size(); i++)
+	{
+		if (elements[i] != "~")		// Char is not material seperator
+		{
+			if (i < elements.size() - 1)
+			{
+				std::string afterelement = elements[i + 1] == "~" ? "" : ",";
+				ss << elements[i] << afterelement;// If next char is material sep don't add a comma
+			}
+			else		// End of array
+			{
+				ss << elements[i].substr(0, elements[i].length() - 1);
+			}
+		}
+		else			// Char is material seperator
+		{
+			ss << elements[i];
+		}
+	}
+	elements[8] = ss.str();
+
 	if (elements[8][0] == '{')
 	{
-		elements[8] = elements[8].substr(1, elements[8].length() - 2);
+		elements[8] = elements[8].substr(1, elements[8].length() - 1);
 		std::vector<std::string> materialStrings = split(elements[8], "~");
 		for (int i = 0; i < materialStrings.size(); i++)
 		{

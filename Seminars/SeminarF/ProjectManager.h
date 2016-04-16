@@ -31,6 +31,8 @@ private: // Variables
 	 * List of all imported materials
 	 */
 	std::vector<Material*> materials_;
+	std::vector<Material*> projectAssociatedMaterials;
+
 	/*
 	 * Flag to test if the user wants to leave the application
 	 */
@@ -102,7 +104,7 @@ private: // Functions
 	 * Allow user to create a material
 	 * Present options depending on material type
 	 */
-	Material* createMaterial();
+	Material* createMaterial(const bool mustBeDisc = false);
 
 	/*
 	 * Set the attributes of the referenced material
@@ -126,6 +128,12 @@ private: // Functions
 	 * Presents user with list of materials loaded into memory for them to select from
 	 */
 	std::vector<Disc*> getDiscMaterialsFromUser(const std::string& message);
+
+	/*
+	 * Prints message to display
+	 * Gets a list of materials
+	 */
+	std::vector<Material*> getMaterialFromUser(const std::string& message);
 
 	/*
 	 * Process the user input for linking media together

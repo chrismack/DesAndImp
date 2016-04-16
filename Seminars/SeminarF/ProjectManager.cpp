@@ -161,12 +161,22 @@ void ProjectManager::importCSV(const std::string &CSV, const bool checkNowPlayin
 				input = getUserInput();
 				if (toLower(input) == "yes" || toLower(input) == "no")
 				{
+					for (Material* material : it->first->getMaterials())
+					{
+						//material->setID(materials_.size());
+						projectAssociatedMaterials.push_back(material);
+					}
 					projects_.insert(std::pair<Project*, bool>(it->first, toLower(input) == "yes" ? true : false));
 				}
 			}
 		}
 		else
 		{
+			for (Material* material : it->first->getMaterials())
+			{
+				//material->setID(materials_.size());
+				projectAssociatedMaterials.push_back(material);
+			}
 			projects_.insert(std::pair<Project*, bool>(it->first, it->second));
 		}
 	}
@@ -189,8 +199,6 @@ const bool ProjectManager::fileExists(const std::string & path)
 	file.close();
 	return false;
 }
-
-
 
 /*
  * Display menu options on screen
@@ -239,6 +247,12 @@ void ProjectManager::processViewOptinos()
 		{
 			std::cout << material->getId() << " : " << material->getFilmTitle() << std::endl;
 		}
+
+		for (Material* material : projectAssociatedMaterials)
+		{
+			std::cout << material->getId() << " : " << material->getFilmTitle() << "Associated with project" << std::endl;
+		}
+
 	}
 	else		// No valid option has been entered for view option
 	{
@@ -267,6 +281,13 @@ void ProjectManager::processCreateOptions()
 	{
 		Project* project = createProject();
 		bool nowPlaying = yesNoBool("Is the project now playing?");
+		if (nowPlaying)
+		{
+			if (yesNoBool("Would you like to link materials to the project?"))
+			{
+				project->setMaterials(getMaterialFromUser("Add material to project"));
+			}
+		}
 		projects_.insert(std::pair<Project*, bool>(project, nowPlaying));
 	}
 	else if (input == "2" || input == "create material")
@@ -303,7 +324,7 @@ Project * ProjectManager::createProject()
  * Creates a Materuak from user entered inputs 
  * Returns the created material class
  */
-Material * ProjectManager::createMaterial()
+Material * ProjectManager::createMaterial(const bool mustBeDisc /*false*/)
 {
 	Material* material = nullptr;
 
@@ -315,6 +336,17 @@ Material * ProjectManager::createMaterial()
 	bool invalid = false;
 	do
 	{
+		if (mustBeDisc)
+		{
+			std::cout << "Please enter valid type; BluRay, SingleDVD, DoubleDVD" << std::endl;
+		}
+		else
+		{
+			std::cout << "Please enter valid type; BluRay, SingleDVD, DoubleDVD, Combo, VHS" << std::endl;
+		}
+		type = messageReturnInput("Set Type");
+		type = toLower(type);
+
 		invalid = false;
 		if (type == "bluray")
 		{
@@ -356,7 +388,7 @@ Material * ProjectManager::createMaterial()
 			dvd->setLanguageTracks(setVectorSideMap("Set language tracks"));
 			dvd->setSubtitleTracks(setVectorSideMap("Set subtitles tracks"));
 		}
-		else if (type == "combo")
+		else if (type == "combo" && !mustBeDisc)
 		{
 			material = new ComboBox();
 			setBaseMaterialAttributes(material, "Combo");
@@ -366,7 +398,7 @@ Material * ProjectManager::createMaterial()
 
 			setMaterialPackage(combo);			// Set package spec
 		}
-		else if (type == "vhs")
+		else if (type == "vhs" && !mustBeDisc)
 		{
 			material = new VHS();
 			setBaseMaterialAttributes(material, "VHS");
@@ -382,9 +414,6 @@ Material * ProjectManager::createMaterial()
 		{
 			invalid = true;
 			
-			std::cout << "Please enter valid type; BluRay, SingleDVD, DoubleDVD, Combo, VHS" << std::endl;
-			type = messageReturnInput("Set Type");
-			type = toLower(type);
 		}
 
 		
@@ -449,34 +478,108 @@ std::vector<Disc*> ProjectManager::getDiscMaterialsFromUser(const std::string & 
 
 	while ((toLower(input) != "exit---loop") || userData.empty())
 	{
-		std::cout << "Please enter material index. Or exit---loop to finish" << std::endl;
-		try
+		if (yesNoBool("Would you like to create a material (must be disc)? enter no to add existing material"))
 		{
-			input = getUserInput();
-			if (input != "" && input.find_first_of(" ") == std::string::npos && toLower(input) != "exit---loop")
+			Disc* discMaterial = (Disc*)createMaterial(true);
+			userData.push_back(discMaterial);
+			selectedId.push_back(discMaterial->getId());
+		}
+		else
+		{
+			std::cout << "Please enter material index. Or exit---loop to finish" << std::endl;
+			try
 			{
-				int id = std::stoi(input);
-				if (std::find(validID.begin(), validID.end(), id) != validID.end())		//Input is a valid ID to select from
+				input = getUserInput();
+				if (input != "" && input.find_first_of(" ") == std::string::npos && toLower(input) != "exit---loop")
 				{
+					int id = std::stoi(input);
+					if (std::find(validID.begin(), validID.end(), id) != validID.end())		//Input is a valid ID to select from
+					{
+						if (std::find(selectedId.begin(), selectedId.end(), id) != selectedId.end())
+						{
+							if (yesNoBool("you have already added this material do you want to add it again?"))
+							{
+								userData.push_back((Disc*)materials_[id]);
+								selectedId.push_back(id);
+							}
+						}
+						else
+						{
+							userData.push_back((Disc*)materials_[id]);
+							selectedId.push_back(id);
+						}
+					}
+				}
+			}
+			catch(std::invalid_argument ia)
+			{
+				std::cout << "Please enter a valid id (integer)" << std::endl;
+			}
+		}
+	}
+
+	return userData;
+}
+
+std::vector<Material*> ProjectManager::getMaterialFromUser(const std::string & message)
+{
+	std::cout << message << std::endl;
+
+	std::cout << "Atleast one value needs to be entered" << std::endl;
+	std::cout << "enter : exit---loop to finish" << std::endl;
+
+	std::vector<int> selectedId;
+	std::vector<Material*> userData = {};
+	std::string input = "";
+
+	std::cout << "ID :	TITLE : FORMAT" << std::endl;
+	for (Material* mat : materials_)
+	{
+		std::cout << mat->getId() << " : " << mat->getFilmTitle() << " : " << mat->getFormat() << std::endl;
+	}
+
+	while ((toLower(input) != "exit---loop") || userData.empty())
+	{
+		if (yesNoBool("Would you like to create a material? enter no to add existing material"))
+		{
+			Material* newMaterial = createMaterial();
+			userData.push_back(newMaterial);
+			selectedId.push_back(newMaterial->getId());
+		}
+		else
+		{
+			std::cout << "Please enter material index. Or exit---loop to finish" << std::endl;
+			try
+			{
+				input = getUserInput();
+				if (input != "" && input.find_first_of(" ") == std::string::npos && toLower(input) != "exit---loop")
+				{
+					int id = std::stoi(input);
 					if (std::find(selectedId.begin(), selectedId.end(), id) != selectedId.end())
 					{
 						if (yesNoBool("you have already added this material do you want to add it again?"))
 						{
-							userData.push_back((Disc*)materials_[id - 1]);
+							userData.push_back((Disc*)materials_[id]);
 							selectedId.push_back(id);
 						}
 					}
 					else
 					{
-						userData.push_back((Disc*)materials_[id - 1]);
-						selectedId.push_back(id);
+						for (Material* material : materials_)
+						{
+							if (material->getId() == id)
+							{
+								userData.push_back((Disc*)material);
+								selectedId.push_back(id);
+							}
+						}
 					}
 				}
 			}
-		}
-		catch(std::invalid_argument ia)
-		{
-			std::cout << "Please enter a valid id (integer)" << std::endl;
+			catch (std::invalid_argument ia)
+			{
+				std::cout << "Please enter a valid id (integer)" << std::endl;
+			}
 		}
 	}
 
@@ -530,7 +633,8 @@ void ProjectManager::userContinueOption()
 std::string ProjectManager::getUserInput()
 {
 	std::string userInput = "";
-	std::cin >> userInput;
+	std::getline(std::cin, userInput);
+	//std::cin >> userInput;
 	return userInput;
 }
 
