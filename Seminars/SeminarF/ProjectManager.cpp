@@ -91,7 +91,7 @@ bool ProjectManager::importFile(std::string path)
 		if (extension == "csv")
 		{
 			logger->debug("Starting csv import");
-			importCSV(path);
+			importCSV(path, true);
 			logger->debug("Finished csv import");
 			return true;
 		}
@@ -119,7 +119,7 @@ bool ProjectManager::importFile(std::string path)
  * Import projects and materials that have been stored in a CSV file
  * Imports lines to materials_ and projects_
  */
-void ProjectManager::importCSV(const std::string &CSV)
+void ProjectManager::importCSV(const std::string &CSV, const bool checkNowPlaying /* false*/)
 {
 	MaterialFactory* mf = new MaterialFactory();
 	CSVHandler csvHandler(CSV, mf);
@@ -128,31 +128,48 @@ void ProjectManager::importCSV(const std::string &CSV)
 	* Append materials to list of existing materials
 	*/
 	std::vector<Material*> materialsFromFile = csvHandler.getMaterialsFromFile();
+	if (checkNowPlaying)																			// Check now playing is acting as a new import flag
+	{
+		for (int i = 0; i < materialsFromFile.size(); i++)											// Make imported ids unique to the new set
+		{
+			materialsFromFile[i]->setID(materials_.size() + i);
+		}
+	}
 	materials_.insert(materials_.end(), materialsFromFile.begin(), materialsFromFile.end());	// Append to existing projects
 	materialsFromFile.clear();
 
 	/*
 	 * Append projects to list of existing projects
 	 */
-	std::vector<Project*> projectsFromFile = csvHandler.getProjectsFromFile();
-	for (Project* project : projectsFromFile)
+	//std::vector<Project*> projectsFromFile = csvHandler.getProjectsFromFile();
+	
+	std::map<Project*, bool> projectsFromFile = csvHandler.getProjects();
+	std::map<Project*, bool>::iterator it;
+
+	for (it = projectsFromFile.begin(); it != projectsFromFile.end(); ++it)
 	{
-		std::cout << "Is this project now playing?" << std::endl;
-		std::cout << project->getTitle() << " : " << project->getGenre() << " : " << project->getSummary() << std::endl;
-		std::string input = "";
-		while (toLower(input) != "yes" || toLower(input) != "no")
+		if (checkNowPlaying)
 		{
-			std::cout << "please enter a valid option. Yes or No" << std::endl;
-			input = getUserInput();
-			if (toLower(input) == "yes" || toLower(input) == "no")
+			std::cout << "Is this project now playing?" << std::endl;
+			std::cout << "Title: " << it->first->getTitle() << " Genre: " << it->first->getGenre() << " Summary: " << it->first->getSummary() << std::endl;
+			std::string tmpNowPlayingStr = it->second == true ? "true" : "false";
+			std::cout << "Currently saved as : " << tmpNowPlayingStr << std::endl;
+			std::string input = "";
+			while (toLower(input) != "yes" && toLower(input) != "no")
 			{
-				projects_.insert(std::pair<Project*, bool>(project, toLower(input) == "yes" ? true : false));
+				std::cout << "please enter a valid option. Yes or No" << std::endl;
+				input = getUserInput();
+				if (toLower(input) == "yes" || toLower(input) == "no")
+				{
+					projects_.insert(std::pair<Project*, bool>(it->first, toLower(input) == "yes" ? true : false));
+				}
 			}
 		}
+		else
+		{
+			projects_.insert(std::pair<Project*, bool>(it->first, it->second));
+		}
 	}
-	//projects_.insert(projects_.end(), projectsFromFile.begin(), projectsFromFile.end());	// Append to existing projects
-	//projectsFromFile.clear();
-
 	delete mf;
 }
 
@@ -221,7 +238,6 @@ void ProjectManager::processViewOptinos()
 		for (Material* material : materials_)
 		{
 			std::cout << material->getId() << " : " << material->getFilmTitle() << std::endl;
-			delete material;
 		}
 	}
 	else		// No valid option has been entered for view option
@@ -250,30 +266,24 @@ void ProjectManager::processCreateOptions()
 	if (input == "1" || input == "create project")
 	{
 		Project* project = createProject();
-
-		std::cout << "Is the project now playing?" << std::endl;
-
-		std::string input = "";
-		while (toLower(input) != "yes" && toLower(input) != "no")
-		{
-			std::cout << "please enter a valid option. Yes or No" << std::endl;
-			input = getUserInput();
-			if (toLower(input) == "yes" || toLower(input) == "no")
-			{
-				projects_.insert(std::pair<Project*, bool>(project, toLower(input) == "yes" ? true : false));
-			}
-		}
+		bool nowPlaying = yesNoBool("Is the project now playing?");
+		projects_.insert(std::pair<Project*, bool>(project, nowPlaying));
 	}
 	else if (input == "2" || input == "create material")
 	{
-		createMaterial();
+		materials_.push_back(createMaterial());
 	}
 	else if (input == "3" || input == "link media")
 	{
-		displayLinkingMenu();
+		std::cout << "Please select a project and material to link" << std::endl;
+		processLinkingOptins();
 	}
 }
 
+/*
+ * Creates project class from user inputs
+ * returns the created project
+ */
 Project * ProjectManager::createProject()
 {
 	Project* project = new Project();
@@ -289,56 +299,208 @@ Project * ProjectManager::createProject()
 	return project;
 }
 
+/*
+ * Creates a Materuak from user entered inputs 
+ * Returns the created material class
+ */
 Material * ProjectManager::createMaterial()
 {
-	Material* material;
+	Material* material = nullptr;
+
+	std::cout << "Please enter type; BluRay, SingleDVD, DoubleDVD, Combo, VHS" << std::endl;
 	std::string type = messageReturnInput("Set Type");
-	if (type == "BluRay")
-	{
-		BlueRay* material = new BlueRay();
-	}
-	else if (type == "SingleDVD")
-	{
-		SingleDVD* material = new SingleDVD();
-	}
-	else if (type == "DoubleDVD")
-	{
-		DoubleDVD* material = new DoubleDVD();
-	}
-	else if (type == "Combo")
-	{
-		ComboBox* material = new ComboBox();
-	}
-	else if (type == "VHS")
-	{
-		VHS* material = new VHS();
-	}
+	type = toLower(type);
 
-	material->setID(materials_.size());
-	material->setFilmTitle(messageReturnInput("Set Title"));
-	material->setFormat(messageReturnInput("Set Format"));
-	material->setAudioFormat(messageReturnInput("Set Audio Format"));
-	//material->setRunTime(messageReturnInput("Set Runtime"));
-	material->setLanguage(messageReturnInput("Set Language"));
-	//material->setRetailPrice(messageReturnInput("Set Retail Price"));
-	material->setSubtitles(messageReturnInput("Set Subtitles"));
-	//material->setAspectRation(messageReturnInput("Set Aspect Ratio"));
 
+	bool invalid = false;
+	do
+	{
+		invalid = false;
+		if (type == "bluray")
+		{
+			material = new BlueRay();
+			setBaseMaterialAttributes(material, "BluRay");
+			
+			BlueRay *blu = dynamic_cast<BlueRay*> (material);
+			blu->setContent(messageReturnUserVector("Set content"));
+			blu->setBonusFeatures(messageReturnUserVector("Set bonus features"));
+			blu->setAudioTracks(messageReturnUserVector("Set audio tacks"));
+			blu->setLanguageTracks(messageReturnUserVector("Set language tracks"));
+			blu->setSubtitleTracks(messageReturnUserVector("Set subtitles tracks"));
+
+			setMaterialPackage(blu);
+		}
+		else if (type == "singledvd")
+		{
+			material = new SingleDVD();
+			setBaseMaterialAttributes(material, "SingleDVD");
+
+			SingleDVD *dvd = dynamic_cast<SingleDVD*> (material);
+			dvd->setContent(messageReturnUserVector("Set content"));
+			dvd->setBonusFeatures(messageReturnUserVector("Set bonus features"));
+			dvd->setAudioTracks(messageReturnUserVector("Set audio tacks"));
+			dvd->setLanguageTracks(messageReturnUserVector("Set language tracks"));
+			dvd->setSubtitleTracks(messageReturnUserVector("Set subtitles tracks"));
+
+			setMaterialPackage(dvd);
+		}
+		else if (type == "doubledvd")
+		{
+			material = new DoubleDVD();
+			setBaseMaterialAttributes(material, "DoubleDVD");
+
+			DoubleDVD *dvd = dynamic_cast<DoubleDVD*> (material);
+			dvd->setContent(setVectorSideMap("Set content"));
+			dvd->setBonusFeatures(setVectorSideMap("Set bonus features"));
+			dvd->setAudioTracks(setVectorSideMap("Set audio tacks"));
+			dvd->setLanguageTracks(setVectorSideMap("Set language tracks"));
+			dvd->setSubtitleTracks(setVectorSideMap("Set subtitles tracks"));
+		}
+		else if (type == "combo")
+		{
+			material = new ComboBox();
+			setBaseMaterialAttributes(material, "Combo");
+
+			ComboBox *combo = dynamic_cast<ComboBox*> (material);
+			combo->setContent(getDiscMaterialsFromUser("Set Materials"));
+
+			setMaterialPackage(combo);			// Set package spec
+		}
+		else if (type == "vhs")
+		{
+			material = new VHS();
+			setBaseMaterialAttributes(material, "VHS");
+
+			VHS *vhs = dynamic_cast<VHS*> (material);
+			vhs->setContent(messageReturnUserVector("Set content"));
+			vhs->setlanguageTrack(messageReturnInput("Set language track"));
+			vhs->setAudioTrack(messageReturnInput("Set audio track"));
+
+			setMaterialPackage(vhs);			// Set package spec
+		}
+		else
+		{
+			invalid = true;
+			
+			std::cout << "Please enter valid type; BluRay, SingleDVD, DoubleDVD, Combo, VHS" << std::endl;
+			type = messageReturnInput("Set Type");
+			type = toLower(type);
+		}
+
+		
+	} while (invalid);
+
+	
 	return material;
 }
 
-/*
- * Display options for linking materials and projects together
- */
-void ProjectManager::displayLinkingMenu()
+void ProjectManager::setBaseMaterialAttributes(Material * material, const std::string& type)
 {
-	std::cout << "Would you like to link a Project to a material or material to project" << std::endl;
-	std::cout << "1) Project to material" << std::endl;
-	std::cout << "2) Material to project" << std::endl;
+	material->setID(materials_.size() + 1);
+	material->setFilmTitle(messageReturnInput("Set Title"));
+	material->setFormat(type);
+	material->setAudioFormat(messageReturnInput("Set Audio Format"));
+	material->setRunTime(messageReturnFloat("Set Runtime"));
+	material->setLanguage(messageReturnInput("Set Language"));
+	material->setRetailPrice(messageReturnInt("Set Retail Price"));
+	material->setSubtitles(messageReturnInput("Set Subtitles"));
+	material->setAspectRation(messageGetAspect("Set Aspect Ratio"));
+}
+
+std::map<int, std::vector<std::string>> ProjectManager::setVectorSideMap(const std::string & message)
+{
+	std::cout << message << std::endl;
+	std::map<int, std::vector<std::string>> discAttributeMap;
+
+	discAttributeMap.insert(std::pair<int, std::vector<std::string>>(0, messageReturnUserVector("Set side one data", true)));
+	discAttributeMap.insert(std::pair<int, std::vector<std::string>>(1, messageReturnUserVector("Set side two data", true)));
+
+	return discAttributeMap;
+}
+
+void ProjectManager::setMaterialPackage(IPackagable * material)
+{
+	material->setPackageType(messageReturnInput("Set package type"));
+	material->setPackageDimensions(std::tuple<int, int, int>(messageReturnInt("Set package width"), messageReturnInt("Set package height"), messageReturnInt("Set package depth")));
+}
+
+std::vector<Disc*> ProjectManager::getDiscMaterialsFromUser(const std::string & message)
+{
+	std::cout << message << std::endl;
+
+	std::cout << "Atleast one value needs to be entered" << std::endl;
+	std::cout << "enter : exit---loop to finish" << std::endl;
+
+	std::vector<int> validID;
+	std::vector<int> selectedId;
+	std::vector<Disc*> userData = {};
+	std::string input = "";
+
+	std::cout << "ID :	TITLE : FORMAT" << std::endl;
+	for (Material* mat: materials_)
+	{
+		std::string format = mat->getFormat();
+		if (toLower(format) == "bluray" || toLower(format) == "singledvd" || toLower(format) == "doubledvd")
+		{
+			std::cout << mat->getId() << " : " << mat->getFilmTitle() << " : " << mat->getFormat() << std::endl;
+			validID.push_back(mat->getId());
+		}
+	}
+
+	while ((toLower(input) != "exit---loop") || userData.empty())
+	{
+		std::cout << "Please enter material index. Or exit---loop to finish" << std::endl;
+		try
+		{
+			input = getUserInput();
+			if (input != "" && input.find_first_of(" ") == std::string::npos && toLower(input) != "exit---loop")
+			{
+				int id = std::stoi(input);
+				if (std::find(validID.begin(), validID.end(), id) != validID.end())		//Input is a valid ID to select from
+				{
+					if (std::find(selectedId.begin(), selectedId.end(), id) != selectedId.end())
+					{
+						if (yesNoBool("you have already added this material do you want to add it again?"))
+						{
+							userData.push_back((Disc*)materials_[id - 1]);
+							selectedId.push_back(id);
+						}
+					}
+					else
+					{
+						userData.push_back((Disc*)materials_[id - 1]);
+						selectedId.push_back(id);
+					}
+				}
+			}
+		}
+		catch(std::invalid_argument ia)
+		{
+			std::cout << "Please enter a valid id (integer)" << std::endl;
+		}
+	}
+
+	return userData;
 }
 
 void ProjectManager::processLinkingOptins()
 {
+	if (!materials_.empty() && !projects_.empty())		
+	{
+		std::string input = toLower(getUserInput());
+		if (input == "1" || "project to material")
+		{
+
+		}
+		else if (input == "2" || input == "material to project")
+		{
+
+		}
+	}
+	else		// Missing either a project or material
+	{
+		std::cout << "You need to have atleast one project and one material to make a link" << std::endl;
+	}
 }
 
 /*
@@ -396,7 +558,7 @@ std::string ProjectManager::getUserInput()
 		 std::map<Project*, bool>::iterator it;
 		 for (it = projects_.begin(); it != projects_.end(); ++it)
 		 {
-			 csvHandler.writeToFile(it->first);
+			 csvHandler.writeToFile(it->first, it->second);
 		 }
 
 		 /*for (Project* project : projects_)
@@ -407,8 +569,8 @@ std::string ProjectManager::getUserInput()
 
 		 for (Material* material : materials_)
 		 {
-			 csvHandler.writeToFile(material);
-			 delete material;
+			 if(material != nullptr)
+				 csvHandler.writeToFile(material);
 		 }
 
 		 saveFile.close();
@@ -427,24 +589,6 @@ std::string ProjectManager::getUserInput()
 		 std::cout << "You didn't enter a valid option" << std::endl;
 	 }
  }
-
- /*
-  * display user with a message and return a non null input
-  */
-const std::string ProjectManager::messageReturnInput(const std::string & message)
-{
-	std::cout << message << std::endl;
-	std::cout << "Please enter your input" << std::endl;
-
-	std::string input = getUserInput();
-	while ((input == "") && (input.find_first_of(" ") == std::string::npos))  // Ensure user input is not null or only spaces
-	{
-		std::cout << "Your input cannot be nothing. Please try again" << std::endl;
-		input = getUserInput();
-	}
-
-	return input;
-}
 
 /*
  * Heavily based on:
@@ -472,9 +616,6 @@ const long ProjectManager::messageGetDate(const std::string & message)
 			std::cout << "Enter Year: " ; year  = stoi(getUserInput());
 			std::cout << "Enter Month: "; month = stoi(getUserInput());
 			std::cout << "Enter Day: "  ; day   = stoi(getUserInput());
-			//printf("Enter year: "); fflush(stdout); scanf_s("%d", &year);
-			//printf("Enter month: "); fflush(stdout); scanf_s("%d", &month);
-			//printf("Enter day: "); fflush(stdout); scanf_s("%d", &day);
 		}
 		catch (std::invalid_argument ia)
 		{
@@ -504,17 +645,38 @@ const long ProjectManager::messageGetDate(const std::string & message)
 	return timestamp;
 }
 
-const std::vector<std::string> ProjectManager::messageReturnUserVector(const std::string & message)
+/*
+* display user with a message and return a non null input
+*/
+const std::string ProjectManager::messageReturnInput(const std::string & message)
 {
 	std::cout << message << std::endl;
-	
-	std::cout << "Atleast one value needs to be entered" << std::endl;
+	std::cout << "Please enter your input" << std::endl;
+
+	std::string input = getUserInput();
+	while ((input == "") && (input.find_first_of(" ") == std::string::npos))  // Ensure user input is not null or only spaces
+	{
+		std::cout << "Your input cannot be nothing. Please try again" << std::endl;
+		input = getUserInput();
+	}
+
+	return input;
+}
+
+/*
+ * Display message on screen and get multiple user input and return in a vector
+ */
+const std::vector<std::string> ProjectManager::messageReturnUserVector(const std::string & message, const bool canBeNull /*false*/)
+{
+	std::cout << message << std::endl;
+	if(!canBeNull)
+		std::cout << "Atleast one value needs to be entered" << std::endl;
 	std::cout << "enter : exit---loop to finish" << std::endl;
 	
 	std::vector<std::string> userData = {};
 	std::string input = "";
 	
-	while ((toLower(input) != "exit---loop") || userData.empty())
+	while ((toLower(input) != "exit---loop") || (userData.empty() && !canBeNull))
 	{
 		std::cout << "Please enter a value. Or exit---loop to finish" << std::endl;
 		input = getUserInput();
@@ -527,7 +689,9 @@ const std::vector<std::string> ProjectManager::messageReturnUserVector(const std
 	return userData;
 }
 
-
+/*
+ * Display a message on screen and get user entered integers and return a vector of ints
+ */
 const std::vector<int> ProjectManager::messageReturnUserVectorInt(const std::string & message)
 {
 
@@ -561,6 +725,101 @@ const std::vector<int> ProjectManager::messageReturnUserVectorInt(const std::str
 	return userData;
 }
 
+/*
+ * Return a pair of ints 
+ */
+const std::pair<int, int> ProjectManager::messageGetAspect(const std::string & message)
+{
+	std::cout << message << std::endl;
+
+	std::pair<int, int> aspectratio;
+	bool invalid = true;
+	while (invalid)
+	{
+		try
+		{
+			aspectratio.first = std::stoi(messageReturnInput("Please enter width"));
+			aspectratio.second = std::stoi(messageReturnInput("Please enter height"));
+			invalid = false;
+		}
+		catch (std::invalid_argument ia)
+		{
+			std::cout << "Invalid input entered! please try again (must be an integer)" << std::endl;
+		}
+	}
+
+	return aspectratio;
+}
+
+/*
+ * Displays a message and converts input to an integer 
+ */
+const int ProjectManager::messageReturnInt(const std::string & message)
+{
+	std::cout << message << std::endl;
+	bool invalid = true;
+
+	int i;
+
+	while (invalid)
+	{
+		try
+		{
+			i = std::stoi(messageReturnInput("Enter Integer"));
+			invalid = false;
+		}
+		catch (std::invalid_argument)
+		{
+			std::cout << "Not a valid input plese try again" << std::endl;
+		}
+	}
+	return i;
+}
+
+
+/*
+ * Gets a user input and converts to a float
+ */
+const float ProjectManager::messageReturnFloat(const std::string & message)
+{
+	std::cout << message << std::endl;
+	bool invalid = true;
+
+	float f;
+
+	while (invalid)
+	{
+		try
+		{
+			f = std::stof(messageReturnInput("Enter decimal"));
+			invalid = false;
+		}
+		catch (std::invalid_argument)
+		{
+			std::cout << "Not a valid input plese try again" << std::endl;
+		}
+	}
+	return f;
+}
+
+
+const bool ProjectManager::yesNoBool(const std::string & message)
+{
+	std::cout << message << std::endl;
+
+	std::string input = "";
+	while (toLower(input) != "yes" && toLower(input) != "no")
+	{
+		std::cout << "please enter a valid option. Yes or No" << std::endl;
+		input = getUserInput();
+		if (toLower(input) == "yes" || toLower(input) == "no")
+		{
+			return input == "yes" ? true : false;
+		}
+	}
+
+	return false;
+}
 
 /*
   * Converts the input string to all lower case characters

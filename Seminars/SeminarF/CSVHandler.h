@@ -42,7 +42,8 @@ private:
 	/*
 	 * List of projects that have been loaded from the file
 	 */
-	std::vector<Project*> projects_;
+	//std::vector<Project*> projects_;
+	std::map<Project*, bool> projects_;
 
 	/*
 	 * Create classes from specified string and type
@@ -96,7 +97,7 @@ public:
 	/*
 	 * Write Project classes to the file
 	 */
-	void writeToFile(Project* project);
+	void writeToFile(Project* project, bool nowPlaying);
 
 	/*
 	 * read file and generate only materials
@@ -106,7 +107,7 @@ public:
 	/*
 	 * read file and generate only projects
 	 */
-	std::vector<Project*> getProjectsFromFile();
+	std::map<Project*, bool> getProjectsFromFile();
 
 	/*
 	 * return materials_
@@ -115,7 +116,7 @@ public:
 	/*
 	 * return projects_
 	 */
-	std::vector<Project*> getProjects();
+	std::map<Project*, bool> getProjects();
 
 };
 

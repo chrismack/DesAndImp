@@ -200,7 +200,12 @@ void Project::populate(std::vector<std::string> elements)
 	std::vector<int> weeklySales;
 	for (int i = 0; i < weeklySalesStrings.size(); i++)
 	{
-		weeklySales.push_back(std::stoi(weeklySalesStrings[i]));
+		try
+		{
+			weeklySales.push_back(std::stoi(weeklySalesStrings[i]));
+		}
+		catch (std::invalid_argument ia)
+		{}
 	}
 	weeklyTicketSales_ = weeklySales;
 

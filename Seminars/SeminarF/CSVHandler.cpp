@@ -92,12 +92,17 @@ void CSVHandler::writeToFile(Material* material)
 	
 }
 
-void CSVHandler::writeToFile(Project* project)
+void CSVHandler::writeToFile(Project* project, bool nowPlaying)
 {
 	std::vector<std::string> projectArray = project->toArray();
+	projectArray.push_back(nowPlaying ? "true" : "false");
 	std::stringstream ss;
 	for (int i = 0; i < projectArray.size(); i++)
 	{
+		if (projectArray[i] == "")
+		{
+			projectArray[i] = " ";
+		}
 		ss << projectArray[i];
 		if (i < projectArray.size() - 1)
 		{
@@ -115,7 +120,7 @@ std::vector<Material*> CSVHandler::getMaterialsFromFile()
 	return this->materials_;
 }
 
-std::vector<Project*> CSVHandler::getProjectsFromFile()
+std::map<Project*, bool> CSVHandler::getProjectsFromFile()
 {
 	readLinesFromFile(fileName_);
 	generateClassesFromLines();
@@ -127,7 +132,7 @@ std::vector<Material*> CSVHandler::getMaterials()
 	return this->materials_;
 }
 
-std::vector<Project*> CSVHandler::getProjects()
+std::map<Project*, bool> CSVHandler::getProjects()
 {
 	return this->projects_;
 }
@@ -141,7 +146,11 @@ void CSVHandler::generate(std::string string, std::string type)
 	}
 	else //Project
 	{
-		projects_.push_back(factory_->createProject(string));
+		std::string nowPlayingString = string.substr(string.find_last_of(",") + 1);
+		string = string.substr(0, string.find_last_of(",") + 1);
+		bool nowPlaying = nowPlayingString == "true" ? true : false;
+		projects_.insert(std::pair<Project*, bool>(factory_->createProject(string), nowPlaying));
+		//projects_.push_back(factory_->createProject(string));
 	}
 
 }

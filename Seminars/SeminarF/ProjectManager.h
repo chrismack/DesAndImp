@@ -9,6 +9,8 @@
 
 #include "Material.h"
 #include "Project.h"
+#include "IPackagable.h"
+#include "Disc.h"
 
 #include "LogHandler.h"
 #include "Logger.h"
@@ -103,10 +105,27 @@ private: // Functions
 	Material* createMaterial();
 
 	/*
-	 * Display the options for linking media together
-	 * Material to Project or Project to Material
+	 * Set the attributes of the referenced material
 	 */
-	void displayLinkingMenu();
+	void setBaseMaterialAttributes(Material* material, const std::string& message);
+
+	/*
+	 * Display a message to the user
+	 * Get their input and put their input
+	 */
+	std::map<int, std::vector<std::string>> setVectorSideMap(const std::string & message);
+
+	/*
+	 * Set package attributes for a material
+	 */
+	void setMaterialPackage(IPackagable* material);
+
+	/*
+	 * prints message to display
+	 * gets a list of materials defined by the users
+	 * Presents user with list of materials loaded into memory for them to select from
+	 */
+	std::vector<Disc*> getDiscMaterialsFromUser(const std::string& message);
 
 	/*
 	 * Process the user input for linking media together
@@ -143,7 +162,7 @@ private: // Functions
 	/*
 	 * Process and import data that has been formatted in CSV
 	 */
-	void importCSV(const std::string &CSV);
+	void importCSV(const std::string &CSV, const bool checkNowPlaying = false);
 
 	/*
 	 * Check if file at path exists
@@ -163,7 +182,7 @@ private: // Functions
 	/*
 	 * Display a message and continue to get user inputs and add to a vector until the user is satisifed
 	 */
-	const std::vector<std::string> messageReturnUserVector(const std::string& message);
+	const std::vector<std::string> messageReturnUserVector(const std::string& message, const bool canBeNull = false);
 
 	/*
 	 * Display a message and continue to get user inputs and add to a vector until the user is satisifed
@@ -172,10 +191,26 @@ private: // Functions
 	const std::vector<int> messageReturnUserVectorInt(const std::string& message);
 
 	/*
-	 * This should be in the CSVHandler but i'm not sure if i'm aloud to chage it so it shall go here
-	 * Write Projects to file with the now playing arg
+	 * Display a message and get the users input for an aspect ratio (int, int)
 	 */
-	void writeToFile(Project* project, bool nowPlaying);
+	const std::pair<int, int> messageGetAspect(const std::string & message);
+
+	/*
+	 * Display a message and get a user entered integer
+	 */
+	const int messageReturnInt(const std::string & message);
+
+	/*
+	* Display a message and get a user entered float
+	*/
+	const float messageReturnFloat(const std::string & message);
+
+	/*
+	 * Ask the user a yes no question and convert their answer to a bool
+	 * yes : true
+	 * no  : false
+	 */
+	const bool yesNoBool(const std::string & message);
 
 	/*
 	 * Converts a string to all lower case

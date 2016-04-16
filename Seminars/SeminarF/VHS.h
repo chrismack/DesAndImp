@@ -28,7 +28,7 @@ private:
 	/*
 	 * VHS can only have one audio track
 	 */
-	std::string audioTrack;
+	std::string audioTrack_;
 	
 	/*
 	 * content on the VHS
@@ -68,6 +68,12 @@ public:
 	void setContent(std::vector<std::string> content);
 	void addContent(std::string content);
 	std::vector<std::string> getContent();
+
+	/*
+	* Get, set add to content_
+	*/
+	void setAudioTrack(std::string content);
+	std::string getAudioTrack();
 
 	/*
 	* Override toArray and populate from Material class

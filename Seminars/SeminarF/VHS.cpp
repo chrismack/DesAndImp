@@ -59,6 +59,17 @@ std::vector<std::string> VHS::getContent()
 	return this->content_;
 }
 
+void VHS::setAudioTrack(std::string content)
+{
+	this->audioTrack_ = content;
+}
+
+
+std::string VHS::getAudioTrack()
+{
+	return this->audioTrack_;
+}
+
 //std::string VHS::toString()
 //{
 //	std::string objectString;
