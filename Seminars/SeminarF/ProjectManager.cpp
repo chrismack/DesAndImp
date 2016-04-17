@@ -24,6 +24,8 @@ ProjectManager::ProjectManager(SDI::Logger *logger)
 	exit_ = false;	// Initally set that we don't want to leave the application
 	this->logger->info("Starting the Project Manager");
 
+	materialCount = -1;
+	
 	setupSaveFile();
 	start();
 }
@@ -31,8 +33,21 @@ ProjectManager::ProjectManager(SDI::Logger *logger)
 
 ProjectManager::~ProjectManager()
 {
-	projects_.clear();
-	materials_.clear();
+	for (Material* material : materials_)
+	{
+		delete material;
+	}
+
+	for (Material* material : projectAssociatedMaterials)
+	{
+		delete material;
+	}
+
+	std::map<Project*, bool>::iterator it;
+	for (it = projects_.begin(); it != projects_.end(); ++it)
+	{
+		delete it->first;
+	}
 }
 
 /*
@@ -128,12 +143,10 @@ void ProjectManager::importCSV(const std::string &CSV, const bool checkNowPlayin
 	* Append materials to list of existing materials
 	*/
 	std::vector<Material*> materialsFromFile = csvHandler.getMaterialsFromFile();
-	if (checkNowPlaying)																			// Check now playing is acting as a new import flag
+	for (int i = 0; i < materialsFromFile.size(); i++)											// Make imported ids unique to the new set
 	{
-		for (int i = 0; i < materialsFromFile.size(); i++)											// Make imported ids unique to the new set
-		{
-			materialsFromFile[i]->setID(materials_.size() + i);
-		}
+		materialCount += 1;
+		materialsFromFile[i]->setID(materialCount);
 	}
 	materials_.insert(materials_.end(), materialsFromFile.begin(), materialsFromFile.end());	// Append to existing projects
 	materialsFromFile.clear();
@@ -163,8 +176,13 @@ void ProjectManager::importCSV(const std::string &CSV, const bool checkNowPlayin
 				{
 					for (Material* material : it->first->getMaterials())
 					{
-						//material->setID(materials_.size());
-						projectAssociatedMaterials.push_back(material);
+						if (material != nullptr)
+						{
+							//material->setID(materials_.size());
+							materialCount += 1;
+							material->setID(materialCount);
+							projectAssociatedMaterials.push_back(material);
+						}
 					}
 					projects_.insert(std::pair<Project*, bool>(it->first, toLower(input) == "yes" ? true : false));
 				}
@@ -174,8 +192,13 @@ void ProjectManager::importCSV(const std::string &CSV, const bool checkNowPlayin
 		{
 			for (Material* material : it->first->getMaterials())
 			{
-				//material->setID(materials_.size());
-				projectAssociatedMaterials.push_back(material);
+				if (material != nullptr)
+				{
+					//material->setID(materials_.size());
+					materialCount += 1;
+					material->setID(materialCount);
+					projectAssociatedMaterials.push_back(material);
+				}
 			}
 			projects_.insert(std::pair<Project*, bool>(it->first, it->second));
 		}
@@ -245,12 +268,14 @@ void ProjectManager::processViewOptinos()
 	{
 		for (Material* material : materials_)
 		{
-			std::cout << material->getId() << " : " << material->getFilmTitle() << std::endl;
+			if(material != nullptr)
+				std::cout << material->getId() << " : " << material->getFilmTitle() << std::endl;
 		}
 
 		for (Material* material : projectAssociatedMaterials)
 		{
-			std::cout << material->getId() << " : " << material->getFilmTitle() << "Associated with project" << std::endl;
+			if (material != nullptr)
+				std::cout << material->getId() << " : " << material->getFilmTitle() << "Associated with project" << std::endl;
 		}
 
 	}
@@ -281,11 +306,11 @@ void ProjectManager::processCreateOptions()
 	{
 		Project* project = createProject();
 		bool nowPlaying = yesNoBool("Is the project now playing?");
-		if (nowPlaying)
+		if (isReleased(project))
 		{
 			if (yesNoBool("Would you like to link materials to the project?"))
 			{
-				project->setMaterials(getMaterialFromUser("Add material to project"));
+				project->setMaterials(getMaterialsFromUser("Add material to project"));
 			}
 		}
 		projects_.insert(std::pair<Project*, bool>(project, nowPlaying));
@@ -328,10 +353,7 @@ Material * ProjectManager::createMaterial(const bool mustBeDisc /*false*/)
 {
 	Material* material = nullptr;
 
-	std::cout << "Please enter type; BluRay, SingleDVD, DoubleDVD, Combo, VHS" << std::endl;
-	std::string type = messageReturnInput("Set Type");
-	type = toLower(type);
-
+	std::string type;
 
 	bool invalid = false;
 	do
@@ -413,25 +435,22 @@ Material * ProjectManager::createMaterial(const bool mustBeDisc /*false*/)
 		else
 		{
 			invalid = true;
-			
 		}
-
-		
 	} while (invalid);
-
 	
 	return material;
 }
 
 void ProjectManager::setBaseMaterialAttributes(Material * material, const std::string& type)
 {
-	material->setID(materials_.size() + 1);
+	materialCount += 1;
+	material->setID(materialCount);
 	material->setFilmTitle(messageReturnInput("Set Title"));
 	material->setFormat(type);
 	material->setAudioFormat(messageReturnInput("Set Audio Format"));
-	material->setRunTime(messageReturnFloat("Set Runtime"));
+	material->setRunTime(messageReturnInt("Set Runtime"));
 	material->setLanguage(messageReturnInput("Set Language"));
-	material->setRetailPrice(messageReturnInt("Set Retail Price"));
+	material->setRetailPrice(messageReturnFloat("Set Retail Price"));
 	material->setSubtitles(messageReturnInput("Set Subtitles"));
 	material->setAspectRation(messageGetAspect("Set Aspect Ratio"));
 }
@@ -468,11 +487,14 @@ std::vector<Disc*> ProjectManager::getDiscMaterialsFromUser(const std::string & 
 	std::cout << "ID :	TITLE : FORMAT" << std::endl;
 	for (Material* mat: materials_)
 	{
-		std::string format = mat->getFormat();
-		if (toLower(format) == "bluray" || toLower(format) == "singledvd" || toLower(format) == "doubledvd")
+		if (mat != nullptr)
 		{
-			std::cout << mat->getId() << " : " << mat->getFilmTitle() << " : " << mat->getFormat() << std::endl;
-			validID.push_back(mat->getId());
+			std::string format = mat->getFormat();
+			if (toLower(format) == "bluray" || toLower(format) == "singledvd" || toLower(format) == "doubledvd")
+			{
+				std::cout << mat->getId() << " : " << mat->getFilmTitle() << " : " << mat->getFormat() << std::endl;
+				validID.push_back(mat->getId());
+			}
 		}
 	}
 
@@ -521,7 +543,7 @@ std::vector<Disc*> ProjectManager::getDiscMaterialsFromUser(const std::string & 
 	return userData;
 }
 
-std::vector<Material*> ProjectManager::getMaterialFromUser(const std::string & message)
+std::vector<Material*> ProjectManager::getMaterialsFromUser(const std::string & message)
 {
 	std::cout << message << std::endl;
 
@@ -535,7 +557,10 @@ std::vector<Material*> ProjectManager::getMaterialFromUser(const std::string & m
 	std::cout << "ID :	TITLE : FORMAT" << std::endl;
 	for (Material* mat : materials_)
 	{
-		std::cout << mat->getId() << " : " << mat->getFilmTitle() << " : " << mat->getFormat() << std::endl;
+		if(mat != nullptr)
+		{
+			std::cout << mat->getId() << " : " << mat->getFilmTitle() << " : " << mat->getFormat() << std::endl;
+		}
 	}
 
 	while ((toLower(input) != "exit---loop") || userData.empty())
@@ -567,10 +592,13 @@ std::vector<Material*> ProjectManager::getMaterialFromUser(const std::string & m
 					{
 						for (Material* material : materials_)
 						{
-							if (material->getId() == id)
+							if(material != nullptr)
 							{
-								userData.push_back((Disc*)material);
-								selectedId.push_back(id);
+								if (material->getId() == id)
+								{
+									userData.push_back((Disc*)material);
+									selectedId.push_back(id);
+								}
 							}
 						}
 					}
@@ -586,18 +614,83 @@ std::vector<Material*> ProjectManager::getMaterialFromUser(const std::string & m
 	return userData;
 }
 
+Project * ProjectManager::getProjectFromUser(const std::string & message)
+{
+	std::cout << message << std::endl;
+
+	Project* project = nullptr;
+	std::vector<Project*> tmpProjects;
+	if (!projects_.empty())
+	{
+		std::cout << "INDEX : TITLE : SUMMARY : GENRE" << std::endl;
+
+		int index = 0;
+		std::map<Project*, bool>::iterator it;
+		for (it = projects_.begin(); it != projects_.end(); ++it)
+		{
+			std::cout << index << " : " << it->first->getTitle() << " : " << it->first->getSummary() << " : " << it->first->getGenre() << std::endl;
+			index++;
+			tmpProjects.push_back(it->first);
+		}
+		
+		int selectedIndex;
+		do
+		{
+			selectedIndex = messageReturnInt("Enter Project index");
+			if (selectedIndex > -1 && selectedIndex < projects_.size())  // if valid selection
+			{
+				return tmpProjects[selectedIndex];
+			}
+		} while (selectedIndex > -1 && selectedIndex < projects_.size());
+	}
+	else		// No projects are loaded to memory
+	{
+		std::cout << "Their are no loaded projects! Import or create one" << std::endl;
+		return nullptr;
+	}
+
+	return project;
+}
+
 void ProjectManager::processLinkingOptins()
 {
 	if (!materials_.empty() && !projects_.empty())		
 	{
-		std::string input = toLower(getUserInput());
-		if (input == "1" || "project to material")
+		Project* project = getProjectFromUser("Please select a project");
+		if (project != nullptr)
 		{
+			if (isReleased(project))
+			{
+				std::vector<Material*> materials = getMaterialsFromUser("Please select materials to link");
+				if (!materials.empty())
+				{
+					project->setMaterials(materials);
 
-		}
-		else if (input == "2" || input == "material to project")
-		{
-
+					int materialIndex = -1;
+					for (Material* material : materials_)
+					{
+						if (material != nullptr)
+						{
+							materialIndex++;
+							for (Material* localMaterial : materials)
+							{
+								if (localMaterial != nullptr)
+								{
+									if (material->getId() == localMaterial->getId())
+									{
+										projectAssociatedMaterials.push_back(localMaterial);
+										materials_[materialIndex] = nullptr;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				std::cout << "Project has not been released. Materials cannot be added" << std::endl;
+			}
 		}
 	}
 	else		// Missing either a project or material
@@ -923,6 +1016,22 @@ const bool ProjectManager::yesNoBool(const std::string & message)
 	}
 
 	return false;
+}
+
+const bool ProjectManager::isReleased(Project * project)
+{
+	time_t rawTime;
+	time(&rawTime);
+	
+	return project->getReleaseDate() <= rawTime;
+}
+
+const bool ProjectManager::isreleased(const long timestamp)
+{
+	time_t rawTime;
+	time(&rawTime);
+
+	return timestamp <= rawTime;
 }
 
 /*

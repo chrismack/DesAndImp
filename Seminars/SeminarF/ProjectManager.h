@@ -33,6 +33,8 @@ private: // Variables
 	std::vector<Material*> materials_;
 	std::vector<Material*> projectAssociatedMaterials;
 
+	int materialCount = 0;
+
 	/*
 	 * Flag to test if the user wants to leave the application
 	 */
@@ -133,7 +135,12 @@ private: // Functions
 	 * Prints message to display
 	 * Gets a list of materials
 	 */
-	std::vector<Material*> getMaterialFromUser(const std::string& message);
+	std::vector<Material*> getMaterialsFromUser(const std::string& message);
+
+	/*
+	 * Prints message to display and promts user and returns their selected project
+	 */
+	Project* getProjectFromUser(const std::string & message);
 
 	/*
 	 * Process the user input for linking media together
@@ -219,6 +226,17 @@ private: // Functions
 	 * no  : false
 	 */
 	const bool yesNoBool(const std::string & message);
+
+	/*
+	 * Check if a project has been released or not
+	 * Check against local time
+	 */
+	const bool isReleased(Project* project);
+
+	/*
+	* Check if unix time stamp is more than or equal to local timestamp
+	*/
+	const bool isreleased(const long timestamp);
 
 	/*
 	 * Converts a string to all lower case

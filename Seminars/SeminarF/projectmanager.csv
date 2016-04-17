@@ -1,2 +1,3 @@
-Chris,Chris is testing,testing,1460764800,home,english,chris|testing, ,{0,chris chs,VHS,mp3,10,english,10.000000,english,10:11,plastic,10|10|100,content1},true
-0,chris chs,VHS,mp3,10,english,10.000000,english,10:11,plastic,10|10|100,content1
+Chris,Chris is testing,testing,1460764800,home,english,chris|testing, ,{0,Test,BluRay,DTS,3600,english,10.000000,english,16:9,english|french-english1|french1,english|french-english1|french1,audio 1|audio 2|audio 3-audio 4,plastic,1000|20|100,chap1|chap2|chap3,BHS1|BHS2|BHS3},true
+1,Testing,BluRay,DTS,3600,english,10.000000,english,16:9,english|french-english1|french1,english|french-english1|french1,audio 1|audio 2|audio 3-audio 4,plastic,1000|20|100,chap1|chap2|chap3,BHS1|BHS2|BHS3
+2,Chris,VHS,3,2,1,1.000000,1,1:1,123,123|123|123,234

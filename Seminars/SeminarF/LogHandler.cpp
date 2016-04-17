@@ -22,6 +22,7 @@ LogHandler::LogHandler(int argc, char * argv[])
 
 LogHandler::~LogHandler()
 {
+	delete logger;
 }
 
 void LogHandler::setArgc(int argc)

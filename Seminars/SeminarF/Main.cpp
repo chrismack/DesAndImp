@@ -13,7 +13,7 @@
 int main(int argc, char* argv[])
 {
 	LogHandler::getHandler()->logger = new SDI::Logger(argc, argv, false);
-	ProjectManager p(LogHandler::getHandler()->logger);
+	ProjectManager projectManager(LogHandler::getHandler()->logger);
 	
 
 	return 0;
