@@ -26,7 +26,7 @@ std::tuple<int, int, int> VHS::getPackageSize() const
 
 std::string VHS::getLanguageTrack() const
 {
-	return std::string();
+	return this->languageTrack_;
 }
 
 void VHS::setlanguageTrack(const std::string languageTrack)

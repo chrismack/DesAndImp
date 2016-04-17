@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 
+#include "ProjectViewer.h"
 #include "Material.h"
 #include "Project.h"
 #include "IPackagable.h"
@@ -20,6 +21,8 @@ class ProjectManager
 private: // Variables
 
 	SDI::Logger* logger;
+
+	ProjectViewer* projectViewer;
 
 	/*
 	 * List of all imported projects
@@ -57,6 +60,28 @@ public:  // Functions
 	 */
 	~ProjectManager();
 
+	/*
+	* Process the user input for the view menu
+	*/
+	void processViewOptinos();
+
+	/*
+	* Process the user input for the create media options
+	*/
+	void processCreateOptions();
+
+
+	/*
+	* Process the user input for the search option
+	*/
+	void processSearchOptions();
+
+	/*
+	* Process the user input for linking media together
+	*/
+	void processLinkingOptins();
+
+
 private: // Functions
 
 	/*
@@ -69,32 +94,7 @@ private: // Functions
 	 */
 	void start();
 
-	/*
-	 * Write options to the display
-	 */
-	void displayMenuOptions();
 
-	/*
-	 * Display message on screen for views that can be selected
-	 * displayed when option 3(view) from the menu is selected 
-	 */
-	void displayViewOptions();
-
-	/*
-	 * Process the user input for the view menu
-	 */
-	void processViewOptinos();
-
-	/*
-	 * Display the create menu sub options
-	 * displayed when option 4(create) from menu is selected
-	 */
-	void displayCreateMenu();
-
-	/*
-	 * Process the user input for the create media options
-	 */
-	void processCreateOptions();
 
 	/*
 	 * Allow user to create a material
@@ -135,17 +135,15 @@ private: // Functions
 	 * Prints message to display
 	 * Gets a list of materials
 	 */
-	std::vector<Material*> getMaterialsFromUser(const std::string& message);
+	std::vector<Material*> getMaterialsFromUser(const std::string& message, const bool oneExisting = false);
+
+	Material* getAssociatedMaterial(const std::string& message);
 
 	/*
 	 * Prints message to display and promts user and returns their selected project
 	 */
 	Project* getProjectFromUser(const std::string & message);
 
-	/*
-	 * Process the user input for linking media together
-	 */
-	void processLinkingOptins();
 
 	/*
 	 * Display a message to the user and ask if they would like to continue
@@ -238,10 +236,38 @@ private: // Functions
 	*/
 	const bool isreleased(const long timestamp);
 
+	void viewFullMaterial(Material* material);
+
+
 	/*
 	 * Converts a string to all lower case
 	 */
 	std::string toLower(std::string &input);
+
+
+
+	/*
+	* Write options to the display
+	*/
+	void displayMenuOptions();
+
+	/*
+	* Display message on screen for views that can be selected
+	* displayed when option 3(view) from the menu is selected
+	*/
+	void displayViewOptions();
+
+	/*
+	* Display the create menu sub options
+	* displayed when option 4(create) from menu is selected
+	*/
+	void displayCreateMenu();
+
+
+	/*
+	* Print the display menu to the screen
+	*/
+	void displaySearchMenu();
 };
 
 #endif // !PROJECTMANAGER_H
