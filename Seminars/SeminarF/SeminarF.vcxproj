@@ -94,6 +94,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialFactory.h" />
     <ClInclude Include="Project.h" />
+    <ClInclude Include="ProjectController.h" />
     <ClInclude Include="ProjectManager.h" />
     <ClInclude Include="ProjectViewer.h" />
     <ClInclude Include="SingleDVD.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialFactory.cpp" />
     <ClCompile Include="Project.cpp" />
+    <ClCompile Include="ProjectController.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
     <ClCompile Include="ProjectViewer.cpp" />
     <ClCompile Include="SingleDVD.cpp" />

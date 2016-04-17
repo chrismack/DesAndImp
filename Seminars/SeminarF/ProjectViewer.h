@@ -1,17 +1,19 @@
 #pragma once
-#include <string>
+#ifndef PROJECTVIEWER_H
+#define PROJECTVIEWER_H
 
-#include "ProjectManager.h"
+#include "Material.h"
+#include "Project.h"
+
+#include <string>
 
 class ProjectViewer
 {
-private:
-	ProjectManager* projectManager;
 public:
-	ProjectViewer(ProjectManager* projectManager);
+	ProjectViewer();
 	~ProjectViewer();
 
-	void displayMessage(const std::string & message);
+	void displayMessage(const std::string & message, const bool newLine = true);
 
 	/*
 	* Write options to the display
@@ -35,5 +37,11 @@ public:
 	* Print the display menu to the screen
 	*/
 	void displaySearchMenu();
+
+	void clearScreen();
+
+	void viewFullMaterial(Material* material);
+	void viewFullProject(Project* project);
 };
 
+#endif // !PROJECTVIEWER_H

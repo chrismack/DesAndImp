@@ -7,7 +7,6 @@
 #include <vector>
 #include <map>
 
-#include "ProjectViewer.h"
 #include "Material.h"
 #include "Project.h"
 #include "IPackagable.h"
@@ -15,6 +14,7 @@
 
 #include "LogHandler.h"
 #include "Logger.h"
+#include "ProjectViewer.h"
 
 class ProjectManager
 {
@@ -22,7 +22,7 @@ private: // Variables
 
 	SDI::Logger* logger;
 
-	ProjectViewer* projectViewer;
+	ProjectViewer projectViewer;
 
 	/*
 	 * List of all imported projects
@@ -236,38 +236,11 @@ private: // Functions
 	*/
 	const bool isreleased(const long timestamp);
 
-	void viewFullMaterial(Material* material);
-
-
 	/*
 	 * Converts a string to all lower case
 	 */
 	std::string toLower(std::string &input);
 
-
-
-	/*
-	* Write options to the display
-	*/
-	void displayMenuOptions();
-
-	/*
-	* Display message on screen for views that can be selected
-	* displayed when option 3(view) from the menu is selected
-	*/
-	void displayViewOptions();
-
-	/*
-	* Display the create menu sub options
-	* displayed when option 4(create) from menu is selected
-	*/
-	void displayCreateMenu();
-
-
-	/*
-	* Print the display menu to the screen
-	*/
-	void displaySearchMenu();
 };
 
 #endif // !PROJECTMANAGER_H

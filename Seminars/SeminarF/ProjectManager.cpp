@@ -24,8 +24,6 @@ ProjectManager::ProjectManager(SDI::Logger *logger)
 	exit_ = false;	// Initally set that we don't want to leave the application
 	this->logger->info("Starting the Project Manager");
 
-	projectViewer = new ProjectViewer(this);
-
 	materialCount = -1;
 	
 	setupSaveFile();
@@ -67,13 +65,13 @@ void ProjectManager::setupSaveFile()
 		saveFile.close();
 	
 		// File doesn't exist may want to import from and existing file
-		std::cout << "You do not have any existing projects or materials"		 << std::endl;
-		std::cout << "Would you like to import from an existing file? Yes or No" << std::endl;
+		projectViewer.displayMessage("You do not have any existing projects or materials"		);
+		projectViewer.displayMessage("Would you like to import from an existing file? Yes or No");
 		
 		std::string userImport = toLower(getUserInput());
 		if (userImport == "yes" || userImport == "y")
 		{
-			std::cout << "What file would you like to import?" << std::endl;
+			projectViewer.displayMessage("What file would you like to import?");
 			importFile(getUserInput());
 		}
 	}
@@ -87,7 +85,7 @@ void ProjectManager::start()
 {
 	while (!exit_)
 	{
-		projectViewer->displayMenuOptions();
+		projectViewer.displayMenuOptions();
 		processUserInput(getUserInput());
 		userContinueOption();
 	}
@@ -165,14 +163,14 @@ void ProjectManager::importCSV(const std::string &CSV, const bool checkNowPlayin
 	{
 		if (checkNowPlaying)
 		{
-			std::cout << "Is this project now playing?" << std::endl;
-			std::cout << "Title: " << it->first->getTitle() << " Genre: " << it->first->getGenre() << " Summary: " << it->first->getSummary() << std::endl;
+			projectViewer.displayMessage("Is this project now playing?");
+			projectViewer.displayMessage("Title: " + it->first->getTitle() + " Genre: " + it->first->getGenre() + " Summary: " + it->first->getSummary());
 			std::string tmpNowPlayingStr = it->second == true ? "true" : "false";
-			std::cout << "Currently saved as : " << tmpNowPlayingStr << std::endl;
+			projectViewer.displayMessage("Currently saved as : " + tmpNowPlayingStr);
 			std::string input = "";
 			while (toLower(input) != "yes" && toLower(input) != "no")
 			{
-				std::cout << "please enter a valid option. Yes or No" << std::endl;
+				projectViewer.displayMessage("please enter a valid option. Yes or No");
 				input = getUserInput();
 				if (toLower(input) == "yes" || toLower(input) == "no")
 				{
@@ -225,31 +223,6 @@ const bool ProjectManager::fileExists(const std::string & path)
 	return false;
 }
 
-/*
- * Display menu options on screen
- */
-void ProjectManager::displayMenuOptions()
-{
-	std::cout << "			MENU			      " << std::endl;
-	std::cout << "0)exit   : leave the application" << std::endl;		// Leave applicatoin
-	std::cout << "1)import : Import from file" << std::endl;		// Import materials from files
-	std::cout << "2)save   : Save to file" << std::endl;		// Save material strings to file
-	std::cout << "3)view   : View data" << std::endl;		// View Materials and projects currently stored in memory
-	std::cout << "4)create : Create Material or Proj" << std::endl;
-	std::cout << "5)search : Search for linked media" << std::endl;
-	std::cout << std::endl;
-}
-
-/*
- * Display options for viewing materials loaded into memory
- */
-void ProjectManager::displayViewOptions()
-{
-	std::cout << "What would you like to view?" << std::endl << "1)Projects or 2)Materials" << std::endl;;
-	std::cout << "Please enter you choice" << std::endl;
-	processViewOptinos();
-}
-
 void ProjectManager::processViewOptinos()
 {
 	std::string viewOption = toLower(getUserInput());
@@ -259,11 +232,11 @@ void ProjectManager::processViewOptinos()
 		std::map<Project*, bool>::iterator it;
 		for (it = projects_.begin(); it != projects_.end(); ++it)
 		{
-			std::cout << it->first->getTitle() << std::endl;
+			projectViewer.displayMessage(it->first->getTitle());
 		}
 		/*for (Project* project : projects_)
 		{
-			std::cout << project->getTitle() << std::endl;
+			projectViewer.displayMessage(project->getTitle());
 			delete project;
 		}*/
 	}
@@ -272,34 +245,20 @@ void ProjectManager::processViewOptinos()
 		for (Material* material : materials_)
 		{
 			if(material != nullptr)
-				std::cout << material->getId() << " : " << material->getFilmTitle() << std::endl;
+				projectViewer.displayMessage(std::to_string(material->getId()) + " : " + material->getFilmTitle());
 		}
 
 		for (Material* material : projectAssociatedMaterials)
 		{
 			if (material != nullptr)
-				std::cout << material->getId() << " : " << material->getFilmTitle() << "Associated with project" << std::endl;
+				projectViewer.displayMessage(std::to_string(material->getId()) + " : " + material->getFilmTitle() + "Associated with project");
 		}
 
 	}
 	else		// No valid option has been entered for view option
 	{
-		std::cout << "You didn't enter a valid option for view" << std::endl;
+		projectViewer.displayMessage("You didn't enter a valid option for view");
 	}
-}
-
-/*
- * display the options for creating materials or projects
- */
-void ProjectManager::displayCreateMenu()
-{
-	std::cout << "What operation would you like to complete?" << std::endl;
-	std::cout << "1) Create Project" << std::endl;		// Create a project and add to projects_
-	std::cout << "2) Create Material" << std::endl;		// Create a material and add to materials_
-	std::cout << "3) Link Media" << std::endl;		// Display linking menu
-
-	std::cout << "Please enter your option : " << std::endl;
-	processCreateOptions();
 }
 
 void ProjectManager::processCreateOptions()
@@ -324,7 +283,7 @@ void ProjectManager::processCreateOptions()
 	}
 	else if (input == "3" || input == "link media")
 	{
-		std::cout << "Please select a project and material to link" << std::endl;
+		projectViewer.displayMessage("Please select a project and material to link");
 		processLinkingOptins();
 	}
 }
@@ -363,11 +322,11 @@ Material * ProjectManager::createMaterial(const bool mustBeDisc /*false*/)
 	{
 		if (mustBeDisc)
 		{
-			std::cout << "Please enter valid type; BluRay, SingleDVD, DoubleDVD" << std::endl;
+			projectViewer.displayMessage("Please enter valid type; BluRay, SingleDVD, DoubleDVD");
 		}
 		else
 		{
-			std::cout << "Please enter valid type; BluRay, SingleDVD, DoubleDVD, Combo, VHS" << std::endl;
+			projectViewer.displayMessage("Please enter valid type; BluRay, SingleDVD, DoubleDVD, Combo, VHS");
 		}
 		type = messageReturnInput("Set Type");
 		type = toLower(type);
@@ -460,7 +419,7 @@ void ProjectManager::setBaseMaterialAttributes(Material * material, const std::s
 
 std::map<int, std::vector<std::string>> ProjectManager::setVectorSideMap(const std::string & message)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 	std::map<int, std::vector<std::string>> discAttributeMap;
 
 	discAttributeMap.insert(std::pair<int, std::vector<std::string>>(0, messageReturnUserVector("Set side one data", true)));
@@ -477,17 +436,18 @@ void ProjectManager::setMaterialPackage(IPackagable * material)
 
 std::vector<Disc*> ProjectManager::getDiscMaterialsFromUser(const std::string & message)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 
-	std::cout << "Atleast one value needs to be entered" << std::endl;
-	std::cout << "enter : exit---loop to finish" << std::endl;
+	projectViewer.displayMessage("Atleast one value needs to be entered");
+	projectViewer.displayMessage("enter : exit---loop to finish");
 
 	std::vector<int> validID;
 	std::vector<int> selectedId;
 	std::vector<Disc*> userData = {};
 	std::string input = "";
 
-	std::cout << "ID :	TITLE : FORMAT" << std::endl;
+
+	projectViewer.displayMessage("ID :	TITLE : FORMAT");
 	for (Material* mat: materials_)
 	{
 		if (mat != nullptr)
@@ -495,7 +455,7 @@ std::vector<Disc*> ProjectManager::getDiscMaterialsFromUser(const std::string & 
 			std::string format = mat->getFormat();
 			if (toLower(format) == "bluray" || toLower(format) == "singledvd" || toLower(format) == "doubledvd")
 			{
-				std::cout << mat->getId() << " : " << mat->getFilmTitle() << " : " << mat->getFormat() << std::endl;
+				projectViewer.displayMessage(std::to_string(mat->getId()) + " : " + mat->getFilmTitle() + " : " + mat->getFormat());
 				validID.push_back(mat->getId());
 			}
 		}
@@ -511,7 +471,7 @@ std::vector<Disc*> ProjectManager::getDiscMaterialsFromUser(const std::string & 
 		}
 		else
 		{
-			std::cout << "Please enter material index. Or exit---loop to finish" << std::endl;
+			projectViewer.displayMessage("Please enter material index. Or exit---loop to finish");
 			try
 			{
 				input = getUserInput();
@@ -538,7 +498,7 @@ std::vector<Disc*> ProjectManager::getDiscMaterialsFromUser(const std::string & 
 			}
 			catch(std::invalid_argument ia)
 			{
-				std::cout << "Please enter a valid id (integer)" << std::endl;
+				projectViewer.displayMessage("Please enter a valid id (integer)");
 			}
 		}
 	}
@@ -548,21 +508,21 @@ std::vector<Disc*> ProjectManager::getDiscMaterialsFromUser(const std::string & 
 
 std::vector<Material*> ProjectManager::getMaterialsFromUser(const std::string & message, const bool oneExisting /* false */)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 
-	std::cout << "Atleast one value needs to be entered" << std::endl;
-	std::cout << "enter : exit---loop to finish" << std::endl;
+	projectViewer.displayMessage("Atleast one value needs to be entered");
+	projectViewer.displayMessage("enter : exit---loop to finish");
 
 	std::vector<int> selectedId;
 	std::vector<Material*> userData = {};
 	std::string input = "";
 
-	std::cout << "ID :	TITLE : FORMAT" << std::endl;
+	projectViewer.displayMessage("ID :	TITLE : FORMAT");
 	for (Material* mat : materials_)
 	{
 		if(mat != nullptr)
 		{
-			std::cout << mat->getId() << " : " << mat->getFilmTitle() << " : " << mat->getFormat() << std::endl;
+			projectViewer.displayMessage(std::to_string(mat->getId()) + " : " + mat->getFilmTitle() + " : " + mat->getFormat());
 		}
 	}
 
@@ -578,7 +538,7 @@ std::vector<Material*> ProjectManager::getMaterialsFromUser(const std::string & 
 			}
 			else
 			{
-				std::cout << "Please enter material index. Or exit---loop to finish" << std::endl;
+				projectViewer.displayMessage("Please enter material index. Or exit---loop to finish");
 				try
 				{
 					input = getUserInput();
@@ -611,7 +571,7 @@ std::vector<Material*> ProjectManager::getMaterialsFromUser(const std::string & 
 				}
 				catch (std::invalid_argument ia)
 				{
-					std::cout << "Please enter a valid id (integer)" << std::endl;
+					projectViewer.displayMessage("Please enter a valid id (integer)");
 				}
 			}
 		}
@@ -623,7 +583,7 @@ std::vector<Material*> ProjectManager::getMaterialsFromUser(const std::string & 
 			bool valid = true;
 			do
 			{
-				std::cout << "Please enter material index" << std::endl;
+				projectViewer.displayMessage("Please enter material index");
 				try
 				{
 					input = getUserInput();
@@ -653,7 +613,7 @@ std::vector<Material*> ProjectManager::getMaterialsFromUser(const std::string & 
 		}
 		else
 		{
-			std::cout << "No materials exist" << std::endl;
+			projectViewer.displayMessage("No materials exist");
 		}
 	}
 	return userData;
@@ -661,7 +621,7 @@ std::vector<Material*> ProjectManager::getMaterialsFromUser(const std::string & 
 
 Material * ProjectManager::getAssociatedMaterial(const std::string & message)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 	Material* material = nullptr;
 	std::string input;
 	std::vector<int> validIndex;
@@ -669,7 +629,7 @@ Material * ProjectManager::getAssociatedMaterial(const std::string & message)
 	{
 		if (mat != nullptr)
 		{
-			std::cout << mat->getId() << " : " << mat->getFilmTitle() << " : " << mat->getFormat() << std::endl;
+			projectViewer.displayMessage(std::to_string(mat->getId()) + " : " + mat->getFilmTitle() + " : " + mat->getFormat());
 			validIndex.push_back(mat->getId());
 		}
 	}
@@ -679,7 +639,7 @@ Material * ProjectManager::getAssociatedMaterial(const std::string & message)
 		bool valid = false;
 		do
 		{
-			std::cout << "Please enter material index" << std::endl;
+			projectViewer.displayMessage("Please enter material index");
 			try
 			{
 				input = getUserInput();
@@ -724,26 +684,26 @@ Material * ProjectManager::getAssociatedMaterial(const std::string & message)
 	}
 	else
 	{
-		std::cout << "No materials exist" << std::endl;
+		projectViewer.displayMessage("No materials exist");
 	}
 	return material;
 }
 
 Project * ProjectManager::getProjectFromUser(const std::string & message)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 
 	Project* project = nullptr;
 	std::vector<Project*> tmpProjects;
 	if (!projects_.empty())
 	{
-		std::cout << "INDEX : TITLE : SUMMARY : GENRE" << std::endl;
+		projectViewer.displayMessage("INDEX : TITLE : SUMMARY : GENRE");
 
 		int index = 0;
 		std::map<Project*, bool>::iterator it;
 		for (it = projects_.begin(); it != projects_.end(); ++it)
 		{
-			std::cout << index << " : " << it->first->getTitle() << " : " << it->first->getSummary() << " : " << it->first->getGenre() << std::endl;
+			projectViewer.displayMessage(std::to_string(index) + " : " + it->first->getTitle() + " : " + it->first->getSummary() + " : " + it->first->getGenre());
 			index++;
 			tmpProjects.push_back(it->first);
 		}
@@ -760,7 +720,7 @@ Project * ProjectManager::getProjectFromUser(const std::string & message)
 	}
 	else		// No projects are loaded to memory
 	{
-		std::cout << "Their are no loaded projects! Import or create one" << std::endl;
+		projectViewer.displayMessage("Their are no loaded projects! Import or create one");
 		return nullptr;
 	}
 
@@ -804,13 +764,13 @@ void ProjectManager::processLinkingOptins()
 			}
 			else
 			{
-				std::cout << "Project has not been released. Materials cannot be added" << std::endl;
+				projectViewer.displayMessage("Project has not been released. Materials cannot be added");
 			}
 		}
 	}
 	else		// Missing either a project or material
 	{
-		std::cout << "You need to have atleast one project and one material to make a link" << std::endl;
+		projectViewer.displayMessage("You need to have atleast one project and one material to make a link");
 	}
 }
 
@@ -823,15 +783,15 @@ void ProjectManager::userContinueOption()
 	if (exit_ == false) // Skip this step if we are already leaving the application
 	{
 		// Display message to the user
-		std::cout << std::endl;		// Blank space
-		std::cout << "Would you like to continue?" << std::endl;
-		std::cout << "Yes or No" << std::endl;
+		projectViewer.displayMessage(" ");
+		projectViewer.displayMessage("Would you like to continue?");
+		projectViewer.displayMessage("Yes or No");
 	
 		std::string userContinue = toLower(getUserInput());
 		if (userContinue == "no" )
 			exit_ = true;
 
-		system("cls");
+		projectViewer.clearScreen();
 	}
 }
 
@@ -857,7 +817,7 @@ std::string ProjectManager::getUserInput()
 	 }
 	 else if (input == "1" || input == "import")
 	 {
-		 std::cout << "Please enter a path to the file you would like to import : " << std::endl;
+		 projectViewer.displayMessage("Please enter a path to the file you would like to import : ");
 		 importFile(getUserInput());
 	 }
 	 else if (input == "2" || input == "save")
@@ -890,33 +850,25 @@ std::string ProjectManager::getUserInput()
 	 }
 	 else if (input == "3" || input == "view")
 	 {
-		 projectViewer->displayViewOptions();// displayViewOptions();
+		 projectViewer.displayViewOptions();// displayViewOptions();
+		 processViewOptinos();
 	 }
 	 else if (input == "4" || input == "create")
 	 {
-		 displayCreateMenu();
+		 projectViewer.displayCreateMenu();// displayCreateMenu();
+		 processCreateOptions();
 	 }
 	 else if (input == "5" || input == "search")
 	 {
-		 displaySearchMenu();
+		 projectViewer.displaySearchMenu();//displaySearchMenu();
+		 processSearchOptions();
 	 }
 	 else			// No valid option has been entered
 	 {
-		 std::cout << "You didn't enter a valid option" << std::endl;
+		 projectViewer.displayMessage("You didn't enter a valid option");
 	 }
  }
 
- /*
-  * Display the search menu
-  */
- void ProjectManager::displaySearchMenu()
- {
-	 std::cout << std::endl;
-	 std::cout << "Please select a seach option" << std::endl;
-	 std::cout << "1)Find materials associated with project" << std::endl;
-	 std::cout << "2)Find project associated with material" << std::endl;
-	 processSearchOptions();
- }
 
  /*
   * Process the user input after the search menu
@@ -937,14 +889,14 @@ std::string ProjectManager::getUserInput()
 			 {
 				 for (Material* material : project->getMaterials())
 				 {
-					 std::cout << "TITLE : " << material->getFilmTitle() << "   ";
-					 std::cout << "FORMAT : " << material->getFormat() << "   ";
-					 std::cout << "" << material->getLanguage() << "   ";
-					 std::cout << std::endl;
+					 projectViewer.displayMessage("TITLE : " + material->getFilmTitle() + "   ", false);
+					 projectViewer.displayMessage("FORMAT : " + material->getFormat() + "   ", false);
+					 projectViewer.displayMessage("LANGIAGE : " + material->getLanguage() + "   ", false);
+					 projectViewer.displayMessage(" ");
 
 					 if (yesNoBool("Would you like to view the full material?"))
 					 {
-						 viewFullMaterial(material);
+						 projectViewer.viewFullMaterial(material);
 					 }
 				 
 				 }
@@ -952,7 +904,7 @@ std::string ProjectManager::getUserInput()
 			 }
 			 else
 			 {
-				 std::cout << "Project doesn't have any associated materials" << std::endl;
+				 projectViewer.displayMessage("Project doesn't have any associated materials");
 			 }
 		 }
 		 else if (input == "2")
@@ -982,23 +934,17 @@ std::string ProjectManager::getUserInput()
 
 				for (Project* proj : projects)
 				{
-					std::cout << "TILTE: " << proj->getTitle() << " SUMMARY:" << proj->getSummary() << std::endl;
+					projectViewer.displayMessage("TILTE: " + proj->getTitle() + " SUMMARY:" + proj->getSummary());
 				
 					if (yesNoBool("Would you like to see the whole project?"))
 					{
-						std::vector<std::string> projElements = proj->toArray();
-						std::stringstream ss;
-						for (std::string element : projElements)
-						{
-							ss << element << " :: ";
-						}
-						std::cout << ss.str() << std::endl;
+						projectViewer.viewFullProject(proj);
 					}
 				}
 			}
 			else
 			{
-				std::cout << "Couldn't find associated project" << std::endl;
+				projectViewer.displayMessage("Couldn't find associated project");
 			}
 		 }
 		 else
@@ -1016,7 +962,7 @@ std::string ProjectManager::getUserInput()
 const long ProjectManager::messageGetDate(const std::string & message)
 {
 
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 
 	time_t rawTime;
 	struct tm timeInfo;
@@ -1032,14 +978,14 @@ const long ProjectManager::messageGetDate(const std::string & message)
 		 */
 		try
 		{
-			std::cout << "Enter Year: " ; year  = stoi(getUserInput());
-			std::cout << "Enter Month: "; month = stoi(getUserInput());
-			std::cout << "Enter Day: "  ; day   = stoi(getUserInput());
+			projectViewer.displayMessage("Enter Year: ", false); year = stoi(getUserInput());
+			projectViewer.displayMessage("Enter Month: ", false); month = stoi(getUserInput());
+			projectViewer.displayMessage("Enter Day: ", false); day = stoi(getUserInput());
 		}
 		catch (std::invalid_argument ia)
 		{
 			validInput = false;
-			std::cout << "Invalid input please re enter" << std::endl;
+			projectViewer.displayMessage("Invalid input please re enter");
 		}
 
 		if (validInput)
@@ -1057,7 +1003,7 @@ const long ProjectManager::messageGetDate(const std::string & message)
 			timestamp = mktime(&timeInfo);					// COnvert to unix
 		
 			if (timestamp == -1)							// Invalid date set entered
-				std::cout << "invalid date please re enter" << std::endl;
+				projectViewer.displayMessage("invalid date please re enter");
 		}
 	}
 
@@ -1069,13 +1015,13 @@ const long ProjectManager::messageGetDate(const std::string & message)
 */
 const std::string ProjectManager::messageReturnInput(const std::string & message)
 {
-	std::cout << message << std::endl;
-	std::cout << "Please enter your input" << std::endl;
+	projectViewer.displayMessage(message);
+	projectViewer.displayMessage("Please enter your input");
 
 	std::string input = getUserInput();
 	while ((input == "") && (input.find_first_of(" ") == std::string::npos))  // Ensure user input is not null or only spaces
 	{
-		std::cout << "Your input cannot be nothing. Please try again" << std::endl;
+		projectViewer.displayMessage("Your input cannot be nothing. Please try again");
 		input = getUserInput();
 	}
 
@@ -1087,17 +1033,17 @@ const std::string ProjectManager::messageReturnInput(const std::string & message
  */
 const std::vector<std::string> ProjectManager::messageReturnUserVector(const std::string & message, const bool canBeNull /*false*/)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 	if(!canBeNull)
-		std::cout << "Atleast one value needs to be entered" << std::endl;
-	std::cout << "enter : exit---loop to finish" << std::endl;
+		projectViewer.displayMessage("Atleast one value needs to be entered");
+	projectViewer.displayMessage("enter : exit---loop to finish");
 	
 	std::vector<std::string> userData = {};
 	std::string input = "";
 	
 	while ((toLower(input) != "exit---loop") || (userData.empty() && !canBeNull))
 	{
-		std::cout << "Please enter a value. Or exit---loop to finish" << std::endl;
+		projectViewer.displayMessage("Please enter a value. Or exit---loop to finish");
 		input = getUserInput();
 		if (input != "" && input.find_first_of(" ") == std::string::npos && toLower(input) != "exit---loop")
 		{
@@ -1114,18 +1060,18 @@ const std::vector<std::string> ProjectManager::messageReturnUserVector(const std
 const std::vector<int> ProjectManager::messageReturnUserVectorInt(const std::string & message)
 {
 
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 
-	std::cout << "Atleast one value needs to be entered" << std::endl;
-	std::cout << "enter : exit---loop to finish" << std::endl;
+	projectViewer.displayMessage("Atleast one value needs to be entered");
+	projectViewer.displayMessage("enter : exit---loop to finish");
 
 	std::vector<int> userData = {};
 	std::string input = "";
 
 	while ((toLower(input) != "exit---loop") || userData.empty())
 	{
-		std::cout << "Please enter a value. Or exit---loop to finish" << std::endl;
-		std::cout << "This is data set : " << userData.size() + 1 << std::endl;
+		projectViewer.displayMessage("Please enter a value. Or exit---loop to finish");
+		projectViewer.displayMessage("This is data set : " + userData.size() + 1);
 		input = getUserInput();
 		if (toLower(input) != "exit---loop")
 		{
@@ -1135,7 +1081,7 @@ const std::vector<int> ProjectManager::messageReturnUserVectorInt(const std::str
 			}
 			catch (std::invalid_argument ia)
 			{
-				std::cout << "Could not convert " << input << " to an integer" << std::endl;
+				projectViewer.displayMessage("Could not convert " + input + " to an integer");
 			}
 		}
 	}
@@ -1149,7 +1095,7 @@ const std::vector<int> ProjectManager::messageReturnUserVectorInt(const std::str
  */
 const std::pair<int, int> ProjectManager::messageGetAspect(const std::string & message)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 
 	std::pair<int, int> aspectratio;
 	bool invalid = true;
@@ -1163,7 +1109,7 @@ const std::pair<int, int> ProjectManager::messageGetAspect(const std::string & m
 		}
 		catch (std::invalid_argument ia)
 		{
-			std::cout << "Invalid input entered! please try again (must be an integer)" << std::endl;
+			projectViewer.displayMessage("Invalid input entered! please try again (must be an integer)");
 		}
 	}
 
@@ -1175,7 +1121,7 @@ const std::pair<int, int> ProjectManager::messageGetAspect(const std::string & m
  */
 const int ProjectManager::messageReturnInt(const std::string & message)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 	bool invalid = true;
 
 	int i;
@@ -1189,7 +1135,7 @@ const int ProjectManager::messageReturnInt(const std::string & message)
 		}
 		catch (std::invalid_argument)
 		{
-			std::cout << "Not a valid input plese try again" << std::endl;
+			projectViewer.displayMessage("Not a valid input plese try again");
 		}
 	}
 	return i;
@@ -1201,7 +1147,7 @@ const int ProjectManager::messageReturnInt(const std::string & message)
  */
 const float ProjectManager::messageReturnFloat(const std::string & message)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 	bool invalid = true;
 
 	float f;
@@ -1215,7 +1161,7 @@ const float ProjectManager::messageReturnFloat(const std::string & message)
 		}
 		catch (std::invalid_argument)
 		{
-			std::cout << "Not a valid input plese try again" << std::endl;
+			projectViewer.displayMessage("Not a valid input plese try again");
 		}
 	}
 	return f;
@@ -1224,12 +1170,12 @@ const float ProjectManager::messageReturnFloat(const std::string & message)
 
 const bool ProjectManager::yesNoBool(const std::string & message)
 {
-	std::cout << message << std::endl;
+	projectViewer.displayMessage(message);
 
 	std::string input = "";
 	while (toLower(input) != "yes" && toLower(input) != "no")
 	{
-		std::cout << "please enter a valid option. Yes or No" << std::endl;
+		projectViewer.displayMessage("please enter a valid option. Yes or No");
 		input = getUserInput();
 		if (toLower(input) == "yes" || toLower(input) == "no")
 		{
@@ -1254,20 +1200,6 @@ const bool ProjectManager::isreleased(const long timestamp)
 	time(&rawTime);
 
 	return timestamp <= rawTime;
-}
-
-void ProjectManager::viewFullMaterial(Material * material)
-{
-	std::vector<std::string> materialElements = material->toArray();
-
-	std::stringstream ss;
-
-	for (std::string element : materialElements)
-	{
-		ss << element << " :: ";
-	}
-
-	std::cout << ss.str() << std::endl;
 }
 
 /*

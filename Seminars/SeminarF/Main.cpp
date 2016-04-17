@@ -14,7 +14,6 @@ int main(int argc, char* argv[])
 {
 	LogHandler::getHandler()->logger = new SDI::Logger(argc, argv, false);
 	ProjectManager projectManager(LogHandler::getHandler()->logger);
-	
 
 	return 0;
 }
