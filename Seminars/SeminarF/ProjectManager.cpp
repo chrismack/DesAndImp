@@ -16,18 +16,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 
-ProjectManager::ProjectManager(SDI::Logger *logger)
+ProjectManager::ProjectManager()
 {
 	this->logger = LogHandler::getHandler()->logger;
 	this->logger->setLogLevel(SDI::Logger::LogLevel::ALL);
-
-	exit_ = false;	// Initally set that we don't want to leave the application
 	this->logger->info("Starting the Project Manager");
 
 	materialCount = -1;
-	
-	setupSaveFile();
-	start();
 }
 
 
@@ -81,16 +76,6 @@ void ProjectManager::setupSaveFile()
 	}
 }
 
-void ProjectManager::start()
-{
-	while (!exit_)
-	{
-		projectViewer.displayMenuOptions();
-		processUserInput(getUserInput());
-		userContinueOption();
-	}
-}
-
 /*
  * Try to import a file from a specified path
  *
@@ -98,6 +83,7 @@ void ProjectManager::start()
  */
 bool ProjectManager::importFile(std::string path)
 {
+	projectViewer.displayMessage("Please enter a path to the file you would like to import : ");
 	logger->info("Importing " + path);
 	if (fileExists(path))
 	{
@@ -128,6 +114,29 @@ bool ProjectManager::importFile(std::string path)
 
 	}
 	return false;
+}
+
+void ProjectManager::save()
+{
+	std::ofstream saveFile(defaultSavePath);
+	saveFile.open(defaultSavePath, std::ofstream::out);
+	MaterialFactory* mf = new MaterialFactory();
+	CSVHandler csvHandler(defaultSavePath, mf);
+
+	std::map<Project*, bool>::iterator it;
+	for (it = projects_.begin(); it != projects_.end(); ++it)
+	{
+		csvHandler.writeToFile(it->first, it->second);
+	}
+
+	for (Material* material : materials_)
+	{
+		if (material != nullptr)
+			csvHandler.writeToFile(material);
+	}
+
+	saveFile.close();
+	delete mf;
 }
 
 /*
@@ -221,71 +230,6 @@ const bool ProjectManager::fileExists(const std::string & path)
 	}
 	file.close();
 	return false;
-}
-
-void ProjectManager::processViewOptinos()
-{
-	std::string viewOption = toLower(getUserInput());
-	if (viewOption == "1" || viewOption == "projects")
-	{
-
-		std::map<Project*, bool>::iterator it;
-		for (it = projects_.begin(); it != projects_.end(); ++it)
-		{
-			projectViewer.displayMessage(it->first->getTitle());
-		}
-		/*for (Project* project : projects_)
-		{
-			projectViewer.displayMessage(project->getTitle());
-			delete project;
-		}*/
-	}
-	else if (viewOption == "2" || viewOption == "materials")
-	{
-		for (Material* material : materials_)
-		{
-			if(material != nullptr)
-				projectViewer.displayMessage(std::to_string(material->getId()) + " : " + material->getFilmTitle());
-		}
-
-		for (Material* material : projectAssociatedMaterials)
-		{
-			if (material != nullptr)
-				projectViewer.displayMessage(std::to_string(material->getId()) + " : " + material->getFilmTitle() + "Associated with project");
-		}
-
-	}
-	else		// No valid option has been entered for view option
-	{
-		projectViewer.displayMessage("You didn't enter a valid option for view");
-	}
-}
-
-void ProjectManager::processCreateOptions()
-{
-	std::string input = toLower(getUserInput());
-	if (input == "1" || input == "create project")
-	{
-		Project* project = createProject();
-		bool nowPlaying = yesNoBool("Is the project now playing?");
-		if (isReleased(project))
-		{
-			if (yesNoBool("Would you like to link materials to the project?"))
-			{
-				project->setMaterials(getMaterialsFromUser("Add material to project"));
-			}
-		}
-		projects_.insert(std::pair<Project*, bool>(project, nowPlaying));
-	}
-	else if (input == "2" || input == "create material")
-	{
-		materials_.push_back(createMaterial());
-	}
-	else if (input == "3" || input == "link media")
-	{
-		projectViewer.displayMessage("Please select a project and material to link");
-		processLinkingOptins();
-	}
 }
 
 /*
@@ -727,8 +671,9 @@ Project * ProjectManager::getProjectFromUser(const std::string & message)
 	return project;
 }
 
-void ProjectManager::processLinkingOptins()
+void ProjectManager::linkMedia()
 {
+	projectViewer.displayMessage("Please select a project and material to link");
 	if (!materials_.empty() && !projects_.empty())		
 	{
 		Project* project = getProjectFromUser("Please select a project");
@@ -774,24 +719,147 @@ void ProjectManager::processLinkingOptins()
 	}
 }
 
-/*
- * Has the user finished using the program
- */
-void ProjectManager::userContinueOption()
+void ProjectManager::updateDisplay(const std::string & message)
 {
+	projectViewer.displayMessage(message);
+}
 
-	if (exit_ == false) // Skip this step if we are already leaving the application
+void ProjectManager::displayViewOptions()
+{
+	projectViewer.displayViewOptions();
+}
+
+void ProjectManager::displayCreateMenu()
+{
+	projectViewer.displayCreateMenu();
+}
+
+void ProjectManager::displaySearchMenu()
+{
+	projectViewer.displaySearchMenu();
+}
+
+void ProjectManager::displayMenuOptions()
+{
+	projectViewer.displayMenuOptions();
+}
+
+void ProjectManager::clearView()
+{
+	projectViewer.clearScreen();
+}
+
+void ProjectManager::viewProjects()
+{
+	std::map<Project*, bool>::iterator it;
+	for (it = projects_.begin(); it != projects_.end(); ++it)
 	{
-		// Display message to the user
-		projectViewer.displayMessage(" ");
-		projectViewer.displayMessage("Would you like to continue?");
-		projectViewer.displayMessage("Yes or No");
-	
-		std::string userContinue = toLower(getUserInput());
-		if (userContinue == "no" )
-			exit_ = true;
+		projectViewer.displayMessage(it->first->getTitle());
+	}
+}
 
-		projectViewer.clearScreen();
+void ProjectManager::viewMaterials()
+{
+	for (Material* material : materials_)
+	{
+		if (material != nullptr)
+			projectViewer.displayMessage(std::to_string(material->getId()) + " : " + material->getFilmTitle());
+	}
+
+	for (Material* material : projectAssociatedMaterials)
+	{
+		if (material != nullptr)
+			projectViewer.displayMessage(std::to_string(material->getId()) + " : " + material->getFilmTitle() + "Associated with project");
+	}
+}
+
+void ProjectManager::createAndAddProject()
+{
+	Project* project = createProject();
+	bool nowPlaying = yesNoBool("Is the project now playing?");
+	if (isReleased(project))
+	{
+		if (yesNoBool("Would you like to link materials to the project?"))
+		{
+			project->setMaterials(getMaterialsFromUser("Add material to project"));
+		}
+	}
+	projects_.insert(std::pair<Project*, bool>(project, nowPlaying));
+	
+}
+
+void ProjectManager::createAndAddMaterial()
+{
+	materials_.push_back(createMaterial());
+}
+
+void ProjectManager::createLink()
+{
+		projectViewer.displayMessage("Please select a project and material to link");
+		linkMedia();
+}
+
+void ProjectManager::projectFindMaterial()
+{
+	Project* project = getProjectFromUser("Select project to view associated materials");
+	if (!project->getMaterials().empty())
+	{
+		for (Material* material : project->getMaterials())
+		{
+			projectViewer.displayMessage("TITLE : " + material->getFilmTitle() + "   ", false);
+			projectViewer.displayMessage("FORMAT : " + material->getFormat() + "   ", false);
+			projectViewer.displayMessage("LANGIAGE : " + material->getLanguage() + "   ", false);
+			projectViewer.displayMessage(" ");
+
+			if (yesNoBool("Would you like to view the full material?"))
+			{
+				projectViewer.viewFullMaterial(material);
+			}
+				 
+		}
+	}
+	else
+	{
+		projectViewer.displayMessage("Project doesn't have any associated materials");
+	}
+}
+
+void ProjectManager::materialFindProject()
+{
+	Material* material = getAssociatedMaterial("Select a material to view linked project");
+	if (material != nullptr)
+	{
+		std::map<Project*, bool>::iterator it;
+
+		std::vector<Project*> projects;
+
+		for (it = projects_.begin(); it != projects_.end(); ++it)
+		{
+			if (!it->first->getMaterials().empty())
+			{
+				for (Material* mat : it->first->getMaterials())
+				{
+					if (mat->getId() == material->getId() && mat->getFilmTitle() == material->getFilmTitle() && mat->getFormat() == material->getFormat())
+					{
+						projects.push_back(it->first);
+					}
+				}
+			}
+		}
+
+		for (Project* proj : projects)
+		{
+			projectViewer.displayMessage("TILTE: " + proj->getTitle() + " SUMMARY:" + proj->getSummary());
+
+			if (yesNoBool("Would you like to see the whole project?"))
+			{
+				projectViewer.viewFullProject(proj);
+			}
+		}
+	}
+	else
+	{
+		projectViewer.displayMessage("Couldn't find associated project");
 	}
 }
 
@@ -805,155 +873,6 @@ std::string ProjectManager::getUserInput()
 	//std::cin >> userInput;
 	return userInput;
 }
-
-/*
- * Takes the users input and processes input that has been entered
- */
- void ProjectManager::processUserInput(const std::string &input)
- {
-	 if (input == "exit" || input == "0")
-	 {
-		 exit_ = true;
-	 }
-	 else if (input == "1" || input == "import")
-	 {
-		 projectViewer.displayMessage("Please enter a path to the file you would like to import : ");
-		 importFile(getUserInput());
-	 }
-	 else if (input == "2" || input == "save")
-	 {
-		 std::ofstream saveFile(defaultSavePath);
-		 saveFile.open(defaultSavePath, std::ofstream::out);
-		 MaterialFactory* mf = new MaterialFactory();
-		 CSVHandler csvHandler(defaultSavePath, mf);
-
-		 std::map<Project*, bool>::iterator it;
-		 for (it = projects_.begin(); it != projects_.end(); ++it)
-		 {
-			 csvHandler.writeToFile(it->first, it->second);
-		 }
-
-		 /*for (Project* project : projects_)
-		 {
-			 csvHandler.writeToFile(project);
-			 delete project;
-		 }*/
-
-		 for (Material* material : materials_)
-		 {
-			 if(material != nullptr)
-				 csvHandler.writeToFile(material);
-		 }
-
-		 saveFile.close();
-		 delete mf;
-	 }
-	 else if (input == "3" || input == "view")
-	 {
-		 projectViewer.displayViewOptions();// displayViewOptions();
-		 processViewOptinos();
-	 }
-	 else if (input == "4" || input == "create")
-	 {
-		 projectViewer.displayCreateMenu();// displayCreateMenu();
-		 processCreateOptions();
-	 }
-	 else if (input == "5" || input == "search")
-	 {
-		 projectViewer.displaySearchMenu();//displaySearchMenu();
-		 processSearchOptions();
-	 }
-	 else			// No valid option has been entered
-	 {
-		 projectViewer.displayMessage("You didn't enter a valid option");
-	 }
- }
-
-
- /*
-  * Process the user input after the search menu
-  */
- void ProjectManager::processSearchOptions()
- {
-	 bool valid = true;
-	 std::string input;
-	 do
-	 {
-		 input = messageReturnInput("Please enter your option. 1 or 2");
-		 input = toLower(input);
-
-		 if (input == "1")
-		 {
-			 Project* project = getProjectFromUser("Select project to view associated materials");
-			 if (!project->getMaterials().empty())
-			 {
-				 for (Material* material : project->getMaterials())
-				 {
-					 projectViewer.displayMessage("TITLE : " + material->getFilmTitle() + "   ", false);
-					 projectViewer.displayMessage("FORMAT : " + material->getFormat() + "   ", false);
-					 projectViewer.displayMessage("LANGIAGE : " + material->getLanguage() + "   ", false);
-					 projectViewer.displayMessage(" ");
-
-					 if (yesNoBool("Would you like to view the full material?"))
-					 {
-						 projectViewer.viewFullMaterial(material);
-					 }
-				 
-				 }
-				 valid = true;
-			 }
-			 else
-			 {
-				 projectViewer.displayMessage("Project doesn't have any associated materials");
-			 }
-		 }
-		 else if (input == "2")
-		 {
-			Material* material = getAssociatedMaterial("Select a material to view linked project");
-			if (material != nullptr)
-			{
-
-				valid = true;
-				std::map<Project*, bool>::iterator it;
-			
-				std::vector<Project*> projects;
-
-				for (it = projects_.begin(); it != projects_.end(); ++it)
-				{
-					if (!it->first->getMaterials().empty())
-					{
-						for (Material* mat : it->first->getMaterials())
-						{
-							if (mat->getId() == material->getId() && mat->getFilmTitle() == material->getFilmTitle() && mat->getFormat() == material->getFormat())
-							{
-								projects.push_back(it->first);
-							}
-						}
-					}
-				}
-
-				for (Project* proj : projects)
-				{
-					projectViewer.displayMessage("TILTE: " + proj->getTitle() + " SUMMARY:" + proj->getSummary());
-				
-					if (yesNoBool("Would you like to see the whole project?"))
-					{
-						projectViewer.viewFullProject(proj);
-					}
-				}
-			}
-			else
-			{
-				projectViewer.displayMessage("Couldn't find associated project");
-			}
-		 }
-		 else
-		 {
-			 valid = false;
-		 }
-	 } while (!valid);
- }
-
 
 /*
  * Heavily based on:

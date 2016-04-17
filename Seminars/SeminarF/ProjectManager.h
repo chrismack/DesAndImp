@@ -53,7 +53,7 @@ public:  // Functions
 	/*
 	 * start project with logging
 	 */
-	ProjectManager(SDI::Logger * logger);
+	ProjectManager();
 
 	/*
 	 * Deconstructor
@@ -61,40 +61,55 @@ public:  // Functions
 	~ProjectManager();
 
 	/*
-	* Process the user input for the view menu
+	* import projects and materials from a specified class
+	*
+	* path   : to the file to be imported
+	* Return : if the file can be properly imported
 	*/
-	void processViewOptinos();
+	bool importFile(const std::string path);
 
 	/*
-	* Process the user input for the create media options
-	*/
-	void processCreateOptions();
-
-
-	/*
-	* Process the user input for the search option
-	*/
-	void processSearchOptions();
-
-	/*
-	* Process the user input for linking media together
-	*/
-	void processLinkingOptins();
-
-
-private: // Functions
+	 * Saves memory to file
+	 */
+	void save();
 
 	/*
 	 * Check for the default save file and if it exists or not
 	 */
 	void setupSaveFile();
 
+	void updateDisplay(const std::string & message);
+
+	void displayViewOptions();
+
+	void displayCreateMenu();
+
+	void displaySearchMenu();
+
+	void displayMenuOptions();
+
+	void clearView();
+
+	void viewProjects();
+
+	void viewMaterials();
+
+	void createAndAddProject();
+
+	void createAndAddMaterial();
+
+	void createLink();
+
+	void projectFindMaterial();
+
+	void materialFindProject();
+
 	/*
-	 * The main loop for the application 
-	 */
-	void start();
+	* Process the user input for linking media together
+	*/
+	void linkMedia();
 
-
+private: // Functions
 
 	/*
 	 * Allow user to create a material
@@ -144,33 +159,12 @@ private: // Functions
 	 */
 	Project* getProjectFromUser(const std::string & message);
 
-
-	/*
-	 * Display a message to the user and ask if they would like to continue
-	 * Process the information if they would like to carry one in the application or not
-	 */
-	void userContinueOption();
-
 	/*
 	 * Get input from the user 
 	 *
 	 * Return std::cin (what they have entered)
 	 */
 	std::string getUserInput();
-
-	/*
-	 * Takes the users input and completes the operation that relates to the
-	 * input entered
-	 */
-	void processUserInput(const std::string &input);
-
-	/*
-	 * import projects and materials from a specified class
-	 *
-	 * path   : to the file to be imported
-	 * Return : if the file can be properly imported
-	 */
-	bool importFile(const std::string path);
 
 	/*
 	 * Process and import data that has been formatted in CSV

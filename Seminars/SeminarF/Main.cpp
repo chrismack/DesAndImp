@@ -7,13 +7,13 @@
 #include "stdafx.h"
 
 #include "LogHandler.h"
-#include "ProjectManager.h"
-
+#include "ProjectController.h"
 
 int main(int argc, char* argv[])
 {
 	LogHandler::getHandler()->logger = new SDI::Logger(argc, argv, false);
-	ProjectManager projectManager(LogHandler::getHandler()->logger);
+	ProjectController projectController(LogHandler::getHandler()->logger);
+	//ProjectManager projectManager(LogHandler::getHandler()->logger);
 
 	return 0;
 }
