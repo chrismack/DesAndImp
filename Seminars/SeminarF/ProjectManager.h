@@ -104,6 +104,11 @@ public:  // Functions
 
 	void materialFindProject();
 
+	void displayDeleteMenu();
+
+	void deleteProject();
+
+	void deleteMaterial();
 	/*
 	* Process the user input for linking media together
 	*/

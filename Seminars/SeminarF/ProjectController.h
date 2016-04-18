@@ -59,5 +59,7 @@ private:
 	void processCreateOptions();
 
 	void processSearchOptions();
+
+	void processDeleteOptions();
 };
 

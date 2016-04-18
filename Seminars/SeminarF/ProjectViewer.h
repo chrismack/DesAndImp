@@ -32,6 +32,10 @@ public:
 	*/
 	void displayCreateMenu();
 
+	/*
+	 * Display delete options
+	 */
+	void displayDeleteMenu();
 
 	/*
 	* Print the display menu to the screen

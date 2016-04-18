@@ -699,10 +699,14 @@ void ProjectManager::linkMedia()
 									if (material->getId() == localMaterial->getId())
 									{
 										projectAssociatedMaterials.push_back(localMaterial);
-										materials_[materialIndex] = nullptr;
+										materials_.erase(materials_.begin() + materialIndex);
 									}
 								}
 							}
+						}
+						if (materialIndex + 1 >= materials_.size())
+						{
+							break;
 						}
 					}
 				}
@@ -781,7 +785,24 @@ void ProjectManager::createAndAddProject()
 	{
 		if (yesNoBool("Would you like to link materials to the project?"))
 		{
-			project->setMaterials(getMaterialsFromUser("Add material to project"));
+			std::vector<Material*> materials = getMaterialsFromUser("Add material to project");
+			for (Material* material : materials)
+			{
+				for (int i = 0; i < materials_.size(); i++)
+				{
+					if (material->getId() == materials_[i]->getId() && material->getFilmTitle() == materials_[i]->getFilmTitle() && material->getFormat() == materials_[i]->getFormat())
+					{
+						projectAssociatedMaterials.push_back(material);
+						materials_.erase(materials_.begin() + materials_[i]->getId());
+					}
+					else
+					{
+						projectAssociatedMaterials.push_back(material);
+					}
+
+				}
+			}
+			project->setMaterials(materials);
 		}
 	}
 	projects_.insert(std::pair<Project*, bool>(project, nowPlaying));
@@ -860,6 +881,75 @@ void ProjectManager::materialFindProject()
 	else
 	{
 		projectViewer.displayMessage("Couldn't find associated project");
+	}
+}
+
+void ProjectManager::displayDeleteMenu()
+{
+	projectViewer.displayDeleteMenu();
+}
+
+void ProjectManager::deleteProject()
+{
+}
+
+void ProjectManager::deleteMaterial()
+{
+	std::vector<Material*> allMaterials;
+
+	projectViewer.displayMessage("Select a material to delete");
+	projectViewer.displayMessage("INDEX : TITLE : FORMAT");
+
+	int split;
+
+	for (Material* material : materials_)
+	{
+		if (material != nullptr)
+		{
+			projectViewer.displayMessage(std::to_string(allMaterials.size()) + " : " + material->getFilmTitle() + " : " + material->getFormat());
+			allMaterials.push_back(material);
+		}
+	}
+
+	split = allMaterials.size() - 1;
+
+	for (Material* material : projectAssociatedMaterials)
+	{
+		if (material != nullptr)
+		{
+			projectViewer.displayMessage(std::to_string(allMaterials.size()) + " : " + material->getFilmTitle() + " : " + material->getFormat());
+			allMaterials.push_back(material);
+		}
+	}
+
+	int id = messageReturnInt("Select a material index");
+	if (id > -1 && id < allMaterials.size())
+	{
+		if (id <= split) // in main material
+		{
+				delete materials_[id];
+				materials_.erase(materials_.begin() + id);
+		}
+		else	//Associated material
+		{
+			delete projectAssociatedMaterials[id - (split + 1)];
+			projectAssociatedMaterials.erase(projectAssociatedMaterials.begin() + (id - (split + 1)));
+
+			std::map<Project*, bool>::iterator it;
+			for (it = projects_.begin(); it != projects_.end(); ++it)
+			{
+				int projMaterialId = 0;
+				for (Material* localMaterial : it->first->getMaterials())
+				{
+					if (localMaterial->getId() == allMaterials[id - (split + 1)]->getId() && localMaterial->getFilmTitle() == allMaterials[id - (split + 1)]->getFilmTitle() && localMaterial->getFormat() == allMaterials[id - (split + 1)]->getFormat())
+					{
+						delete localMaterial;
+						it->first->getMaterials().erase(it->first->getMaterials().begin() + projMaterialId);
+					}
+					projMaterialId++;
+				}
+			}
+		}
 	}
 }
 
