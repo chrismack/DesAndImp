@@ -6,6 +6,7 @@
 #include "Project.h"
 
 #include <string>
+#include <map>
 
 class ProjectViewer
 {
@@ -46,6 +47,15 @@ public:
 
 	void viewFullMaterial(Material* material);
 	void viewFullProject(Project* project);
+
+	void displayPartialProject(Project* project);
+	void displayPartialMaterial(Material* material);
+
+	void allMaterials(std::pair<std::vector<Material*>, std::vector<Material*>> allMaterials);
+
+	void allProjects(std::map<Project*, bool> projects);
+
+	void displayProjects(std::vector<Project*> projects);
 };
 
 #endif // !PROJECTVIEWER_H

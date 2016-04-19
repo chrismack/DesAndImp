@@ -16,6 +16,8 @@ private :
 	std::string defaultSavePath = "projectmanager.csv";
 
 	ProjectManager projectManager;
+	
+	ProjectViewer projectViewer;
 
 public:
 	ProjectController(SDI::Logger * logger);
@@ -61,5 +63,42 @@ private:
 	void processSearchOptions();
 
 	void processDeleteOptions();
+
+	/*
+	* Ask the user a yes no question and convert their answer to a bool
+	* yes : true
+	* no  : false
+	*/
+	const bool yesNoBool(const std::string & message);
+
+
+	/*
+	* Prints message to display
+	* Gets a list of materials
+	*/
+	std::vector<Material*> getMaterialsFromUser(const std::string& message, const bool oneExisting = false);
+
+	/*
+	* Display a message and get a user entered integer
+	*/
+	const int messageReturnInt(const std::string & message);
+
+	/*
+	* Display a message and get a non null user input
+	*/
+	const std::string messageReturnInput(const std::string& message);
+
+	/*
+	* Process the user input for linking media together
+	*/
+	void linkMedia();
+
+	Material * getAssociatedMaterial(const std::string & message);
+
+	/*
+	* Prints message to display and promts user and returns their selected project
+	*/
+	Project* getProjectFromUser(const std::string & message);
+
 };
 

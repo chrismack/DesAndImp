@@ -93,6 +93,7 @@
     <ClInclude Include="LogHandler.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialFactory.h" />
+    <ClInclude Include="MaterialFactoryUserCreate.h" />
     <ClInclude Include="Project.h" />
     <ClInclude Include="ProjectController.h" />
     <ClInclude Include="ProjectManager.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialFactory.cpp" />
+    <ClCompile Include="MaterialFactoryUserCreate.cpp" />
     <ClCompile Include="Project.cpp" />
     <ClCompile Include="ProjectController.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
