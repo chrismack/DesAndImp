@@ -13,9 +13,34 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\SeminarD">
+      <UniqueIdentifier>{1e5d026b-3021-4f48-b3c1-bf7ed288ff16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SeminarC">
+      <UniqueIdentifier>{cbda3930-e769-4787-979a-f18cab5018d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\seminarB">
+      <UniqueIdentifier>{adf5ef4b-5b42-47c7-b58e-c4d7fde9dae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Logger">
+      <UniqueIdentifier>{f807d93d-31d7-4b8e-b477-dfe9d72bfddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SeminarD">
+      <UniqueIdentifier>{135649b2-828c-463e-b0c2-dcb5bbe73941}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SeminarC">
+      <UniqueIdentifier>{da961eee-6d8d-4d5d-9e5c-a4f427f7d5be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SeminarB">
+      <UniqueIdentifier>{013b6940-7ddc-42e9-b396-6862f3b29749}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Logger">
+      <UniqueIdentifier>{32548673-00d7-424f-baa6-4be9aa9c4fc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="Log.log" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -24,8 +49,68 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="XMLparser.h">
+    <ClInclude Include="LogHandler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialFactoryUserCreate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectViewer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VHS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlueRay.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
+    <ClInclude Include="ComboBox.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
+    <ClInclude Include="CSVHandler.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
+    <ClInclude Include="Disc.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleDVD.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
+    <ClInclude Include="IPackagable.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialFactory.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
+    <ClInclude Include="Project.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleDVD.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
+    <ClInclude Include="DynArray.h">
+      <Filter>Header Files\SeminarB</Filter>
+    </ClInclude>
+    <ClInclude Include="LineParse.h">
+      <Filter>Header Files\SeminarC</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\SeminarD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -35,8 +120,72 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XMLparser.cpp">
+    <ClCompile Include="LogHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialFactoryUserCreate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VHS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BlueRay.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="ComboBox.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="CSVHandler.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="Disc.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="DoubleDVD.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="IPackagable.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialFactory.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleDVD.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="DynArray.cpp">
+      <Filter>Source Files\seminarB</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Project.cpp">
+      <Filter>Source Files\SeminarD</Filter>
+    </ClCompile>
+    <ClCompile Include="LineParse.cpp">
+      <Filter>Source Files\SeminarC</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="projectmanager.csv" />
+    <None Include="test.csv" />
   </ItemGroup>
 </Project>

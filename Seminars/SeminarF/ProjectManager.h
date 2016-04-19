@@ -110,6 +110,10 @@ public:  // Functions
 
 	void setAssociatedMaterialsList(std::vector<Material*> materials);
 
+	void deleteMaterial(std::pair<std::vector<Material*>, std::vector<Material*>> allMaterials, int id);
+
+	Material* getMaterialFromId(int id);
+
 
 	/*
 	* Check if a project has been released or not

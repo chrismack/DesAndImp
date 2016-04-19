@@ -55,15 +55,6 @@ void ProjectController::userContinueOption()
 	}
 }
 
-std::string ProjectController::toLower(std::string & input)
-{
-	for (int i = 0; i < input.length(); i++)
-	{
-		input[i] = tolower(input[i]);
-	}
-	return input;
-}
-
 void ProjectController::processUserInput(const std::string & message)
 {
 
@@ -139,6 +130,7 @@ void ProjectController::processCreateOptions()
 		MaterialFactoryUserCreate userCreateProject(&projectViewer);
 		Project* project = userCreateProject.createProject();
 		bool nowPlaying = yesNoBool("Is this project now playing?");
+		
 		if (projectManager.isReleased(project))
 		{
 			if (yesNoBool("Would you like to link materials to the project?"))
@@ -204,44 +196,11 @@ void ProjectController::processDeleteOptions()
 	}
 	else if (input == "2" || input == "delete material")
 	{
-		//projectManager.deleteMaterial();
-
 		std::pair<std::vector<Material*>, std::vector<Material*>> allMaterials = projectManager.getAllMaterials();
 		projectViewer.allMaterials(allMaterials);		// Display all materials
 
 		int id = messageReturnInt("Select a material index");
-
-		if (id < allMaterials.first.size())
-		{
-			delete allMaterials.first[id];
-			allMaterials.first.erase(allMaterials.first.begin() + id);
-			projectManager.setMaterialsList(allMaterials.first);
-		}
-		else
-		{
-
-			std::map<Project*, bool> projects = projectManager.getProjectMap();
-			std::map<Project*, bool>::iterator it;
-			for (it = projects.begin(); it != projects.end(); ++it)
-			{
-				int projMaterialId = 0;
-				for (Material* localMaterial : it->first->getMaterials())
-				{
-					if (localMaterial->getId() == allMaterials.second[id - (allMaterials.first.size())]->getId() && localMaterial->getFilmTitle() == allMaterials.second[id - (allMaterials.first.size())]->getFilmTitle() && localMaterial->getFormat() == allMaterials.second[id - (allMaterials.first.size())]->getFormat())
-					{
-						delete localMaterial;
-						std::vector<Material*> projMaterial = it->first->getMaterials();
-						projMaterial.erase(projMaterial.begin() + projMaterialId);
-						it->first->setMaterials(projMaterial);
-					}
-					projMaterialId++;
-				}
-			}
-
-			allMaterials.second.erase(allMaterials.second.begin() + (id - (allMaterials.first.size())));
-			projectManager.setAssociatedMaterialsList(allMaterials.second);
-		}
-
+		projectManager.deleteMaterial(allMaterials, id);
 	}
 	else
 	{
@@ -289,14 +248,7 @@ std::vector<Material*> ProjectController::getMaterialsFromUser(const std::string
 	std::vector<Material*> userData = {};
 	std::string input = "";
 
-	projectViewer.displayMessage("ID :	TITLE : FORMAT");
-	for (Material* mat : projectManager.getMaterials())
-	{
-		if (mat != nullptr)
-		{
-			projectViewer.displayMessage(std::to_string(mat->getId()) + " : " + mat->getFilmTitle() + " : " + mat->getFormat());
-		}
-	}
+	projectViewer.displayMaterialVector(projectManager.getMaterials());
 
 	if (!oneExisting)
 	{
@@ -322,7 +274,8 @@ std::vector<Material*> ProjectController::getMaterialsFromUser(const std::string
 					input = getUserInput();
 					if (input != "" && input.find_first_of(" ") == std::string::npos && toLower(input) != "exit---loop")
 					{
-						int id = std::stoi(input);
+						int id = messageReturnInt("Please enter index");
+
 						if (std::find(selectedId.begin(), selectedId.end(), id) != selectedId.end())
 						{
 							if (yesNoBool("you have already added this material do you want to add it again?"))
@@ -333,16 +286,11 @@ std::vector<Material*> ProjectController::getMaterialsFromUser(const std::string
 						}
 						else
 						{
-							for (Material* material : projectManager.getMaterials())
+							Material* material = projectManager.getMaterialFromId(id);
+							if (material != nullptr)
 							{
-								if (material != nullptr)
-								{
-									if (material->getId() == id)
-									{
-										userData.push_back(material);
-										selectedId.push_back(id);
-									}
-								}
+								userData.push_back(material);
+								selectedId.push_back(id);
 							}
 						}
 					}
@@ -361,25 +309,16 @@ std::vector<Material*> ProjectController::getMaterialsFromUser(const std::string
 			bool valid = true;
 			do
 			{
-				projectViewer.displayMessage("Please enter material index");
 				try
 				{
-					input = getUserInput();
-					if (input != "" && input.find_first_of(" ") == std::string::npos)
-					{
-						int id = std::stoi(input);
+					int id = messageReturnInt("Please enter material index");;
 
-						for (Material* material : projectManager.getMaterials())
-						{
-							if (material != nullptr)
-							{
-								if (material->getId() == id)
-								{
-									userData.push_back(material);
-									selectedId.push_back(id);
-								}
-							}
-						}
+					Material* material = projectManager.getMaterialFromId(id);
+					if (material != nullptr)
+					{
+						userData.push_back(material);
+						selectedId.push_back(id);
+						valid = true;
 					}
 				}
 				catch (std::invalid_argument ia)
@@ -594,3 +533,11 @@ Material * ProjectController::getAssociatedMaterial(const std::string & message)
 	return material;
 }
 
+std::string ProjectController::toLower(std::string & input)
+{
+	for (int i = 0; i < input.length(); i++)
+	{
+		input[i] = tolower(input[i]);
+	}
+	return input;
+}

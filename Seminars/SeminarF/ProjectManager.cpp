@@ -349,6 +349,40 @@ void ProjectManager::deleteProject()
 {
 }
 
+void ProjectManager::deleteMaterial(std::pair<std::vector<Material*>, std::vector<Material*>> allMaterials, int id)
+{
+	if (id < allMaterials.first.size())
+	{
+		delete allMaterials.first[id];
+		allMaterials.first.erase(allMaterials.first.begin() + id);
+		setMaterialsList(allMaterials.first);
+	}
+	else
+	{
+
+		std::map<Project*, bool> projects = getProjectMap();
+		std::map<Project*, bool>::iterator it;
+		for (it = projects.begin(); it != projects.end(); ++it)
+		{
+			int projMaterialId = 0;
+			for (Material* localMaterial : it->first->getMaterials())
+			{
+				if (localMaterial->getId() == allMaterials.second[id - (allMaterials.first.size())]->getId() && localMaterial->getFilmTitle() == allMaterials.second[id - (allMaterials.first.size())]->getFilmTitle() && localMaterial->getFormat() == allMaterials.second[id - (allMaterials.first.size())]->getFormat())
+				{
+					delete localMaterial;
+					std::vector<Material*> projMaterial = it->first->getMaterials();
+					projMaterial.erase(projMaterial.begin() + projMaterialId);
+					it->first->setMaterials(projMaterial);
+				}
+				projMaterialId++;
+			}
+		}
+
+		allMaterials.second.erase(allMaterials.second.begin() + (id - (allMaterials.first.size())));
+		setAssociatedMaterialsList(allMaterials.second);
+	}
+}
+
 
 const bool ProjectManager::isReleased(Project * project)
 {
@@ -369,3 +403,18 @@ const bool ProjectManager::isReleased(Project * project)
 	 }
 	return input;
 }
+
+ Material* ProjectManager::getMaterialFromId(int id)
+ {
+	 for (Material* material : getMaterials())
+	 {
+		 if (material != nullptr)
+		 {
+			 if (material->getId() == id)
+			 {
+				 return material;
+			 }
+		 }
+	 }
+	 return nullptr;
+ }

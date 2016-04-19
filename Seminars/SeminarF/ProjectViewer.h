@@ -51,6 +51,8 @@ public:
 	void displayPartialProject(Project* project);
 	void displayPartialMaterial(Material* material);
 
+	void displayMaterialVector(std::vector<Material*> materials);
+
 	void allMaterials(std::pair<std::vector<Material*>, std::vector<Material*>> allMaterials);
 
 	void allProjects(std::map<Project*, bool> projects);

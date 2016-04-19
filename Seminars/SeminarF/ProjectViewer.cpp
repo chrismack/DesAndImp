@@ -155,4 +155,16 @@ void ProjectViewer::displayProjects(std::vector<Project*> projects)
 	}
 }
 
+void displayMaterialVector(std::vector<Material*> materials)
+{
+	std::cout << "ID :	TITLE : FORMAT" << std::endl;
+	for (Material* mat : materials)
+	{
+		if (mat != nullptr)
+		{
+			std::cout << std::to_string(mat->getId()) + " : " + mat->getFilmTitle() + " : " + mat->getFormat() << std::endl;
+		}
+	}
+}
+
 #endif 
