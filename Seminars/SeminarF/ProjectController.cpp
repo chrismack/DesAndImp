@@ -51,7 +51,7 @@ void ProjectController::userContinueOption()
 		if (userContinue == "no")
 			exit_ = true;
 
-		projectManager.clearView();
+		projectViewer.clearScreen();
 	}
 }
 
