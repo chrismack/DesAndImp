@@ -188,4 +188,9 @@
     <None Include="projectmanager.csv" />
     <None Include="test.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="XMLFile.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
+  </ItemGroup>
 </Project>

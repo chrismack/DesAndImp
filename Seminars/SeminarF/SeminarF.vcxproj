@@ -137,6 +137,9 @@
     <None Include="projectmanager.csv" />
     <None Include="test.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="XMLFile.xml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
