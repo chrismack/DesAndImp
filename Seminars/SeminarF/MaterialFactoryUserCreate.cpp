@@ -92,7 +92,7 @@ Material * MaterialFactoryUserCreate::userInsertIntoMaterial(int materialCount, 
 			ComboBox *combo = dynamic_cast<ComboBox*> (material);
 			combo->setContent(getDiscMaterialsFromUser(materialCount, "Set Materials", discs));
 
-			setMaterialPackage(combo);			// Set package spec
+setMaterialPackage(combo);			// Set package spec
 		}
 		else if (type == "vhs" && !mustBeDisc)
 		{
@@ -126,6 +126,7 @@ Project * MaterialFactoryUserCreate::createProject()
 	project->setFilmingLocations(messageReturnUserVector("Set Filming Locations"));
 	project->setLanguage(messageReturnInput("Set Language"));
 	project->setKeywords(messageReturnUserVector("Set keywords"));
+	project->setCrew(messageReturnUserVector("Set crew"));
 
 	return project;
 }
@@ -148,6 +149,134 @@ void MaterialFactoryUserCreate::setMaterialPackage(IPackagable * material)
 {
 	material->setPackageType(messageReturnInput("Set package type"));
 	material->setPackageDimensions(std::tuple<int, int, int>(messageReturnInt("Set package width"), messageReturnInt("Set package height"), messageReturnInt("Set package depth")));
+}
+
+void MaterialFactoryUserCreate::editMaterial(Material * material)
+{
+	std::string input = messageReturnInput("Select field to edit");
+	if (input == "1")
+	{
+		material->setFilmTitle(messageReturnInput("Set title"));
+	}
+	else if (input == "2")
+	{
+		material->setAudioFormat(messageReturnInput("Set audio format"));
+	}
+	else if (input == "3")
+	{
+		material->setRunTime(messageReturnInt("Set run time"));
+	}
+	else if (input == "4")
+	{
+		material->setLanguage(messageReturnInput("Set language"));
+	}
+	else if (input == "5")
+	{
+		material->setRetailPrice(messageReturnFloat(""));
+	}
+	else if (input == "6")
+	{
+		material->setSubtitles(messageReturnInput("Set subtitles"));
+	}
+	else if (input == "7")
+	{
+		material->setAspectRation(messageGetAspect("Set aspect ratio"));
+	}
+
+	else if (toLower(material->getFormat()) == "bluray")
+	{
+		BlueRay *blu = dynamic_cast<BlueRay*> (material);
+		if (input == "8")
+		{
+			blu->setContent(messageReturnUserVector("Set content"));
+
+		}
+		else if (input == "9")
+		{
+			blu->setBonusFeatures(messageReturnUserVector("Set bonus features"));
+
+		}
+		else if (input == "10")
+		{
+			blu->setAudioTracks(messageReturnUserVector("Set audio tacks"));
+		}
+		else if (input == "11")
+		{
+			blu->setLanguageTracks(messageReturnUserVector("Set language tracks"));
+		}
+		else if (input == "12")
+		{
+			blu->setSubtitleTracks(messageReturnUserVector("Set subtitles tracks"));
+		}
+	}
+	else if (toLower(material->getFormat()) == "singledvd")
+	{
+		SingleDVD *dvd = dynamic_cast<SingleDVD*> (material);
+
+		if (input == "8")
+		{
+			dvd->setContent(messageReturnUserVector("Set content"));
+		}
+		else if (input == "9")
+		{
+			dvd->setBonusFeatures(messageReturnUserVector("Set bonus features"));
+		}
+		else if (input == "10")
+		{
+			dvd->setAudioTracks(messageReturnUserVector("Set audio tacks"));
+		}
+		else if (input == "11")
+		{
+			dvd->setLanguageTracks(messageReturnUserVector("Set language tracks"));
+		}
+		else if (input == "12")
+		{
+			dvd->setSubtitleTracks(messageReturnUserVector("Set subtitles tracks"));
+		}
+	}
+	else if (toLower(material->getFormat()) == "doublevd")
+	{
+		DoubleDVD *dvd = dynamic_cast<DoubleDVD*> (material);
+
+		if (input == "8")
+		{
+			dvd->setContent(setVectorSideMap("Set content"));
+		}
+		else if (input == "9")
+		{
+			dvd->setBonusFeatures(setVectorSideMap("Set bonus features"));
+		}
+		else if (input == "10")
+		{
+			dvd->setAudioTracks(setVectorSideMap("Set audio tacks"));
+		}
+		else if (input == "11")
+		{
+			dvd->setLanguageTracks(setVectorSideMap("Set language tracks"));
+		}
+		else if (input == "12")
+		{
+			dvd->setSubtitleTracks(setVectorSideMap("Set subtitles tracks"));
+		}
+	}
+	else if (toLower(material->getFormat()) == "vhs")
+	{
+		VHS *vhs = dynamic_cast<VHS*> (material);
+
+		if (input == "8")
+		{
+			vhs->setContent(messageReturnUserVector("Set content"));
+		}
+		else if (input == "9")
+		{
+			vhs->setlanguageTrack(messageReturnInput("Set language track"));
+		}
+		else if (input == "10")
+		{
+			vhs->setAudioTrack(messageReturnInput("Set audio track"));
+		}
+
+	}
 }
 
 /*
@@ -375,14 +504,27 @@ std::vector<Disc*> MaterialFactoryUserCreate::getDiscMaterialsFromUser(int mater
 						{
 							if (yesNoBool("you have already added this material do you want to add it again?"))
 							{
-								userData.push_back(discs[id]);
-								selectedId.push_back(id);
+								for (Material* material : discs)
+								{
+									if (material->getId() == id)
+									{
+										userData.push_back((Disc*)material);
+										selectedId.push_back(id);
+									}
+								}
 							}
 						}
 						else
 						{
-							userData.push_back(discs[id]);
-							selectedId.push_back(id);
+							for (Material* material : discs)
+							{
+								if (material->getId() == id)
+								{
+									userData.push_back((Disc*)material);
+									selectedId.push_back(id);
+									break;
+								}
+							}
 						}
 					}
 				}

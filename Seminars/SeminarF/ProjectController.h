@@ -64,6 +64,20 @@ private:
 
 	void processDeleteOptions();
 
+	void processEditOptions();
+
+	void processProjectEditFields(Project* project);
+	
+	void processMaterialEditFields(Material* material);
+
+	void processBrowseOptions();
+
+	void processInteractiveSearch();
+
+	void sequentialBrowseProjects();
+
+	void sequentialBrowseMaterials();
+
 	/*
 	* Ask the user a yes no question and convert their answer to a bool
 	* yes : true
@@ -99,6 +113,14 @@ private:
 	* Prints message to display and promts user and returns their selected project
 	*/
 	Project* getProjectFromUser(const std::string & message);
+
+	const std::vector<int> messageReturnUserVectorInt(const std::string & message);
+
+	const long messageGetDate(const std::string & message);
+	/*
+	* Display a message and continue to get user inputs and add to a vector until the user is satisifed
+	*/
+	const std::vector<std::string> messageReturnUserVector(const std::string& message, const bool canBeNull = false);
 
 };
 

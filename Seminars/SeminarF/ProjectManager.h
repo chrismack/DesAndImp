@@ -46,7 +46,7 @@ private: // Variables
 	/*
 	 * The default save location for the projects and materials to be saved to 
 	 */
-	std::string defaultSavePath = "projectmanager.csv";
+	std::string defaultSavePath = "test.xml";
 
 public:  // Functions
 
@@ -80,7 +80,7 @@ public:  // Functions
 
 	std::vector<Project*> materialFindProject(Material* material);
 
-	void deleteProject();
+	void deleteProject(Project* project);
 	
 	int getMaterialCount();
 
@@ -114,6 +114,8 @@ public:  // Functions
 
 	Material* getMaterialFromId(int id);
 
+	std::vector<Project*> findProjects(std::map<int, std::string> searchCritera);
+
 
 	/*
 	* Check if a project has been released or not
@@ -127,6 +129,8 @@ private: // Functions
 	 * Process and import data that has been formatted in CSV
 	 */
 	void importCSV(const std::string &CSV);
+
+	void importXML(const std::string &XML);
 
 	/*
 	 * Check if file at path exists

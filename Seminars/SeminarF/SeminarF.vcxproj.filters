@@ -67,9 +67,6 @@
     <ClInclude Include="tinyxml2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VHS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="XMLHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -112,6 +109,9 @@
     <ClInclude Include="Material.h">
       <Filter>Header Files\SeminarD</Filter>
     </ClInclude>
+    <ClInclude Include="VHS.h">
+      <Filter>Header Files\SeminarD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -136,9 +136,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tinyxml2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VHS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="XMLHandler.cpp">
@@ -182,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="LineParse.cpp">
       <Filter>Source Files\SeminarC</Filter>
+    </ClCompile>
+    <ClCompile Include="VHS.cpp">
+      <Filter>Source Files\SeminarD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

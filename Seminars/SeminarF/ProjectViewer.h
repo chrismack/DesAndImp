@@ -43,6 +43,16 @@ public:
 	*/
 	void displaySearchMenu();
 
+	void displayEditMenu();
+
+	void displayBrowseMenu();
+
+	void displayProjectFieldsToEdit();
+
+	void displayInteractiveSearchMenu();
+
+	void displayMaterialFieldsToEdit(Material* material);
+
 	void clearScreen();
 
 	void viewFullMaterial(Material* material);
@@ -58,6 +68,11 @@ public:
 	void allProjects(std::map<Project*, bool> projects);
 
 	void displayProjects(std::vector<Project*> projects);
+
+	void displayProjectMap(std::map<Project*, bool> projects);
+
+	std::string toLower(std::string & input);
+	
 };
 
 #endif // !PROJECTVIEWER_H

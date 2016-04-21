@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ProjectController.h"
 #include "MaterialFactoryUserCreate.h"
+#include "XMLHandler.h"
 
 #include <string>
 
@@ -19,6 +20,7 @@ ProjectController::ProjectController(SDI::Logger * logger)
 			projectManager.importFile(getUserInput());
 		}
 	}
+	XMLHandler handler("XMLFile.xml", new MaterialFactory());
 	start();
 }
 
@@ -93,6 +95,20 @@ void ProjectController::processUserInput(const std::string & message)
 		projectViewer.displayDeleteMenu();
 		processDeleteOptions();
 	}
+	else if (input == "7" || input == "edit")
+	{
+		projectViewer.displayEditMenu();
+		processEditOptions();
+	}
+	else if (input == "8" || input == "browse")
+	{
+		projectViewer.displayBrowseMenu();
+		processBrowseOptions();
+	}
+	else if (input == "9" || input == "interactivly")
+	{
+		processInteractiveSearch();
+	}
 	else			// No valid option has been entered
 	{
 		projectViewer.displayMessage("You didn't enter a valid option");
@@ -104,16 +120,31 @@ void ProjectController::processViewOptions()
 	std::string viewOption = toLower(getUserInput());
 	if (viewOption == "1" || viewOption == "projects")
 	{
-		for (Project* project : projectManager.getProjects())
+		projectViewer.allProjects(projectManager.getProjectMap());
+
+		if (yesNoBool("Would you like to view projects in full?"))
 		{
-			projectViewer.allProjects(projectManager.getProjectMap());
-			//projectManager.viewProjects();
+			for (Project* project : projectManager.getProjects())
+			{
+				projectViewer.viewFullProject(project);
+			}
 		}
 	}
 	else if (viewOption == "2" || viewOption == "materials")
 	{
-		//projectManager.viewMaterials();
 		projectViewer.allMaterials(projectManager.getAllMaterials());
+		if (yesNoBool("Would you like to view materials in full?"))
+		{
+			for (Material* material : projectManager.getAllMaterials().first)
+			{
+				projectViewer.viewFullMaterial(material);
+			}
+
+			for (Material* material : projectManager.getAllMaterials().second)
+			{
+				projectViewer.viewFullMaterial(material);
+			}
+		}
 	}
 	else		// No valid option has been entered for view option
 	{
@@ -126,11 +157,13 @@ void ProjectController::processCreateOptions()
 	std::string input = toLower(getUserInput());
 	if (input == "1" || input == "create project")
 	{
-		//projectManager.createAndAddProject();
 		MaterialFactoryUserCreate userCreateProject(&projectViewer);
 		Project* project = userCreateProject.createProject();
 		bool nowPlaying = yesNoBool("Is this project now playing?");
-		
+		if (nowPlaying || (projectManager.isReleased(project) && yesNoBool("The project has been released would you like to set ticket sales?")))
+		{
+			project->setTicketSales(messageReturnUserVectorInt("Enter weekly ticket sales"));
+		}
 		if (projectManager.isReleased(project))
 		{
 			if (yesNoBool("Would you like to link materials to the project?"))
@@ -142,7 +175,6 @@ void ProjectController::processCreateOptions()
 	}
 	else if (input == "2" || input == "create material")
 	{
-		//projectManager.createAndAddMaterial();
 		MaterialFactoryUserCreate userCreateMaterial(&projectViewer);
 		Material* material = userCreateMaterial.userInsertIntoMaterial(projectManager.getMaterialCount(), projectManager.getExistingDiscs());
 		projectManager.addMaterial(material);
@@ -192,7 +224,8 @@ void ProjectController::processDeleteOptions()
 
 	if (input == "1" || input == "delete project")
 	{
-		projectManager.deleteProject();
+		Project* project = getProjectFromUser("Please select a project to delete");
+		projectManager.deleteProject(project);
 	}
 	else if (input == "2" || input == "delete material")
 	{
@@ -208,11 +241,270 @@ void ProjectController::processDeleteOptions()
 	}
 }
 
+void ProjectController::processEditOptions()
+{
+	std::string input = messageReturnInput("Please enter an option");
+
+	if (toLower(input) == "1" || toLower(input) == "edit project")
+	{
+		Project* project = getProjectFromUser("Select a project");
+		projectViewer.displayProjectFieldsToEdit();
+		processProjectEditFields(project);
+	}
+	else if(toLower(input) == "2" || toLower(input) == "edit material")
+	{
+		std::vector<Material*> materials = getMaterialsFromUser("Select a material", true);
+		if (!materials.empty())
+		{
+			Material* material = materials[0];
+			if (material != nullptr)
+			{
+				projectViewer.displayMaterialFieldsToEdit(material);
+				processMaterialEditFields(material);
+			}
+		}
+	}
+	else
+	{
+		projectViewer.displayMessage("Not a valid optoin");
+	}
+}
+
+void ProjectController::processProjectEditFields(Project* project)
+{
+	std::string input = messageReturnInput("Select field to edit");
+	if (input == "1")
+	{
+		project->setTitle(messageReturnInput("Enter new title"));
+	} 
+	else if (input == "2")
+	{
+		project->setSummary(messageReturnInput("Enter new summary"));
+	}
+	else if (input == "3")
+	{
+		project->setGenre(messageReturnInput("Enter new genre"));
+	}
+	else if (input == "4")
+	{
+		project->setReleaseDate(messageGetDate("Enter new release date"));
+	}
+	else if (input == "5")
+	{
+		project->setFilmingLocations(messageReturnUserVector("Enter new Filming locations"));
+	}
+	else if (input == "6")
+	{
+		project->setKeywords(messageReturnUserVector("Enter new key words"));
+	}
+	else if (input == "7")
+	{
+		if (projectManager.isReleased(project))
+		{
+			project->setTicketSales(messageReturnUserVectorInt("Enter new ticket sales"));
+		}
+		else
+		{
+			projectViewer.displayMessage("Project is not released");
+		}
+	}
+	else if(input == "8")
+	{
+		if (projectManager.isReleased(project))
+		{
+			project->getTicketSales().push_back(messageReturnInt("Enter ticket sales"));
+		}
+		else
+		{
+			projectViewer.displayMessage("Project is not released");
+		}
+	}
+	else if (input == "9")
+	{
+		project->setCrew(messageReturnUserVector("Set crew"));
+	}
+}
+
+void ProjectController::processMaterialEditFields(Material * material)
+{
+	MaterialFactoryUserCreate mf(&projectViewer);
+	mf.editMaterial(material);
+}
+
+void ProjectController::processBrowseOptions()
+{
+	std::string input = messageReturnInput("Please enter an option");
+
+	if (toLower(input) == "1" || toLower(input) == "projects")
+	{
+		sequentialBrowseProjects();
+	}
+	else if (toLower(input) == "2" || toLower(input) == "materials")
+	{
+		sequentialBrowseMaterials();
+	}
+}
+
+void ProjectController::processInteractiveSearch()
+{
+	std::string input;
+
+	std::map<int, std::string> searchCritera;
+
+	do
+	{
+		projectViewer.displayInteractiveSearchMenu();
+		input = messageReturnInput("Please enter a field to seach for or enter exit---loop to finish");
+
+		if (input == "1")	//Title
+		{
+			searchCritera.insert(std::pair<int, std::string>(1, messageReturnInput("Enter a title")));
+		}
+		else if (input == "2")	//Summary
+		{
+			searchCritera.insert(std::pair<int, std::string>(2, messageReturnInput("Enter a Summary")));
+		}
+		else if (input == "3")  //Genre
+		{
+			searchCritera.insert(std::pair<int, std::string>(3, messageReturnInput("Enter a Genre")));
+		}
+		else if (input == "4")	//Release date
+		{
+			searchCritera.insert(std::pair<int, std::string>(4, std::to_string(messageGetDate("Enter a date"))));
+		}
+		else if (input == "5")	//Filming location
+		{
+			searchCritera.insert(std::pair<int, std::string>(5, messageReturnInput("Enter a location")));
+		}
+		else if (input == "6")	//Key words
+		{
+			searchCritera.insert(std::pair<int, std::string>(6, messageReturnInput("Enter a key word")));
+		}
+		else if (input == "7")	//crew
+		{
+			searchCritera.insert(std::pair<int, std::string>(7, messageReturnInput("Enter a crew member")));
+		}
+		else if (input == "8")	//Mateial Format
+		{
+			searchCritera.insert(std::pair<int, std::string>(8, messageReturnInput("Enter a material format")));
+		}
+
+	} while (toLower(input) != "exit---loop");
+
+	std::vector<Project*> projects = projectManager.findProjects(searchCritera);
+
+	if (!projects.empty())
+	{
+		projectViewer.displayMessage("Found projects!");
+		for (int i = 0; i < projects.size(); i++)
+		{
+			projectViewer.displayPartialProject(projects[i]);
+			if (yesNoBool("Would you like to view the full project?"))
+			{
+				projectViewer.viewFullProject(projects[i]);
+			}
+		}
+	}
+}
+
+void ProjectController::sequentialBrowseProjects()
+{
+	int count = 0;
+	std::string input;
+	do
+	{
+		projectViewer.displayPartialProject(projectManager.getProjects()[count]);
+		if (yesNoBool("Would you like to view the full project?"))
+		{
+			projectViewer.viewFullProject(projectManager.getProjects()[count]);
+		}
+		input = getUserInput();
+
+		if (projectManager.getProjects().size() > 1)
+		{
+			if (input == "<")
+			{
+				if (count - 1 < 0)
+				{
+					count = projectManager.getProjects().size() - 1;
+				}
+				count--;
+			}
+			else if (input == ">")
+			{
+				if (count + 1 > projectManager.getProjects().size() - 1)
+				{
+					count = 0;
+				}
+				count++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		else
+		{
+			if (input != "<" || input != ">")
+			{
+				break;
+			}
+		}
+
+	} while (1);
+}
+
+void ProjectController::sequentialBrowseMaterials()
+{
+	int count = 0;
+	std::string input;
+	do
+	{
+		projectViewer.displayPartialMaterial(projectManager.getMaterials()[count]);
+		if (yesNoBool("Would you like to view the full project?"))
+		{
+			projectViewer.viewFullMaterial(projectManager.getMaterials()[count]);
+		}
+		input = getUserInput();
+
+		if (projectManager.getMaterials().size())
+		{
+			if (input == "<")
+			{
+				if (count - 1 < 0)
+				{
+					count = projectManager.getMaterials().size() - 1;
+				}
+				count--;
+			}
+			else if (input == ">")
+			{
+				if (count + 1 > projectManager.getMaterials().size() - 1)
+				{
+					count = 0;
+				}
+				count++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		else
+		{
+			if (input != "<" || input != ">")
+			{
+				break;
+			}
+		}
+
+	} while (1);
+}
+
 std::string ProjectController::getUserInput()
 {
 	std::string userInput = "";
 	std::getline(std::cin, userInput);
-	//std::cin >> userInput;
 	return userInput;
 }
 
@@ -348,25 +640,18 @@ Project * ProjectController::getProjectFromUser(const std::string & message)
 	if (!projects_.empty())
 	{
 		projectViewer.displayMessage("INDEX : TITLE : SUMMARY : GENRE");
-
-		int index = 0;
-		std::map<Project*, bool>::iterator it;
-		for (it = projects_.begin(); it != projects_.end(); ++it)
-		{
-			projectViewer.displayMessage(std::to_string(index) + " : " + it->first->getTitle() + " : " + it->first->getSummary() + " : " + it->first->getGenre());
-			index++;
-			tmpProjects.push_back(it->first);
-		}
+		projectViewer.displayProjectMap(projects_);
+		tmpProjects = projectManager.getProjects();
 
 		int selectedIndex;
 		do
 		{
 			selectedIndex = messageReturnInt("Enter Project index");
-			if (selectedIndex > -1 && selectedIndex < projects_.size())  // if valid selection
+			if (selectedIndex > -1 && selectedIndex <= projects_.size() - 1)  // if valid selection
 			{
 				return tmpProjects[selectedIndex];
 			}
-		} while (selectedIndex > -1 && selectedIndex < projects_.size());
+		} while (selectedIndex < 0 || selectedIndex > projects_.size() - 1);
 	}
 	else		// No projects are loaded to memory
 	{
@@ -487,43 +772,30 @@ Material * ProjectController::getAssociatedMaterial(const std::string & message)
 	bool valid = false;
 	do
 	{
-		projectViewer.displayMessage("Please enter material index");
-		try
+		
+		int id = messageReturnInt("Please enter material index");
+
+		for (int i : validIndex)
 		{
-			input = getUserInput();
-			if (input != "" && input.find_first_of(" ") == std::string::npos)
+			if (id == i)
 			{
-				int id = std::stoi(input);
-
-				for (int i : validIndex)
-				{
-					if (id == i)
-					{
-						valid = true;
-					}
-				}
-
-				if (valid)
-				{
-
-					for (Material* localMaterial : projectManager.getProjectAssociatedMaterials())
-					{
-						if (localMaterial != nullptr)
-						{
-							if (localMaterial->getId() == id)
-							{
-								material = localMaterial;
-							}
-						}
-					}
-				}
-				else
-				{
-					valid = false;
-				}
+				valid = true;
 			}
 		}
-		catch (std::invalid_argument ia)
+
+		if (valid)
+		{
+			if (projectManager.getProjectAssociatedMaterials()[id] != nullptr)
+			{
+				material = projectManager.getProjectAssociatedMaterials()[id];
+				valid = true;
+			}
+			else
+			{
+				valid = false;
+			}
+		}
+		else
 		{
 			valid = false;
 		}
@@ -540,4 +812,111 @@ std::string ProjectController::toLower(std::string & input)
 		input[i] = tolower(input[i]);
 	}
 	return input;
+}
+
+/*
+* Display a message on screen and get user entered integers and return a vector of ints
+*/
+const std::vector<int> ProjectController::messageReturnUserVectorInt(const std::string & message)
+{
+	projectViewer.displayMessage(message);
+
+	projectViewer.displayMessage("Atleast one value needs to be entered");
+
+	std::vector<int> userData = {};
+	std::string input = "";
+
+	while ((toLower(input) != "exit---loop") || userData.empty())
+	{
+		projectViewer.displayMessage("Please enter a value. Or exit---loop to finish");
+		projectViewer.displayMessage("This is data set : " + userData.size() + 1);
+		input = getUserInput();
+		if (toLower(input) != "exit---loop")
+		{
+			try
+			{
+				userData.push_back(std::stoi(input));
+			}
+			catch (std::invalid_argument ia)
+			{
+				projectViewer.displayMessage("Could not convert " + input + " to an integer");
+			}
+		}
+	}
+
+
+	return userData;
+}
+
+const long ProjectController::messageGetDate(const std::string & message)
+{
+	projectViewer.displayMessage(message);
+
+	time_t rawTime;
+	struct tm timeInfo;
+	int year, month, day;
+	long timestamp = -1;
+
+	bool validInput = true;
+
+	while (timestamp == -1)
+	{
+		/*
+		* Get user input date
+		*/
+		try
+		{
+			projectViewer.displayMessage("Enter Year: ", false); year = stoi(getUserInput());
+			projectViewer.displayMessage("Enter Month: ", false); month = stoi(getUserInput());
+			projectViewer.displayMessage("Enter Day: ", false); day = stoi(getUserInput());
+		}
+		catch (std::invalid_argument ia)
+		{
+			validInput = false;
+			projectViewer.displayMessage("Invalid input please re enter");
+		}
+
+		if (validInput)
+		{
+			time(&rawTime);
+			localtime_s(&timeInfo, &rawTime);				// Init timeInfo struct
+
+			timeInfo.tm_year = year - 1900;					// Setup timeInfo struct
+			timeInfo.tm_mon = month - 1;
+			timeInfo.tm_mday = day;
+			timeInfo.tm_hour = 1;
+			timeInfo.tm_min = 0;
+			timeInfo.tm_sec = 0;
+
+			timestamp = mktime(&timeInfo);					// COnvert to unix
+
+			if (timestamp == -1)							// Invalid date set entered
+				projectViewer.displayMessage("invalid date please re enter");
+		}
+	}
+
+	return timestamp;
+}
+
+const std::vector<std::string> ProjectController::messageReturnUserVector(const std::string & message, const bool canBeNull)
+{
+	projectViewer.displayMessage(message);
+	if (!canBeNull)
+		projectViewer.displayMessage("Atleast one value needs to be entered");
+	projectViewer.displayMessage("enter : exit---loop to finish");
+
+	std::vector<std::string> userData = {};
+	std::string input = "";
+
+	while ((toLower(input) != "exit---loop") || (userData.empty() && !canBeNull))
+	{
+		projectViewer.displayMessage("Please enter a value. Or exit---loop to finish");
+		input = getUserInput();
+		if (input != "" && input.find_first_of(" ") == std::string::npos && toLower(input) != "exit---loop")
+		{
+			userData.push_back(input);
+		}
+	}
+
+	return userData;
 }

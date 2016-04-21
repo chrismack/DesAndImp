@@ -94,23 +94,7 @@ void CSVHandler::writeToFile(Material* material)
 
 void CSVHandler::writeToFile(Project* project, bool nowPlaying)
 {
-	std::vector<std::string> projectArray = project->toArray();
-	projectArray.push_back(nowPlaying ? "true" : "false");
-	std::stringstream ss;
-	for (int i = 0; i < projectArray.size(); i++)
-	{
-		if (projectArray[i] == "")
-		{
-			projectArray[i] = " ";
-		}
-		ss << projectArray[i];
-		if (i < projectArray.size() - 1)
-		{
-			ss << ",";
-		}
-	}
-
-	addLineToFile(fileName_, ss.str());
+	
 }
 
 std::vector<Material*> CSVHandler::getMaterialsFromFile()

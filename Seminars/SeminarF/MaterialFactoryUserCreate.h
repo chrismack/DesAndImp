@@ -31,13 +31,15 @@ public:
 	*/
 	void setMaterialPackage(IPackagable* material);
 
+	void editMaterial(Material* material);
+
 private: /* function */
 
 	void userInsertBaseMaterials(Material* material, const std::string& type, int materialCount);
 
-		 /*
-		 * Display a message and get a non null user input
-		 */
+	/*
+	* Display a message and get a non null user input
+	*/
 	const std::string messageReturnInput(const std::string& message);
 
 	/*
@@ -93,7 +95,8 @@ private: /* function */
 
 	const bool yesNoBool(const std::string & message);
 
-	const long MaterialFactoryUserCreate::messageGetDate(const std::string & message);
+	const long messageGetDate(const std::string & message);
+
 
 };
 

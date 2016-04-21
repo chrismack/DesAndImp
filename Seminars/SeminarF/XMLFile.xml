@@ -1,8 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<poetry>
-	<verse>
-		Alas
-		  Great World
-			Alas (again)
-	</verse>
-</poetry>
+<media>
+  <projects>
+    <project>
+      <title>Chris</title>
+      <summary>Chris is testing</summary>
+      <genre>Testing</genre>
+      <releaseDate>2131323123</releaseDate>
+      <filmingLocations vector="true">
+        <item>test</item>
+      </filmingLocations>
+      <language>LANG</language>
+      <keywords vector="true">
+        <item>1</item>
+        <item>2</item>
+      </keywords>
+      <weeklyTicketSales vector="true">
+        <item>1</item>
+        <item>2</item>
+      </weeklyTicketSales>
+      <crew vector="true">
+        <item>123</item>
+        <item>13</item>
+      </crew>
+      <materials>
+        <material>
+          <id>0</id>
+          <title>TITLE</title>
+          <format>BluRay</format>
+          <audioformat>AUDIOFORMAT</audioformat>
+          <runtime>1</runtime>
+          <language>LANG</language>
+          <retailPrice>2</retailPrice>
+          <subtitles>SUBS</subtitles>
+          <aspectRatio>16:9</aspectRatio>
+          <langiageTrack vector ="true">
+            <item>LANG1</item>
+          </langiageTrack>
+          <subtitleTrack vector ="true">
+            <item>LANG1</item>
+          </subtitleTrack>
+          <audioTrack vector ="true">
+            <item>LANG1</item>
+          </audioTrack>
+          <packageType>plastic</packageType>
+          <packageSize vector="true">
+            <item>1</item>
+            <item>1</item>
+            <item>1</item>
+          </packageSize>
+          <content vector ="true">
+            <item>LANG1</item>
+          </content>
+          <bonus vector ="true">
+            <item>LANG1</item>
+          </bonus>
+        </material>
+      </materials>
+      <nowPlaying>false</nowPlaying>
+    </project>
+  </projects>
+  
+  <materials>
+    <material>
+      <id>0</id>
+      <title>TITLE</title>
+      <format>BluRay</format>
+      <audioformat>AUDIOFORMAT</audioformat>
+      <runtime>1</runtime>
+      <language>LANG</language>
+      <retailPrice>2</retailPrice>
+      <subtitles>SUBS</subtitles>
+      <aspectRatio>16:9</aspectRatio>
+      <langiageTrack vector ="true">
+        <item>LANG1</item>
+      </langiageTrack>
+      <subtitleTrack vector ="true">
+        <item>LANG1</item>
+      </subtitleTrack>
+      <audioTrack vector ="true">
+        <item>LANG1</item>
+      </audioTrack>
+      <packageType>plastic</packageType>
+      <packageSize vector="true">
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+      </packageSize>
+      <content vector ="true">
+        <item>LANG1</item>
+      </content>
+      <bonus vector ="true">
+        <item>LANG1</item>
+      </bonus>
+    </material>
+
+    <material>
+      <id>1</id>
+      <title>TITLE</title>
+      <format>DoubleDVD</format>
+      <audioformat>AUDIOFORMAT</audioformat>
+      <runtime>1</runtime>
+      <language>LANG</language>
+      <retailPrice>2</retailPrice>
+      <subtitles>SUBS</subtitles>
+      <aspectRatio>16:9</aspectRatio>
+      <langiageTrack vector ="true">
+        <item side="1">
+          <side>LANG1</side>
+        </item>
+        <item side="2">
+          <side>LANG1</side>
+        </item>
+      </langiageTrack>
+      <subtitleTrack vector ="true">
+        <item side="1">
+          <side>LANG1</side>
+        </item>
+        <item side="2">
+          <side>LANG1</side>
+        </item>
+      </subtitleTrack>
+      <audioTrack vector ="true">
+        <item side="1">
+          <side>LANG1</side>
+        </item>
+        <item side="2">
+          <side>LANG1</side>
+        </item>
+      </audioTrack>
+      <packageType>plastic</packageType>
+      <packageSize vector="true">
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+      </packageSize>
+      <content vector ="true">
+        <item side="1">
+          <side>LANG1</side>
+        </item>
+        <item side="2">
+          <side>LANG1</side>
+        </item>
+      </content>
+      <bonus vector ="true">
+        <item side="1">
+          <side>LANG1</side>
+        </item>
+        <item side="2">
+          <side>LANG1</side>
+        </item>
+      </bonus>
+    </material>
+    
+    
+  </materials>
+</media>

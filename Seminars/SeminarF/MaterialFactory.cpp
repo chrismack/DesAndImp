@@ -48,6 +48,7 @@ Material * MaterialFactory::createMaterial(std::string type, std::string data)
 		data = data.substr(0, data.find('['));
 		data.append(dvds);
 		tmpLine = split(data, ",");
+		tmpLine[11] = dvds;
 	}
 	else if (type == "VHS")
 	{

@@ -63,6 +63,11 @@ std::vector<int> Project::getTicketSales() const
 	return this->weeklyTicketSales_;
 }
 
+std::vector<std::string> Project::getCrew() const
+{
+	return this->crew_;
+}
+
 void Project::setTitle(const std::string title)
 {
 	this->title_ = title;
@@ -101,6 +106,11 @@ void Project::setKeywords(const std::vector<std::string> keywords)
 void Project::setTicketSales(const std::vector<int> ticketSales)
 {
 	this->weeklyTicketSales_ = ticketSales;
+}
+
+void Project::setCrew(const std::vector<std::string> crew)
+{
+	this->crew_ = crew;
 }
 
 std::vector<Material*> Project::getMaterials()
@@ -162,6 +172,17 @@ std::vector<std::string> Project::toArray()
 	}
 	elements.push_back(salesStrings.str());
 
+	std::stringstream crewString;
+	for (int i = 0; i < crew_.size(); i++)
+	{
+		crewString << crew_[i];
+		if (i < crew_.size() - 1)
+		{
+			crewString << "|";
+		}
+	}
+	elements.push_back(crewString.str());
+
 	std::stringstream materialString;
 	materialString << "{";
 	for (int i = 0; i < materials_.size(); i++)
@@ -209,8 +230,10 @@ void Project::populate(std::vector<std::string> elements)
 	}
 	weeklyTicketSales_ = weeklySales;
 
+	crew_ = split(elements[8], "|");
+
 	std::stringstream ss;
-	for (int i = 8; i < elements.size(); i++)
+	for (int i = 9; i < elements.size(); i++)
 	{
 		if (elements[i] != "~")		// Char is not material seperator
 		{
@@ -229,12 +252,12 @@ void Project::populate(std::vector<std::string> elements)
 			ss << elements[i];
 		}
 	}
-	elements[8] = ss.str();
+	elements[9] = ss.str();
 
-	if (elements[8][0] == '{')
+	if (elements[9][0] == '{')
 	{
-		elements[8] = elements[8].substr(1, elements[8].length() - 1);
-		std::vector<std::string> materialStrings = split(elements[8], "~");
+		elements[9] = elements[9].substr(1, elements[9].length() - 1);
+		std::vector<std::string> materialStrings = split(elements[9], "~");
 		for (int i = 0; i < materialStrings.size(); i++)
 		{
 			std::string type = split(materialStrings[i], ",")[2];
