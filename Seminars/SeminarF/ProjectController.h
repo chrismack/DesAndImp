@@ -1,3 +1,8 @@
+#ifndef PROJECTCONTROLLER_H
+#define PROJECTCONTROLLER_H
+
+
+
 #pragma once
 
 #include "Logger.h"
@@ -124,3 +129,4 @@ private:
 
 };
 
+#endif // !PROJECTCONTROLLER_H

@@ -1,3 +1,8 @@
+#ifndef XMLHANDLER_H
+#define XMLHANDLER_H
+
+
+
 #pragma once
 #include "tinyxml2.h"
 
@@ -32,6 +37,7 @@ private:
 	void writeVHS(std::vector<std::string> elements, tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* parent = nullptr);
 	void writeCombo(std::vector<std::string> elements, tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* parent = nullptr);
 	void writeDouble(std::vector<std::string> elements, tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* parent = nullptr);
+	void writeBluray(std::vector<std::string> elements, tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* parent = nullptr);
 
 	void writeComboMaterial(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* parent, std::string elementName, std::string value);
 
@@ -54,3 +60,4 @@ public:
 	void writeToFile(Material*);
 };
 
+#endif // !XMLHANDLER

@@ -1,3 +1,8 @@
+#pragma once
+
+#ifndef MATERIALUSERFACTORY_CPP
+#define MATERIALUSERFACTORY_CPP
+
 #include "stdafx.h"
 #include "MaterialFactoryUserCreate.h"
 
@@ -628,3 +633,5 @@ const long MaterialFactoryUserCreate::messageGetDate(const std::string & message
 
 	return timestamp;
 }
+
+#endif // !MATERIALUSERFACTORY_CPP

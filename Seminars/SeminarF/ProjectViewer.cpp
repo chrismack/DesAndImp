@@ -179,18 +179,281 @@ void ProjectViewer::clearScreen()
 	system("cls");
 }
 
-void ProjectViewer::viewFullMaterial(Material * material)
+void ProjectViewer::viewAllBaseMaterial(Material * material)
 {
-	std::vector<std::string> materialElements = material->toArray();
+	std::cout << "TITLE: " << material->getFilmTitle() << "  ";
+	std::cout << "FORMAT: " << material->getFormat() << "  ";
+	std::cout << "AUDIOFORMAT: " << material->getAudioFormat() << "  ";
+	std::cout << "RUNTIME: " << std::to_string(material->getRunTime()) << "  ";
+	std::cout << "LANGUAGE: " << material->getLanguage() << "  ";
+	std::cout << "RETAILPRICE: " << std::to_string(material->getRetailPrice()) << "  ";
+	std::cout << "SUBTITLES: " << material->getSubtitles() << "  ";
+	std::cout << "ASPECT RATIO: " << material->getAspectRatio().first << ":" << material->getAspectRatio().second << "  ";
+}
 
+void ProjectViewer::viewFullBlu(BlueRay * blu)
+{
+	viewAllBaseMaterial(blu);
+	
 	std::stringstream ss;
-
-	for (std::string element : materialElements)
+	for (std::string str : blu->getLanguagetracks())
 	{
-		ss << element << " :: ";
+		ss << str << "|";
+	}
+	std::cout << "LANGUAGE TRACKS: " << ss.str() << "  ";
+
+	ss.clear();
+	for (std::string str : blu->getsubtitleTracks())
+	{
+		ss << str << "|";
+	}
+	std::cout << "SUBTITLE TRACKS: " << ss.str() << "  ";
+
+	ss.clear();
+	for (std::string str : blu->getAudioTracks())
+	{
+		ss << str << "|";
+	}
+	std::cout << "AUDIO TRACKS: " << ss.str() << "  ";
+
+	ss.clear();
+	for (std::string str : blu->getContent())
+	{
+		ss << str << "|";
+	}
+	std::cout << "CONTENT: " << ss.str() << "  ";
+
+	ss.clear();
+	for (std::string str : blu->getBonusFeatures())
+	{
+		ss << str << "|";
+	}
+	std::cout << "BONUS FEATURES: " << ss.str() << "  ";
+
+	std::cout << "PACKAGE TYPE: " << blu->getPackageType() << "  ";
+
+	std::string packageDimString = std::to_string(std::get<0>(blu->getPackageSize()))
+		.append("|")
+		.append(std::to_string(std::get<0>(blu->getPackageSize())))
+		.append("|")
+		.append(std::to_string(std::get<0>(blu->getPackageSize())));
+
+	std::cout << "PACKAGE SIZE: " << packageDimString << std::endl;
+}
+
+void ProjectViewer::viewFullDVD(SingleDVD * dvd)
+{
+	viewAllBaseMaterial(dvd);
+	std::stringstream ss;
+	for (std::string str : dvd->getLanguagetracks())
+	{
+		ss << str << "|";
+	}
+	std::cout << "LANGUAGE TRACKS: " << ss.str() << "  ";
+
+	ss.clear();
+	for (std::string str : dvd->getsubtitleTracks())
+	{
+		ss << str << "|";
+	}
+	std::cout << "SUBTITLE TRACKS: " << ss.str() << "  ";
+
+	ss.clear();
+	for (std::string str : dvd->getAudioTracks())
+	{
+		ss << str << "|";
+	}
+	std::cout << "AUDIO TRACKS: " << ss.str() << "  ";
+
+	ss.clear();
+	for (std::string str : dvd->getContent())
+	{
+		ss << str << "|";
+	}
+	std::cout << "CONTENT: " << ss.str() << "  ";
+
+	ss.clear();
+	for (std::string str : dvd->getBonusFeatures())
+	{
+		ss << str << "|";
+	}
+	std::cout << "BONUS FEATURES: " << ss.str() << "  ";
+
+	std::cout << "PACKAGE TYPE: " << dvd->getPackageType() << "  ";
+
+	std::string packageDimString = std::to_string(std::get<0>(dvd->getPackageSize()))
+		.append("|")
+		.append(std::to_string(std::get<0>(dvd->getPackageSize())))
+		.append("|")
+		.append(std::to_string(std::get<0>(dvd->getPackageSize())));
+
+	std::cout << "PACKAGE SIZE: " << packageDimString << std::endl;
+}
+
+void ProjectViewer::viewFullDouble(DoubleDVD * dvd)
+{
+	viewAllBaseMaterial(dvd);
+	
+	std::stringstream ss;
+	std::map<int, std::vector<std::string>>::iterator it;
+	std::cout << "LANGUAGE TRACKS: ";
+	for (it = dvd->getLanguagetracks().begin(); it != dvd->getLanguagetracks().end(); ++it)
+	{
+		std::cout << "side: " << std::to_string(it->first) << " ";
+		for (std::string str : it->second)
+		{
+			ss << str << "|";
+		}
+		std::cout << ss.str();
 	}
 
-	displayMessage(ss.str());
+	ss.clear();
+	std::cout << "SUBTITLE TRACKS: ";
+	for (it = dvd->getsubtitleTracks().begin(); it != dvd->getsubtitleTracks().end(); ++it)
+	{
+		std::cout << "side: " << std::to_string(it->first) << " ";
+		for (std::string str : it->second)
+		{
+			ss << str << "|";
+		}
+		std::cout << ss.str();
+	}
+
+	ss.clear();
+	std::cout << "AUDIO TRACKS: ";
+	for (it = dvd->getAudioTracks().begin(); it != dvd->getAudioTracks().end(); ++it)
+	{
+		std::cout << "side: " << std::to_string(it->first) << " ";
+		for (std::string str : it->second)
+		{
+			ss << str << "|";
+		}
+		std::cout << ss.str();
+	}
+
+	ss.clear();
+	std::cout << "CONTENT: ";
+	for (it = dvd->getAllContent().begin(); it != dvd->getAllContent().end(); ++it)
+	{
+		std::cout << "side: " << std::to_string(it->first) << " ";
+		for (std::string str : it->second)
+		{
+			ss << str << "|";
+		}
+		std::cout << ss.str();
+	}
+
+	ss.clear();
+	std::cout << "BONUS: ";
+	for (it = dvd->getBonusFeatures().begin(); it != dvd->getBonusFeatures().end(); ++it)
+	{
+		std::cout << "side: " << std::to_string(it->first) << " ";
+		for (std::string str : it->second)
+		{
+			ss << str << "|";
+		}
+		std::cout << ss.str();
+	}
+
+	std::cout << "PACKAGE TYPE: " << dvd->getPackageType() << "  ";
+
+	std::string packageDimString = std::to_string(std::get<0>(dvd->getPackageSize()))
+		.append("|")
+		.append(std::to_string(std::get<0>(dvd->getPackageSize())))
+		.append("|")
+		.append(std::to_string(std::get<0>(dvd->getPackageSize())));
+
+	std::cout << "PACKAGE SIZE: " << packageDimString << std::endl;
+}
+
+void ProjectViewer::viewFullCombo(ComboBox * combo)
+{
+	viewAllBaseMaterial(combo);
+
+	std::cout << "MATERIALS: " << std::endl;
+	for (Material* mat : combo->getContent())
+	{
+		std::string format = toLower(mat->getFormat());
+
+		if (format == "bluray")
+		{
+			viewFullBlu((BlueRay*)mat);
+		}
+		else if (format == "singledvd")
+		{
+			viewFullDVD((SingleDVD*)mat);
+		}
+		else if (format == "doubledvd")
+		{
+			viewFullDouble((DoubleDVD*)mat);
+		}
+		else if (format == "vhs")
+		{
+			viewFullVHS((VHS*)mat);
+		}
+	}
+
+	std::cout << "PACKAGE TYPE: " << combo->getPackageType() << "  ";
+
+	std::string packageDimString = std::to_string(std::get<0>(combo->getPackageSize()))
+		.append("|")
+		.append(std::to_string(std::get<0>(combo->getPackageSize())))
+		.append("|")
+		.append(std::to_string(std::get<0>(combo->getPackageSize())));
+
+	std::cout << "PACKAGE SIZE: " << packageDimString << std::endl;
+}
+
+void ProjectViewer::viewFullVHS(VHS * vhs)
+{
+	viewAllBaseMaterial(vhs);
+	
+	std::cout << "LANGUAGE TRACK: " << vhs->getLanguageTrack() << "  ";
+
+	std::cout << "AUDIO TRACK: " << vhs->getAudioTrack() << "  ";
+
+	std::stringstream ss;
+	for (std::string str : vhs->getContent())
+	{
+		ss << str << "|";
+	}
+	std::cout << "CONTENT: " << ss.str() << "  ";
+
+	std::cout << "PACKAGE TYPE: " << vhs->getPackageType() << "  ";
+
+	std::string packageDimString = std::to_string(std::get<0>(vhs->getPackageSize()))
+		.append("|")
+		.append(std::to_string(std::get<0>(vhs->getPackageSize())))
+		.append("|")
+		.append(std::to_string(std::get<0>(vhs->getPackageSize())));
+
+	std::cout << "PACKAGE SIZE: " << packageDimString << std::endl;
+}
+
+void ProjectViewer::viewFullMaterial(Material * material)
+{
+	std::string format = toLower(material->getFormat());
+
+	if (format == "bluray")
+	{
+		viewFullBlu((BlueRay*)material);
+	}
+	else if (format == "singledvd")
+	{
+		viewFullDVD((SingleDVD*)material);
+	}
+	else if (format == "doubledvd")
+	{
+		viewFullDouble((DoubleDVD*)material);
+	}
+	else if (format == "combo")
+	{
+		viewFullCombo((ComboBox*)material);
+	}
+	else if (format == "vhs")
+	{
+		viewFullVHS((VHS*)material);
+	}
 }
 
 void ProjectViewer::viewFullProject( Project * project)
@@ -248,9 +511,9 @@ void ProjectViewer::allProjects(std::map<Project*, bool> projects)
 		std::stringstream ss;
 		for (Material* material : it->first->getMaterials())
 		{
-			ss << material->getFormat() << "And";
+			ss << material->getFormat() << " And ";
 		}
-		std::cout << ss.str().substr(0, ss.str().length() - 3) << std::endl;
+		std::cout << ss.str().substr(0, ss.str().length() - 4) << std::endl;
 	}
 }
 

@@ -1,3 +1,8 @@
+#pragma once
+
+#ifndef PROJECTMANAGER_CPP
+#define PROJECTMANAGER_CPP
+
 #include "stdafx.h"
 #include "ProjectManager.h"
 
@@ -29,6 +34,7 @@ ProjectManager::ProjectManager()
 
 ProjectManager::~ProjectManager()
 {
+	logger->debug("closing project manager");
 	for (Material* material : materials_)
 	{
 		delete material;
@@ -53,10 +59,12 @@ ProjectManager::~ProjectManager()
  */
 bool ProjectManager::setupSaveFile()
 {
+	logger->info("setting up save file");
 	std::fstream saveFile(defaultSavePath);
 	
 	if (! fileExists(defaultSavePath) || saveFile.peek() == std::fstream::traits_type::eof())	// File doesn't exists or is empty
 	{
+		logger->info("file empty");
 		saveFile.open(defaultSavePath, std::fstream::in | std::fstream::out | std::fstream::app);		// Create file if it doesn't exist
 		saveFile.close();
 	
@@ -65,6 +73,8 @@ bool ProjectManager::setupSaveFile()
 	}
 	else
 	{
+		logger->info("default file found");
+		saveFile.close();
 		importFile(defaultSavePath);
 		//importCSV(defaultSavePath);
 		return true;
@@ -103,6 +113,7 @@ bool ProjectManager::importFile(std::string path)
 		}
 		else
 		{
+			logger->info("file :" + path + " could not be imported");
 			return false;
 		}
 
@@ -122,7 +133,7 @@ void ProjectManager::save()
 	{
 
 	}
-
+	logger->info("saving file");
 	std::ofstream saveFile(defaultSavePath);
 	saveFile.close();
 
@@ -149,6 +160,7 @@ void ProjectManager::save()
  */
 void ProjectManager::importCSV(const std::string &CSV)
 {
+	logger->info("importing csv");
 	MaterialFactory* mf = new MaterialFactory();
 	CSVHandler csvHandler(CSV, mf);
 
@@ -188,6 +200,7 @@ void ProjectManager::importCSV(const std::string &CSV)
 		projects_.insert(std::pair<Project*, bool>(it->first, it->second));
 	}
 		
+	logger->debug("csv import finished");
 	delete mf;
 }
 
@@ -195,6 +208,8 @@ void ProjectManager::importXML(const std::string & XML)
 {
 	MaterialFactory* mf = new MaterialFactory();
 	XMLHandler xmlHandler(XML, mf);
+
+	logger->info("importing xml");
 
 	/*
 	* Append materials to list of existing materials
@@ -232,6 +247,7 @@ void ProjectManager::importXML(const std::string & XML)
 		projects_.insert(std::pair<Project*, bool>(it->first, it->second));
 	}
 
+	logger->debug("xml import finished");
 	delete mf;
 }
 
@@ -279,16 +295,24 @@ std::vector<Disc*> ProjectManager::getExistingDiscs()
 		}
 	}
 
+	logger->debug("exisiting discs = ");
+	for (Disc* d : discs)
+	{
+		logger->debug(d->getId() + " : " + d->getFilmTitle());
+	}
+
 	return discs;
 }
 
 void ProjectManager::addMaterial(Material * material)
 {
+	logger->debug("adding material : " + material->getFilmTitle());
 	materials_.push_back(material);
 }
 
 void ProjectManager::addProject(Project* project, bool nowPlaying)
 {
+	logger->debug("adding project : " + project->getTitle());
 	projects_.insert(std::pair<Project*, bool>(project, nowPlaying));
 }
 
@@ -299,6 +323,7 @@ std::vector<Material*> ProjectManager::getMaterials()
 
 void ProjectManager::addMaterialToProject(Project* project, std::vector<Material*> materials)
 {
+	logger->debug("adding material to project");
 	for (Material* material : materials)
 	{
 		for (int i = 0; i < materials_.size(); i++)
@@ -315,7 +340,9 @@ void ProjectManager::addMaterialToProject(Project* project, std::vector<Material
 
 		}
 	}
+	
 	project->setMaterials(materials);
+	logger->info("added materials to " + project->getTitle());
 }
 
 void ProjectManager::setMaterialsList(std::vector<Material*> materials)
@@ -402,6 +429,7 @@ std::vector<Project*> ProjectManager::materialFindProject(Material* lmaterial)
 
 void ProjectManager::deleteProject(Project* project)
 {
+	logger->info("deleting project : " + project->getTitle());
 	std::map<Project*, bool>::iterator it;
 	for (it = projects_.begin(); it != projects_.end(); ++it)
 	{
@@ -433,6 +461,7 @@ void ProjectManager::deleteProject(Project* project)
 
 void ProjectManager::deleteMaterial(std::pair<std::vector<Material*>, std::vector<Material*>> allMaterials, int id)
 {
+	logger->info("deleting material id : " + std::to_string(id));
 	if (id < allMaterials.first.size())
 	{
 		delete allMaterials.first[id];
@@ -589,3 +618,5 @@ const bool ProjectManager::isReleased(Project * project)
 
 	 return projects;
  }
+
+#endif // !PROJECTMANAGER_CPP

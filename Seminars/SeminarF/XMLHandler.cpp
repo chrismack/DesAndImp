@@ -1,3 +1,10 @@
+#pragma once
+
+#ifndef XMLHANDLER_CPP
+#define XMLHANDLER_CPP
+
+
+
 #define _CRT_SECURE_NO_WARNINGS // Used for strtok doesn't compile with out
 
 #include "stdafx.h"
@@ -64,7 +71,7 @@ std::map<Project*, bool> XMLHandler::readProjectsFromFile()
 	std::map<Project*, bool> fileProjects;
 
 	XMLDocument doc;
-	doc.LoadFile("test.xml");
+	doc.LoadFile(fileName.c_str());
 
 	if (doc.ErrorID() == 0)
 	{
@@ -139,6 +146,7 @@ std::map<Project*, bool> XMLHandler::readProjectsFromFile()
 			}
 		}
 	}
+	projects_ = fileProjects;
 	return fileProjects;
 }
 
@@ -146,7 +154,7 @@ std::vector<Material*> XMLHandler::readMaterialsFromFile()
 {
 	std::vector<Material*> materialsVec;
 	XMLDocument doc;
-	doc.LoadFile("test.xml");
+	doc.LoadFile(fileName.c_str());
 	if (doc.ErrorID() == 0)
 	{
 		XMLElement* root = doc.FirstChildElement("media");
@@ -293,7 +301,7 @@ std::vector<std::string> XMLHandler::split(std::string string, std::string del)
 void XMLHandler::write(std::vector<std::string> elements)
 {
 	XMLDocument document;
-	document.LoadFile("test.xml");
+	document.LoadFile(fileName.c_str());
 
 	XMLNode * pRoot;
 
@@ -339,7 +347,7 @@ void XMLHandler::write(std::vector<std::string> elements)
 	{
 		writeProject(elements, &document);
 	}
-	document.SaveFile("test.xml");
+	document.SaveFile(fileName.c_str());
 }
 
 void XMLHandler::writeBaseMaterial(std::vector<std::string> elements, tinyxml2::XMLElement* parent, tinyxml2::XMLDocument * doc)
@@ -392,7 +400,7 @@ void XMLHandler::writeSingleDisc(std::vector<std::string> elements, tinyxml2::XM
 	materials->InsertFirstChild(material);
 
 	writeBaseMaterial(elements, material, doc);
-	
+
 	insertVectorElement(doc, material, "languageTrack", elements[9]);
 	insertVectorElement(doc, material, "subtitlesTrack", elements[10]);
 	insertVectorElement(doc, material, "audioTrack", elements[11]);
@@ -403,7 +411,32 @@ void XMLHandler::writeSingleDisc(std::vector<std::string> elements, tinyxml2::XM
 
 	materials->InsertEndChild(material);
 
-	
+
+}
+
+void XMLHandler::writeBluray(std::vector<std::string> elements, tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* parent /*nullptr*/)
+{
+	XMLElement* materials = doc->FirstChildElement("media")->FirstChildElement("materials");
+	XMLElement* material = doc->NewElement("material");
+	if (parent != nullptr)
+	{
+		materials = parent;
+	}
+	materials->InsertFirstChild(material);
+
+	writeBaseMaterial(elements, material, doc);
+
+	insertVectorElement(doc, material, "languageTrack", elements[9]);
+	insertVectorElement(doc, material, "subtitlesTrack", elements[10]);
+	insertVectorElement(doc, material, "audioTrack", elements[11]);
+	insertElement(doc, material, "packageType", elements[12]);
+	insertVectorElement(doc, material, "packageSize", elements[13]);
+	insertVectorElement(doc, material, "content", elements[14]);
+	insertVectorElement(doc, material, "bonus", elements[15]);
+
+	materials->InsertEndChild(material);
+
+
 }
 
 void XMLHandler::writeVHS(std::vector<std::string> elements, tinyxml2::XMLDocument * doc, tinyxml2::XMLElement* parent)
@@ -521,7 +554,10 @@ void XMLHandler::insertVectorElement(tinyxml2::XMLDocument * doc, tinyxml2::XMLE
 	XMLElement* newElement = doc->NewElement(elementName.c_str());
 	newElement->SetAttribute("vector", "true");
 	parent->InsertFirstChild(newElement);
-	
+	if (value == "")
+	{
+		newElement->SetText(" ");
+	}
 	for (std::string item : itemsVec)
 	{
 		XMLElement* itemElement = doc->NewElement("item");
@@ -571,12 +607,11 @@ void XMLHandler::insertMapElement(tinyxml2::XMLDocument * doc, tinyxml2::XMLElem
 void XMLHandler::writeProjectMaterials(tinyxml2::XMLDocument * doc, tinyxml2::XMLElement * parent, std::string elementName, std::string value)
 {
 	value = value.substr(value.find_first_of("{") + 1, value.find_last_of("}") - 1);
+	XMLElement* newElement = doc->NewElement(elementName.c_str());
+	parent->InsertFirstChild(newElement);
 	if (value == "")
 	{
-		XMLElement* newElement = doc->NewElement(elementName.c_str());
 		newElement->SetText(" ");
-		parent->InsertFirstChild(newElement);
-		parent->InsertEndChild(newElement);
 	}
 	else
 	{
@@ -586,21 +621,23 @@ void XMLHandler::writeProjectMaterials(tinyxml2::XMLDocument * doc, tinyxml2::XM
 			std::vector<std::string> materialElements = split(materialString, ",");
 			if (materialElements[2] == "BluRay" || materialElements[2] == "SingleDVD")
 			{
-				writeSingleDisc(materialElements, doc);
+				writeSingleDisc(materialElements, doc, newElement);
 			}
 			else if (materialElements[2] == "DoubleDVD")
 			{
-				writeDouble(materialElements, doc);
+				writeDouble(materialElements, doc, newElement);
 			}
 			else if (materialElements[2] == "Combo")
 			{
-				writeCombo(materialElements, doc);
+				writeCombo(materialElements, doc, newElement);
 			}
 			else if (materialElements[2] == "VHS")
 			{
-				writeSingleDisc(materialElements, doc);
+				writeVHS(materialElements, doc, newElement);
 			}
 		}
 	}
+	parent->InsertEndChild(newElement);
 }
 
+#endif // !XMLHANDLER

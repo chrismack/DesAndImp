@@ -46,7 +46,7 @@ private: // Variables
 	/*
 	 * The default save location for the projects and materials to be saved to 
 	 */
-	std::string defaultSavePath = "test.xml";
+	std::string defaultSavePath = "default.xml";
 
 public:  // Functions
 

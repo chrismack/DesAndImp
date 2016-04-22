@@ -5,6 +5,12 @@
 #include "Material.h"
 #include "Project.h"
 
+#include "BlueRay.h"
+#include "SingleDVD.h"
+#include "DoubleDVD.h"
+#include "ComboBox.h"
+#include "VHS.h"
+
 #include <string>
 #include <map>
 
@@ -55,6 +61,8 @@ public:
 
 	void clearScreen();
 
+	
+
 	void viewFullMaterial(Material* material);
 	void viewFullProject(Project* project);
 
@@ -73,6 +81,14 @@ public:
 
 	std::string toLower(std::string & input);
 	
+private:
+	void viewAllBaseMaterial(Material* material);
+	void viewFullBlu(BlueRay* blu);
+	void viewFullDVD(SingleDVD* dvd);
+	void viewFullDouble(DoubleDVD* dvd);
+	void viewFullCombo(ComboBox* combo);
+	void viewFullVHS(VHS* vhs);
+
 };
 
 #endif // !PROJECTVIEWER_H

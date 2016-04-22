@@ -1,3 +1,8 @@
+#pragma once
+
+#ifndef PROJECTCONTROLLER_CPP
+#define PROJECTCONTROLLER_CPP
+
 #include "stdafx.h"
 #include "ProjectController.h"
 #include "MaterialFactoryUserCreate.h"
@@ -505,6 +510,7 @@ std::string ProjectController::getUserInput()
 {
 	std::string userInput = "";
 	std::getline(std::cin, userInput);
+	logger->debug("user input == : " + userInput);
 	return userInput;
 }
 
@@ -713,7 +719,10 @@ void ProjectController::linkMedia()
 				std::vector<Material*> materials = getMaterialsFromUser("Please select materials to link");
 				if (!materials.empty())
 				{
-					project->setMaterials(materials);
+					for (Material* projMat : materials)
+					{
+						project->addMaterial(projMat);
+					}
 
 					int materialIndex = -1;
 					for (Material* material : projectManager.getMaterials())
@@ -869,6 +878,7 @@ const long ProjectController::messageGetDate(const std::string & message)
 			projectViewer.displayMessage("Enter Year: ", false); year = stoi(getUserInput());
 			projectViewer.displayMessage("Enter Month: ", false); month = stoi(getUserInput());
 			projectViewer.displayMessage("Enter Day: ", false); day = stoi(getUserInput());
+			validInput = true;
 		}
 		catch (std::invalid_argument ia)
 		{
@@ -920,3 +930,5 @@ const std::vector<std::string> ProjectController::messageReturnUserVector(const 
 
 	return userData;
 }
+
+#endif // !PROJECTCONTROLLER

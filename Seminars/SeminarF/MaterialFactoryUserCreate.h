@@ -1,3 +1,8 @@
+#ifndef MATERIALFACTORYUSERCREATE_H
+#define MATERIALFACTORYUSERCREATE_H
+
+
+
 #pragma once
 #include "Material.h"
 #include "IPackagable.h"
@@ -100,3 +105,4 @@ private: /* function */
 
 };
 
+#endif // !MATERIALFACTORYUSERCREATE_H
